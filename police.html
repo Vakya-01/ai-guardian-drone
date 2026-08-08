@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Guardian Drone — Police Station</title>
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#0b1220;color:#fff}
+.wrap{max-width:800px;margin:auto;padding:24px}.top{display:flex;justify-content:space-between;gap:15px;align-items:center}
+h1{margin:0;font-size:27px}.badge{padding:9px 13px;border-radius:20px;background:#344054;color:#d0d5dd;font-size:14px}
+.card{background:#172033;border:1px solid #344054;border-radius:22px;padding:24px;margin-top:20px}
+.qrbox{background:#fff;width:240px;height:240px;padding:15px;border-radius:15px;margin:18px auto;display:flex;align-items:center;justify-content:center}
+#qrcode img,#qrcode canvas{max-width:210px;max-height:210px}
+.link{background:#0b1220;padding:12px;border-radius:10px;word-break:break-all;color:#98a2b3;font-size:12px}
+button{padding:13px 18px;border:0;border-radius:10px;font-weight:bold;cursor:pointer}
+#enable{background:#12b76a;color:white}.status{margin-top:12px;color:#98a2b3}
+#alert{display:none;background:#b42318;border-radius:20px;padding:25px;text-align:center;margin-top:20px;animation:pulse 1s infinite alternate}
+@keyframes pulse{from{box-shadow:0 0 0 #b42318}to{box-shadow:0 0 30px #f04438}}
+#alert h2{font-size:34px;margin:8px}.big{font-size:65px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top"><h1>🚓 AI Guardian Drone</h1><span class="badge" id="online">STARTING…</span></div>
+<div class="card">
+<h2>Police Station Dashboard</h2>
+<p>1. Tap <b>Enable Siren</b> once.</p>
+<p>2. Show the QR code to the parent/visitor.</p>
+<button id="enable">🔊 Enable Siren</button>
+<div class="status" id="status">Creating a private demonstration session…</div>
+<div class="qrbox"><div id="qrcode"></div></div>
+<div class="link" id="link">Preparing SOS link…</div>
+</div>
+<div id="alert">
+<div class="big">🚨</div><h2>SOS ALERT RECEIVED</h2>
+<p id="details"></p>
+</div>
+</div>
+<script>
+const statusEl=document.getElementById("status"), online=document.getElementById("online");
+let peer, audioCtx, sirenTimer, sessionId;
+
+function makeSession(){
+  sessionId="guardian-"+Math.random().toString(36).slice(2,10)+"-"+Date.now().toString(36);
+  peer=new Peer(sessionId);
+  peer.on("open",id=>{
+    online.textContent="● SYSTEM ONLINE";
+    online.style.background="#067647";
+    statusEl.textContent="Ready. Parent can scan the QR code.";
+    const url=new URL("index.html",location.href);
+    url.searchParams.set("police",id);
+    document.getElementById("link").textContent=url.href;
+    new QRCode(document.getElementById("qrcode"),{text:url.href,width:210,height:210});
+  });
+  peer.on("connection",conn=>{
+    conn.on("open",()=>statusEl.textContent="Parent phone connected — waiting for SOS…");
+    conn.on("data",data=>{
+      if(data && data.type==="SOS"){
+        document.getElementById("alert").style.display="block";
+        document.getElementById("details").textContent="Alert received at "+data.time;
+        startSiren();
+        statusEl.textContent="SOS received. Demonstration alert active.";
+      }
+    });
+  });
+  peer.on("error",e=>{
+    online.textContent="CONNECTION ERROR";
+    online.style.background="#b42318";
+    statusEl.textContent="Connection error: "+e.type+". Refresh and try again.";
+  });
+}
+
+document.getElementById("enable").onclick=()=>{
+  audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  audioCtx.resume();
+  document.getElementById("enable").textContent="🔊 Siren Enabled";
+  statusEl.textContent="Siren enabled. Waiting for SOS…";
+};
+
+function startSiren(){
+  if(!audioCtx){ alert("Please tap 'Enable Siren' before the demonstration."); return; }
+  if(sirenTimer) clearInterval(sirenTimer);
+  let high=false;
+  sirenTimer=setInterval(()=>{
+    const osc=audioCtx.createOscillator(), gain=audioCtx.createGain();
+    osc.type="square"; osc.frequency.value=high?1050:650;
+    gain.gain.value=.12; osc.connect(gain).connect(audioCtx.destination);
+    osc.start(); osc.stop(audioCtx.currentTime+.18); high=!high;
+  },220);
+  setTimeout(()=>{clearInterval(sirenTimer);sirenTimer=null},10000);
+}
+makeSession();
+</script>
+</body>
+</html>
