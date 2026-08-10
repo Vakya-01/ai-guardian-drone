@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Guardian Drone — SOS</title>
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;min-height:100vh;display:flex;align-items:center;justify-content:center}
+.card{background:white;width:min(92%,430px);padding:30px;border-radius:25px;text-align:center;box-shadow:0 10px 35px #0002}
+h1{color:#17233c;margin:0 0 7px}.sub{color:#667085;margin-bottom:25px}
+#sos{width:215px;height:215px;border-radius:50%;border:11px solid #ffd5d5;background:#e53935;color:#fff;font-size:40px;font-weight:bold;cursor:pointer}
+#sos:disabled{opacity:.65;cursor:not-allowed}
+#sos:active:not(:disabled){transform:scale(.96)}
+#status{margin-top:23px;font-weight:bold;color:#667085}.safe{color:#067647!important}
+.note{font-size:12px;color:#98a2b3;margin-top:20px;line-height:1.5}
+#location{display:none;margin-top:18px;padding:14px;background:#eef7ff;border-radius:12px;color:#344054;font-size:13px}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>AI Guardian Drone</h1>
+<div class="sub">Women’s Safety & Emergency Response</div>
+<button id="sos" disabled>SOS</button>
+<div id="status">Connecting to the demonstration police station…</div>
+<div id="location"></div>
+<div class="note">School demonstration only — this page does not contact real emergency services.<br>When SOS is pressed, the phone will request permission to share its location.</div>
+</div>
+<script>
+const params=new URLSearchParams(location.search);
+const police=params.get("police");
+const sos=document.getElementById("sos");
+const status=document.getElementById("status");
+const locationBox=document.getElementById("location");
+let peer,conn;
+
+if(!police){
+ status.textContent="Invalid SOS link. Please scan the QR code from the police station dashboard.";
+}else{
+ peer=new Peer();
+ peer.on("open",()=>{
+  conn=peer.connect(police,{reliable:true});
+  conn.on("open",()=>{
+   sos.disabled=false;
+   status.textContent="✓ Connected to demonstration police station";
+   status.className="safe";
+  });
+  conn.on("error",()=>status.textContent="Could not connect. Please scan the QR code again.");
+ });
+ peer.on("error",()=>status.textContent="Internet connection unavailable.");
+}
+
+sos.onclick=()=>{
+ if(!conn||!conn.open){status.textContent="Not connected to the police station.";return;}
+ sos.disabled=true;
+ sos.textContent="LOCATING...";
+ status.textContent="Getting your location…";
+ if(!navigator.geolocation){sendSOSWithoutLocation();return;}
+ navigator.geolocation.getCurrentPosition(
+  (position)=>{
+   const latitude=position.coords.latitude;
+   const longitude=position.coords.longitude;
+   const accuracy=Math.round(position.coords.accuracy);
+   conn.send({type:"SOS",time:new Date().toLocaleString(),latitude,longitude,accuracy});
+   locationBox.style.display="block";
+   locationBox.innerHTML="📍 Location shared<br>Accuracy: approximately "+accuracy+" metres";
+   sos.textContent="SOS SENT";
+   status.textContent="🚨 SOS SENT — location delivered to the police station.";
+  },
+  ()=>sendSOSWithoutLocation(),
+  {enableHighAccuracy:true,timeout:10000,maximumAge:0}
+ );
+};
+
+function sendSOSWithoutLocation(){
+ conn.send({type:"SOS",time:new Date().toLocaleString(),locationUnavailable:true});
+ sos.textContent="SOS SENT";
+ status.textContent="🚨 SOS SENT — but the phone could not provide its location.";
+}
+</script>
+</body>
+</html>
