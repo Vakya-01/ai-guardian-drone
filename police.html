@@ -1,1337 +1,601 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<title>AI Guardian Drone - Police Dashboard</title>
 
-<title>AI Guardian Drone - Police Control</title>
+<!-- QR Code Library -->
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 
+<!-- PeerJS -->
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+
+<!-- Leaflet Map -->
 <link
 rel="stylesheet"
 href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
 />
 
+<script
+src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
+
 <style>
 
-*{
-  box-sizing:border-box;
+* {
+box-sizing: border-box;
 }
 
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#071426;
-  color:white;
+body {
+margin: 0;
+font-family: Arial, sans-serif;
+background: #071a2b;
+color: white;
 }
 
-.header{
-  padding:20px;
-  background:#0d223d;
-  text-align:center;
-  border-bottom:2px solid #1d4f7a;
+header {
+background: #102f49;
+padding: 22px;
+text-align: center;
+border-bottom: 2px solid #285476;
 }
 
-.header h1{
-  margin:0;
-  font-size:28px;
+header h1 {
+margin: 0;
+font-size: 30px;
 }
 
-.header p{
-  margin:7px 0 0;
-  color:#a9c4df;
+header p {
+color: #b8c9d8;
+margin-bottom: 0;
 }
 
-.dashboard{
-  display:grid;
-  grid-template-columns:350px 1fr;
-  min-height:calc(100vh - 100px);
+.container {
+width: 94%;
+max-width: 1100px;
+margin: 20px auto;
 }
 
-.panel{
-  padding:20px;
-  background:#0b1b30;
-  overflow:auto;
+.card {
+background: #102f49;
+border: 1px solid #285476;
+border-radius: 18px;
+padding: 20px;
+margin-bottom: 20px;
 }
 
-.card{
-  background:#102943;
-  border-radius:15px;
-  padding:18px;
-  margin-bottom:15px;
-  border:1px solid #1d466d;
+.card h2 {
+margin-top: 0;
 }
 
-.card h2{
-  margin-top:0;
-  font-size:19px;
+.status {
+padding: 14px;
+border-radius: 12px;
+background: #193f5d;
+margin-bottom: 15px;
 }
 
-.alert{
-  display:none;
-  background:#441b20;
-  border:2px solid #e5484d;
-  animation:pulse 1.2s infinite alternate;
+#connectionStatus {
+color: #7ee787;
+font-weight: bold;
 }
 
-@keyframes pulse{
-  from{
-    box-shadow:0 0 5px #e5484d;
-  }
-  to{
-    box-shadow:0 0 22px #e5484d;
-  }
+.qrbox {
+text-align: center;
+background: #0b2438;
+padding: 20px;
+border-radius: 15px;
 }
 
-.success{
-  background:#123b2b;
-  border-color:#31a46c;
+#qrcode {
+display: flex;
+justify-content: center;
+align-items: center;
+background: white;
+padding: 15px;
+width: fit-content;
+margin: 20px auto;
+border-radius: 10px;
 }
 
-.warning{
-  background:#463713;
-  border-color:#e0aa24;
+#alertBox {
+display: none;
+background: #571c1c;
+border: 2px solid #ff5252;
+border-radius: 15px;
+padding: 20px;
 }
 
-.info{
-  color:#b7cce2;
-  line-height:1.6;
+#alertBox h2 {
+color: #ff6666;
 }
 
-.big{
-  font-size:22px;
-  font-weight:bold;
+.locationBox {
+background: #0b2438;
+border-radius: 12px;
+padding: 15px;
+margin-top: 12px;
 }
 
-.station{
-  padding:12px;
-  margin-top:10px;
-  border-radius:10px;
-  background:#183753;
+.locationBox strong {
+color: #70e1a1;
 }
 
-.station.available{
-  border-left:5px solid #37c878;
+#map {
+width: 100%;
+height: 420px;
+border-radius: 15px;
+margin-top: 15px;
 }
 
-.station.busy{
-  border-left:5px solid #e5484d;
+.station {
+padding: 16px;
+margin: 10px 0;
+border-radius: 14px;
+background: #193f5d;
+border-left: 7px solid #2ecc71;
 }
 
-button{
-  width:100%;
-  padding:13px;
-  border:none;
-  border-radius:9px;
-  cursor:pointer;
-  font-size:16px;
-  font-weight:bold;
-  margin-top:10px;
+.station.busy {
+border-left-color: #ff4444;
 }
 
-.drone{
-  background:#1976d2;
-  color:white;
+.station.selected {
+border: 3px solid #ffd54a;
+border-left: 7px solid #ffd54a;
 }
 
-.manpower{
-  background:#16845a;
-  color:white;
+.station h3 {
+margin: 0 0 7px;
 }
 
-#map{
-  height:calc(100vh - 100px);
-  min-height:600px;
+.available {
+color: #64e572;
+font-weight: bold;
 }
 
-.coords{
-  font-family:monospace;
-  background:#06101e;
-  padding:10px;
-  border-radius:8px;
-  color:#8bd3ff;
+.busyText {
+color: #ff6666;
+font-weight: bold;
 }
 
-.status{
-  padding:12px;
-  border-radius:10px;
-  background:#172f49;
-  margin-top:10px;
+button {
+border: none;
+border-radius: 10px;
+padding: 14px 18px;
+margin: 7px 5px 0 0;
+font-size: 16px;
+font-weight: bold;
+cursor: pointer;
 }
 
-@media(max-width:800px){
+.drone {
+background: #2384d5;
+color: white;
+}
 
-  .dashboard{
-    grid-template-columns:1fr;
-  }
+.manpower {
+background: #20a060;
+color: white;
+}
 
-  .panel{
-    order:2;
-  }
+.demo {
+background: #6b4fc3;
+color: white;
+}
 
-  #map{
-    height:500px;
-    min-height:500px;
-    order:1;
-  }
+button:disabled {
+background: #555;
+cursor: not-allowed;
+}
 
+#responseStatus {
+margin-top: 15px;
+padding: 16px;
+border-radius: 12px;
+background: #173b52;
+font-size: 17px;
+}
+
+.small {
+color: #aebdca;
+font-size: 13px;
 }
 
 </style>
-
 </head>
+
 
 <body>
 
-<div class="header">
 
-<h1>🚨 AI Guardian Drone — Police Control Centre</h1>
+<header>
+
+<h1>🚓 AI Guardian Drone</h1>
 
 <p>
-Bengaluru Women's Safety Emergency Response Dashboard
+Police Emergency Response Dashboard — Bengaluru
 </p>
 
-</div>
+</header>
 
 
-<div class="dashboard">
+<div class="container">
 
 
-<div class="panel">
-
-
-<div class="card alert" id="alertCard">
-
-<h2>🚨 EMERGENCY ALERT</h2>
-
-<div class="big">
-Victim SOS Received
-</div>
-
-<p id="alertTime">
-Waiting...
-</p>
-
-</div>
-
+<!-- CONNECTION -->
 
 <div class="card">
 
-<h2>📍 Victim Location</h2>
+<h2>📡 Police Station Connection</h2>
 
-<div class="coords">
+<div class="status">
 
+Connection:
+<span id="connectionStatus">
+Connecting...
+</span>
+
+</div>
+
+<p class="small">
+Keep this page open at the police station during the demonstration.
+The QR code below connects the victim device to this dashboard.
+</p>
+
+</div>
+
+
+<!-- QR CODE -->
+
+<div class="card">
+
+<h2>📱 Victim / Parent SOS Connection</h2>
+
+<div class="qrbox">
+
+<p>
+Scan this QR code using the victim's phone.
+</p>
+
+<p class="small">
+After scanning, the SOS page will open on the victim's device.
+</p>
+
+<div id="qrcode"></div>
+
+<p class="small">
+The QR code connects the demonstration SOS page
+to this police dashboard.
+</p>
+
+</div>
+
+</div>
+
+
+<!-- ALERT -->
+
+<div id="alertBox">
+
+<h2>
+🚨 EMERGENCY SOS ALERT RECEIVED
+</h2>
+
+<p>
+The AI Guardian Drone system has received an emergency alert.
+</p>
+
+<div class="locationBox">
+
+<p>
+📍 <strong>Victim's Location</strong>
+</p>
+
+<p>
 Latitude:
-<span id="victimLat">--</span>
+<strong id="victimLat">--</strong>
+</p>
 
-<br>
-
+<p>
 Longitude:
-<span id="victimLng">--</span>
+<strong id="victimLng">--</strong>
+</p>
+
+<p>
+Alert Time:
+<strong id="alertTime">--</strong>
+</p>
 
 </div>
 
 </div>
 
+
+<!-- MAP -->
 
 <div class="card">
 
-<h2>🚔 Nearest Police Station</h2>
+<h2>
+🗺️ Bengaluru Emergency Map
+</h2>
 
-<div id="nearestStation"
-class="big">
+<p class="small">
+The map shows the victim's location and the police-station network.
+</p>
 
-Waiting for location...
-
-</div>
-
-<div id="stationDistance"
-class="info">
---
-</div>
+<div id="map"></div>
 
 </div>
 
+
+<!-- POLICE STATIONS -->
 
 <div class="card">
 
-<h2>👮 Response Status</h2>
+<h2>
+🚓 Bengaluru Police Station Network
+</h2>
 
-<div id="responseStatus"
-class="status">
+<p class="small">
+The system checks the distance between the victim and the listed
+stations. If the nearest station is busy, the alert is routed to
+the next closest station with available manpower.
+</p>
 
-Waiting for emergency...
+<div id="stations"></div>
 
 </div>
+
+
+<!-- RESPONSE -->
+
+<div class="card">
+
+<h2>
+🚨 Emergency Response
+</h2>
+
+<p id="selectedInfo">
+Waiting for an SOS alert...
+</p>
 
 <button
 class="drone"
 id="droneButton"
-onclick="dispatchDrone()">
+onclick="dispatchDrone()"
+disabled>
 
-🚁 DISPATCH DRONE
+🚁 Dispatch Guardian Drone
 
 </button>
 
 <button
 class="manpower"
 id="manpowerButton"
-onclick="dispatchManpower()">
+onclick="dispatchManpower()"
+disabled>
 
-👮 DISPATCH MANPOWER
+👮 Dispatch Manpower
 
 </button>
 
-</div>
+<button
+class="demo"
+onclick="demoLocation()">
 
+🧪 Test Emergency
 
-<div class="card">
+</button>
 
-<h2>🔄 Backup Response</h2>
+<div id="responseStatus">
 
-<div id="backupStatus"
-class="info">
-
-Backup station will be selected automatically if the nearest station has no immediate manpower.
-
-</div>
+Waiting for emergency alert...
 
 </div>
 
-
-<div class="card">
-
-<h2>🏢 Bengaluru Police Stations</h2>
-
-<div id="stationList"></div>
-
 </div>
 
-
-</div>
-
-
-<div id="map"></div>
-
-
-</div>
-
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-
-<script>
-
-
-/*
-=========================================================
-BENGALURU MAP
-=========================================================
-*/
-
-const map = L.map("map").setView(
-  [12.9716,77.5946],
-  11
-);
-
-
-L.tileLayer(
-  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-  {
-    maxZoom:19,
-    attribution:
-      "&copy; OpenStreetMap contributors"
-  }
-).addTo(map);
-
-
-/*
-=========================================================
-POLICE STATIONS
-=========================================================
-
-These are demonstration locations.
-manpower = true  -> immediately available
-manpower = false -> station is busy
-
-You can change these for your exhibition.
-=========================================================
-*/
-
-const stations = [
-
-  {
-    name:"Whitefield Police Station",
-    lat:12.9698,
-    lng:77.7500,
-    manpower:true
-  },
-
-  {
-    name:"Mahadevapura Police Station",
-    lat:12.9913,
-    lng:77.6899,
-    manpower:false
-  },
-
-  {
-    name:"Marathahalli Police Station",
-    lat:12.9591,
-    lng:77.6974,
-    manpower:true
-  },
-
-  {
-    name:"Indiranagar Police Station",
-    lat:12.9784,
-    lng:77.6408,
-    manpower:true
-  },
-
-  {
-    name:"Koramangala Police Station",
-    lat:12.9345,
-    lng:77.6266,
-    manpower:false
-  },
-
-  {
-    name:"Jayanagar Police Station",
-    lat:12.9250,
-    lng:77.5938,
-    manpower:true
-  },
-
-  {
-    name:"Yelahanka Police Station",
-    lat:13.1007,
-    lng:77.5963,
-    manpower:true
-  },
-
-  {
-    name:"Hebbal Police Station",
-    lat:13.0358,
-    lng:77.5970,
-    manpower:false
-  },
-
-  {
-    name:"Electronic City Police Station",
-    lat:12.8452,
-    lng:77.6602,
-    manpower:true
-  }
-
-];
-
-
-/*
-=========================================================
-DISPLAY POLICE STATIONS
-=========================================================
-*/
-
-const stationList =
-document.getElementById("stationList");
-
-
-stations.forEach(function(station,index){
-
-  const marker =
-    L.marker([station.lat,station.lng])
-    .addTo(map);
-
-  marker.bindPopup(
-    "<b>🚔 "
-    + station.name
-    + "</b><br>"
-    + (
-      station.manpower
-      ? "🟢 Manpower Available"
-      : "🔴 No Immediate Manpower"
-    )
-  );
-
-
-  const div =
-    document.createElement("div");
-
-  div.className =
-    "station "
-    + (
-      station.manpower
-      ? "available"
-      : "busy"
-    );
-
-  div.innerHTML =
-
-    "<b>"
-    + station.name
-    + "</b><br>"
-    + (
-      station.manpower
-      ? "🟢 Available"
-      : "🔴 Currently Busy"
-    );
-
-  stationList.appendChild(div);
-
-});
-
-
-/*
-=========================================================
-DISTANCE CALCULATION
-=========================================================
-
-Haversine formula calculates approximate straight-line
-distance between victim and police station.
-=========================================================
-*/
-
-function distanceKm(
-  lat1,
-  lon1,
-  lat2,
-  lon2
-){
-
-  const R = 6371;
-
-  const dLat =
-    (lat2-lat1)
-    * Math.PI/180;
-
-  const dLon =
-    (lon2-lon1)
-    * Math.PI/180;
-
-  const a =
-    Math.sin(dLat/2)
-    * Math.sin(dLat/2)
-    +
-    Math.cos(lat1*Math.PI/180)
-    *
-    Math.cos(lat2*Math.PI/180)
-    *
-    Math.sin(dLon/2)
-    *
-    Math.sin(dLon/2);
-
-  const c =
-    2 *
-    Math.atan2(
-      Math.sqrt(a),
-      Math.sqrt(1-a)
-    );
-
-  return R*c;
-
-}
-
-
-/*
-=========================================================
-GET VICTIM LOCATION
-=========================================================
-*/
-
-const params =
-new URLSearchParams(
-  window.location.search
-);
-
-
-let victimLat =
-parseFloat(params.get("lat"));
-
-let victimLng =
-parseFloat(params.get("lng"));
-
-
-/*
-If URL doesn't contain coordinates,
-check the latest demonstration emergency.
-*/
-
-if(
-  !Number.isFinite(victimLat)
-  ||
-  !Number.isFinite(victimLng)
-){
-
-  const saved =
-    localStorage.getItem(
-      "guardianEmergency"
-    );
-
-  if(saved){
-
-    try{
-
-      const data =
-        JSON.parse(saved);
-
-      victimLat =
-        parseFloat(data.latitude);
-
-      victimLng =
-        parseFloat(data.longitude);
-
-    }catch(e){
-
-      console.log(e);
-
-    }
-
-  }
-
-}
-
-
-/*
-=========================================================
-VICTIM MARKER
-=========================================================
-*/
-
-let victimMarker = null;
-
-let selectedStation = null;
-
-let stationOrder = [];
-
-
-if(
-  Number.isFinite(victimLat)
-  &&
-  Number.isFinite(victimLng)
-){
-
-  document.getElementById(
-    "victimLat"
-  ).textContent =
-    victimLat.toFixed(6);
-
-  document.getElementById(
-    "victimLng"
-  ).textContent =
-    victimLng.toFixed(6);
-
-
-  document.getElementById(
-    "alertCard"
-  ).style.display =
-    "block";
-
-
-  document.getElementById(
-    "alertTime"
-  ).textContent =
-    "SOS received at "
-    + new Date().toLocaleTimeString();
-
-
-  /*
-  Add victim marker
-  */
-
-  victimMarker =
-    L.marker(
-      [victimLat,victimLng],
-      {
-        title:"Victim Emergency Location"
-      }
-    )
-    .addTo(map);
-
-
-  victimMarker.bindPopup(
-    "<b>🚨 VICTIM LOCATION</b><br>"
-    + victimLat.toFixed(6)
-    + ", "
-    + victimLng.toFixed(6)
-  ).openPopup();
-
-
-  /*
-  Zoom map to victim
-  */
-
-  map.setView(
-    [victimLat,victimLng],
-    13
-  );
-
-
-  /*
-  Calculate distance to every station
-  */
-
-  stationOrder =
-    stations.map(function(station){
-
-      return {
-
-        station:station,
-
-        distance:
-          distanceKm(
-            victimLat,
-            victimLng,
-            station.lat,
-            station.lng
-          )
-
-      };
-
-    });
-
-
-  /*
-  Sort nearest → farthest
-  */
-
-  stationOrder.sort(
-    function(a,b){
-      return a.distance-b.distance;
-    }
-  );
-
-
-  /*
-  Find first station with manpower.
-  */
-
-  assignNearestAvailableStation();
-
-}else{
-
-  document.getElementById(
-    "responseStatus"
-  ).innerHTML =
-    "⚠️ No victim location received.";
-
-}
-
-
-/*
-=========================================================
-SELECT NEAREST AVAILABLE STATION
-=========================================================
-*/
-
-function assignNearestAvailableStation(){
-
-  selectedStation = null;
-
-  for(
-    let i=0;
-    i<stationOrder.length;
-    i++
-  ){
-
-    if(
-      stationOrder[i]
-      .station
-      .manpower
-    ){
-
-      selectedStation =
-        stationOrder[i];
-
-      break;
-
-    }
-
-  }
-
-
-  if(!selectedStation){
-
-    document.getElementById(
-      "nearestStation"
-    ).textContent =
-      "No station currently available";
-
-    document.getElementById(
-      "stationDistance"
-    ).textContent =
-      "All listed stations are busy.";
-
-    return;
-
-  }
-
-
-  document.getElementById(
-    "nearestStation"
-  ).textContent =
-    selectedStation.station.name;
-
-
-  document.getElementById(
-    "stationDistance"
-  ).textContent =
-    "Approx. "
-    + selectedStation.distance.toFixed(2)
-    + " km from victim";
-
-
-  /*
-  Show fallback information
-  */
-
-  const nearest =
-    stationOrder[0];
-
-  if(
-    nearest.station !==
-    selectedStation.station
-  ){
-
-    document.getElementById(
-      "backupStatus"
-    ).innerHTML =
-      "⚠️ "
-      + nearest.station.name
-      + " is the closest station but has no immediate manpower.<br><br>"
-      + "➡️ Alert automatically routed to "
-      + selectedStation.station.name
-      + ".";
-
-  }else{
-
-    document.getElementById(
-      "backupStatus"
-    ).innerHTML =
-      "🟢 Nearest station has manpower available. "
-      + "No backup station required.";
-
-  }
-
-}
-
-
-/*
-=========================================================
-DISPATCH DRONE
-=========================================================
-*/
-
-function dispatchDrone(){
-
-  if(!selectedStation){
-
-    alert(
-      "No available police station."
-    );
-
-    return;
-
-  }
-
-
-  document.getElementById(
-    "responseStatus"
-  ).innerHTML =
-    "🚁 DRONE DISPATCHED<br><br>"
-    + "Drone launched from "
-    + selectedStation.station.name
-    + ".<br>"
-    + "Flying toward victim location.";
-
-}
-
-
-/*
-=========================================================
-DISPATCH MANPOWER
-=========================================================
-*/
-
-function dispatchManpower(){
-
-  if(!selectedStation){
-
-    alert(
-      "No available police station."
-    );
-
-    return;
-
-  }
-
-
-  document.getElementById(
-    "responseStatus"
-  ).innerHTML =
-    "👮 MANPOWER DISPATCHED<br><br>"
-    + selectedStation.station.name
-    + " personnel are proceeding to the victim's location.";
-
-}
-
-
-/*
-=========================================================
-DEMONSTRATION BUTTON
-
-This lets you test the system without pressing SOS.
-=========================================================
-*/
-
-function demoLocation(){
-
-  victimLat = 12.9716;
-  victimLng = 77.5946;
-
-}
-
-
-</script>
-
-</body>
-</html>header h1{
-  margin:0;
-  font-size:30px;
-}
-
-header p{
-  margin:8px 0 0;
-  color:#b8c9d8;
-}
-
-.container{
-  width:94%;
-  max-width:1100px;
-  margin:20px auto;
-}
-
-.card{
-  background:#102f49;
-  border:1px solid #285476;
-  border-radius:18px;
-  padding:20px;
-  margin-bottom:20px;
-}
-
-.card h2{
-  margin-top:0;
-}
-
-.status{
-  padding:14px;
-  border-radius:12px;
-  background:#193f5d;
-  margin-bottom:15px;
-}
-
-#connectionStatus{
-  color:#7ee787;
-  font-weight:bold;
-}
-
-#alertBox{
-  display:none;
-  background:#571c1c;
-  border:2px solid #ff5252;
-  border-radius:15px;
-  padding:20px;
-}
-
-#alertBox h2{
-  color:#ff6666;
-}
-
-.locationBox{
-  background:#0b2438;
-  border-radius:12px;
-  padding:15px;
-  margin-top:12px;
-}
-
-.locationBox strong{
-  color:#70e1a1;
-}
-
-#map{
-  width:100%;
-  height:420px;
-  border-radius:15px;
-  margin-top:15px;
-}
-
-.station{
-  padding:16px;
-  margin:10px 0;
-  border-radius:14px;
-  background:#193f5d;
-  border-left:7px solid #2ecc71;
-}
-
-.station.busy{
-  border-left-color:#ff4444;
-}
-
-.station.selected{
-  border:3px solid #ffd54a;
-  border-left:7px solid #ffd54a;
-}
-
-.station h3{
-  margin:0 0 7px;
-}
-
-.available{
-  color:#64e572;
-  font-weight:bold;
-}
-
-.busyText{
-  color:#ff6666;
-  font-weight:bold;
-}
-
-button{
-  border:none;
-  border-radius:10px;
-  padding:14px 18px;
-  margin:7px 5px 0 0;
-  font-size:16px;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-.drone{
-  background:#2384d5;
-  color:white;
-}
-
-.manpower{
-  background:#20a060;
-  color:white;
-}
-
-.demo{
-  background:#6b4fc3;
-  color:white;
-}
-
-button:disabled{
-  background:#555;
-  cursor:not-allowed;
-}
-
-#responseStatus{
-  margin-top:15px;
-  padding:16px;
-  border-radius:12px;
-  background:#173b52;
-  font-size:17px;
-}
-
-.small{
-  color:#aebdca;
-  font-size:13px;
-}
-
-</style>
-</head>
-
-<body>
-
-<header>
-  <h1>🚓 AI Guardian Drone</h1>
-  <p>Police Emergency Response Dashboard — Bangalore</p>
-</header>
-
-<div class="container">
-
-  <!-- CONNECTION -->
-  <div class="card">
-
-    <h2>📡 Police Station Connection</h2>
-
-    <div class="status">
-      Connection:
-      <span id="connectionStatus">
-        Waiting for Guardian Drone...
-      </span>
-    </div>
-
-    <p class="small">
-      Demonstration system: alerts and responses shown here are simulated.
-    </p>
-
-  </div>
-
-
-  <!-- EMERGENCY ALERT -->
-
-  <div id="alertBox">
-
-    <h2>🚨 EMERGENCY ALERT RECEIVED</h2>
-
-    <p>
-      <strong>AI Guardian Drone has received an SOS alert.</strong>
-    </p>
-
-    <div class="locationBox">
-
-      <p>
-        📍 <strong>Victim's Location</strong>
-      </p>
-
-      <p>
-        Latitude:
-        <strong id="victimLat">--</strong>
-      </p>
-
-      <p>
-        Longitude:
-        <strong id="victimLng">--</strong>
-      </p>
-
-      <p>
-        Time:
-        <strong id="alertTime">--</strong>
-      </p>
-
-    </div>
-
-  </div>
-
-
-  <!-- MAP -->
-
-  <div class="card">
-
-    <h2>🗺️ Bangalore Emergency Map</h2>
-
-    <div id="map"></div>
-
-    <div id="responseStatus">
-      Waiting for an SOS alert...
-    </div>
-
-  </div>
-
-
-  <!-- POLICE STATIONS -->
-
-  <div class="card">
-
-    <h2>🚓 Nearby Police Stations</h2>
-
-    <p class="small">
-      The system checks the distance from the victim's location and
-      selects the nearest station with available manpower.
-    </p>
-
-    <div id="stations"></div>
-
-  </div>
-
-
-  <!-- RESPONSE -->
-
-  <div class="card">
-
-    <h2>🚁 Emergency Response</h2>
-
-    <p id="selectedInfo">
-      No police station selected yet.
-    </p>
-
-    <button
-      class="drone"
-      id="droneButton"
-      onclick="dispatchDrone()"
-      disabled>
-      🚁 Dispatch Drone
-    </button>
-
-    <button
-      class="manpower"
-      id="manpowerButton"
-      onclick="dispatchManpower()"
-      disabled>
-      👮 Dispatch Manpower
-    </button>
-
-    <button
-      class="demo"
-      onclick="demoLocation()">
-      🧪 Test Emergency
-    </button>
-
-    <div id="responseStatus">
-      Response awaiting alert.
-    </div>
-
-  </div>
 
 </div>
 
 
 <script>
+
 
 /* =========================================================
    POLICE STATIONS
-   Approximate Bangalore locations for SCHOOL DEMONSTRATION
+   Approximate locations used for SCHOOL DEMONSTRATION
    ========================================================= */
 
 const stations = [
 
-  {
-    name:"Yelahanka Police Station",
-    lat:13.1007,
-    lng:77.5963,
-    available:true
-  },
+{
+name: "Yelahanka Police Station",
+lat: 13.1007,
+lng: 77.5963,
+available: true
+},
 
-  {
-    name:"Hebbal Police Station",
-    lat:13.0358,
-    lng:77.5970,
-    available:false
-  },
+{
+name: "Hebbal Police Station",
+lat: 13.0358,
+lng: 77.5970,
+available: false
+},
 
-  {
-    name:"Indiranagar Police Station",
-    lat:12.9784,
-    lng:77.6408,
-    available:true
-  },
+{
+name: "Indiranagar Police Station",
+lat: 12.9784,
+lng: 77.6408,
+available: true
+},
 
-  {
-    name:"Shivajinagar Police Station",
-    lat:12.9857,
-    lng:77.6057,
-    available:true
-  },
+{
+name: "Shivajinagar Police Station",
+lat: 12.9857,
+lng: 77.6057,
+available: true
+},
 
-  {
-    name:"Jayanagar Police Station",
-    lat:12.9250,
-    lng:77.5938,
-    available:true
-  },
+{
+name: "Jayanagar Police Station",
+lat: 12.9250,
+lng: 77.5938,
+available: true
+},
 
-  {
-    name:"Electronic City Police Station",
-    lat:12.8458,
-    lng:77.6632,
-    available:true
-  }
+{
+name: "Electronic City Police Station",
+lat: 12.8458,
+lng: 77.6632,
+available: true
+},
+
+{
+name: "Whitefield Police Station",
+lat: 12.9698,
+lng: 77.7499,
+available: true
+}
 
 ];
 
 
 /* =========================================================
-   MAP
+   POLICE PEER ID
+   ========================================================= */
+
+const POLICE_PEER_ID =
+"bangalore-police-demo";
+
+
+/* =========================================================
+   CREATE MAP
    ========================================================= */
 
 const map = L.map("map").setView(
-  [12.9716,77.5946],
-  11
+[12.9716, 77.5946],
+11
 );
 
+
 L.tileLayer(
-  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-  {
-    maxZoom:19,
-    attribution:"© OpenStreetMap contributors"
-  }
+"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+{
+maxZoom: 19,
+attribution: "© OpenStreetMap contributors"
+}
 ).addTo(map);
 
 
 let victimMarker = null;
+
 let selectedMarker = null;
 
 
 /* =========================================================
-   ADD POLICE STATION MARKERS
+   SHOW POLICE STATIONS ON MAP
    ========================================================= */
 
-stations.forEach(station => {
+stations.forEach(function(station) {
 
-  const marker = L.marker([
-    station.lat,
-    station.lng
-  ]).addTo(map);
+const marker =
+L.marker([
+station.lat,
+station.lng
+]).addTo(map);
 
-  marker.bindPopup(
-    "<b>" +
-    station.name +
-    "</b><br>" +
-    (
-      station.available
-      ? "🟢 Manpower Available"
-      : "🔴 Currently Busy"
-    )
-  );
+
+marker.bindPopup(
+
+"<b>" +
+station.name +
+"</b><br>" +
+
+(
+station.available
+?
+"🟢 Manpower Available"
+:
+"🔴 Currently Busy"
+)
+
+);
 
 });
 
 
 /* =========================================================
-   DISPLAY STATIONS
+   DISPLAY POLICE STATIONS
    ========================================================= */
 
-function displayStations(selectedStation=null){
+function displayStations(selectedStation) {
 
-  const container =
-    document.getElementById("stations");
+const container =
+document.getElementById("stations");
 
-  container.innerHTML = "";
+container.innerHTML = "";
 
-  stations.forEach(station => {
 
-    const div =
-      document.createElement("div");
+stations.forEach(function(station) {
 
-    div.className =
-      "station " +
-      (
-        station.available
-        ? ""
-        : "busy"
-      ) +
-      (
-        selectedStation &&
-        selectedStation.name === station.name
-        ? " selected"
-        : ""
-      );
+const div =
+document.createElement("div");
 
-    div.innerHTML =
 
-      "<h3>" +
-      station.name +
-      "</h3>" +
+div.className =
+"station " +
 
-      (
-        station.available
+(
+station.available
+?
+""
+:
+"busy"
+) +
 
-        ? "<span class='available'>🟢 Manpower Available</span>"
+(
+selectedStation &&
+selectedStation.name === station.name
+?
+" selected"
+:
+""
+);
 
-        : "<span class='busyText'>🔴 Currently Busy</span>"
-      );
 
-    container.appendChild(div);
+div.innerHTML =
 
-  });
+"<h3>" +
+station.name +
+"</h3>" +
+
+(
+station.available
+
+?
+
+"<span class='available'>🟢 Manpower Available</span>"
+
+:
+
+"<span class='busyText'>🔴 Currently Busy</span>"
+
+);
+
+
+container.appendChild(div);
+
+});
 
 }
 
-displayStations();
+
+displayStations(null);
 
 
 /* =========================================================
@@ -1339,299 +603,328 @@ displayStations();
    ========================================================= */
 
 function distanceKm(
-  lat1,
-  lon1,
-  lat2,
-  lon2
-){
+lat1,
+lng1,
+lat2,
+lng2
+) {
 
-  const R = 6371;
+const R = 6371;
 
-  const dLat =
-    (lat2-lat1) *
-    Math.PI / 180;
+const dLat =
+(lat2 - lat1) *
+Math.PI / 180;
 
-  const dLon =
-    (lon2-lon1) *
-    Math.PI / 180;
+const dLng =
+(lng2 - lng1) *
+Math.PI / 180;
 
-  const a =
-    Math.sin(dLat/2) *
-    Math.sin(dLat/2) +
+const a =
 
-    Math.cos(lat1*Math.PI/180) *
-    Math.cos(lat2*Math.PI/180) *
+Math.sin(dLat / 2) *
+Math.sin(dLat / 2)
 
-    Math.sin(dLon/2) *
-    Math.sin(dLon/2);
++
 
-  const c =
-    2 *
-    Math.atan2(
-      Math.sqrt(a),
-      Math.sqrt(1-a)
-    );
+Math.cos(lat1 * Math.PI / 180) *
+Math.cos(lat2 * Math.PI / 180) *
 
-  return R*c;
+Math.sin(dLng / 2) *
+Math.sin(dLng / 2);
+
+
+const c =
+2 *
+Math.atan2(
+Math.sqrt(a),
+Math.sqrt(1 - a)
+);
+
+
+return R * c;
 
 }
 
 
 /* =========================================================
-   FIND NEAREST AVAILABLE POLICE STATION
+   FIND NEAREST AVAILABLE STATION
+   ========================================================= */
+
+function findNearestStation(
+lat,
+lng
+) {
+
+const ranked =
+stations
+.map(function(station) {
+
+return {
+
+name: station.name,
+
+lat: station.lat,
+
+lng: station.lng,
+
+available: station.available,
+
+distance:
+
+distanceKm(
+lat,
+lng,
+station.lat,
+station.lng
+)
+
+};
+
+})
+.sort(function(a,b) {
+
+return a.distance -
+b.distance;
+
+});
+
+
+const nearestAvailable =
+ranked.find(function(station) {
+
+return station.available === true;
+
+});
+
+
+return {
+
+ranked: ranked,
+
+selected: nearestAvailable
+
+};
+
+}
+
+
+/* =========================================================
+   RECEIVE SOS
    ========================================================= */
 
 let selectedStation = null;
 
-function findNearestStation(
-  victimLat,
-  victimLng
-){
 
-  const ranked =
-    stations
-      .map(station => ({
+function receiveSOS(data) {
 
-        ...station,
+const lat =
+Number(data.lat);
 
-        distance:
-          distanceKm(
-            victimLat,
-            victimLng,
-            station.lat,
-            station.lng
-          )
-
-      }))
-      .sort(
-        (a,b) =>
-          a.distance-b.distance
-      );
+const lng =
+Number(data.lng);
 
 
-  /* First check nearest available station */
+if(
+!Number.isFinite(lat) ||
+!Number.isFinite(lng)
+) {
 
-  const available =
-    ranked.find(
-      station =>
-        station.available
-    );
+document.getElementById(
+"responseStatus"
+).textContent =
+"⚠️ Invalid location received.";
 
-
-  return {
-
-    ranked:ranked,
-
-    selected:available || null
-
-  };
+return;
 
 }
 
 
-/* =========================================================
-   HANDLE SOS ALERT
-   ========================================================= */
+/* SHOW ALERT */
 
-function receiveSOS(data){
+document.getElementById(
+"alertBox"
+).style.display =
+"block";
 
-  const lat =
-    Number(data.lat);
 
-  const lng =
-    Number(data.lng);
+document.getElementById(
+"victimLat"
+).textContent =
+lat.toFixed(6);
 
 
-  if(
-    !Number.isFinite(lat) ||
-    !Number.isFinite(lng)
-  ){
+document.getElementById(
+"victimLng"
+).textContent =
+lng.toFixed(6);
 
-    document.getElementById(
-      "responseStatus"
-    ).textContent =
-      "⚠️ Invalid victim location received.";
 
-    return;
+document.getElementById(
+"alertTime"
+).textContent =
+new Date().toLocaleString();
 
-  }
 
+/* REMOVE OLD VICTIM MARKER */
 
-  /* Show emergency box */
+if(victimMarker) {
 
-  document.getElementById(
-    "alertBox"
-  ).style.display =
-    "block";
+victimMarker.remove();
 
+}
 
-  document.getElementById(
-    "victimLat"
-  ).textContent =
-    lat.toFixed(6);
 
+/* ADD VICTIM MARKER */
 
-  document.getElementById(
-    "victimLng"
-  ).textContent =
-    lng.toFixed(6);
+victimMarker =
+L.marker(
+[lat,lng]
+)
+.addTo(map)
+.bindPopup(
+"<b>🚨 VICTIM LOCATION</b>"
+)
+.openPopup();
 
 
-  document.getElementById(
-    "alertTime"
-  ).textContent =
-    new Date().toLocaleString();
+map.setView(
+[lat,lng],
+13
+);
 
 
-  /* Victim marker */
+/* FIND STATION */
 
-  if(victimMarker){
+const result =
+findNearestStation(
+lat,
+lng
+);
 
-    victimMarker.remove();
 
-  }
+selectedStation =
+result.selected;
 
 
-  victimMarker =
-    L.marker(
-      [lat,lng]
-    )
-    .addTo(map)
-    .bindPopup(
-      "<b>🚨 VICTIM LOCATION</b>"
-    )
-    .openPopup();
+/* DISPLAY STATIONS */
 
+displayStations(
+selectedStation
+);
 
-  map.setView(
-    [lat,lng],
-    13
-  );
 
+if(!selectedStation) {
 
-  /* Find nearest station */
+document.getElementById(
+"selectedInfo"
+).textContent =
+"⚠️ No station currently has available manpower.";
 
-  const result =
-    findNearestStation(
-      lat,
-      lng
-    );
+return;
 
+}
 
-  selectedStation =
-    result.selected;
 
+/* REMOVE OLD SELECTED MARKER */
 
-  displayStations(
-    selectedStation
-  );
+if(selectedMarker) {
 
+selectedMarker.remove();
 
-  if(!selectedStation){
+}
 
-    document.getElementById(
-      "selectedInfo"
-    ).textContent =
-      "⚠️ No station currently has available manpower.";
 
-    document.getElementById(
-      "responseStatus"
-    ).textContent =
-      "Alert received. All listed stations are currently busy.";
+/* SELECTED STATION MARKER */
 
-    return;
+selectedMarker =
+L.marker([
+selectedStation.lat,
+selectedStation.lng
+])
+.addTo(map)
+.bindPopup(
+"<b>🚓 Selected Police Station</b><br>" +
+selectedStation.name
+);
 
-  }
 
+/* DETERMINE ROUTING */
 
-  /* Highlight selected station */
+const nearestOverall =
+result.ranked[0];
 
-  if(selectedMarker){
 
-    selectedMarker.remove();
+let message;
 
-  }
 
+if(
+nearestOverall.name !==
+selectedStation.name
+) {
 
-  selectedMarker =
-    L.marker([
-      selectedStation.lat,
-      selectedStation.lng
-    ])
-    .addTo(map)
-    .bindPopup(
-      "<b>🚓 Selected Police Station</b><br>" +
-      selectedStation.name
-    );
+message =
 
+"Nearest station " +
+nearestOverall.name +
+" is currently busy. " +
+"The alert has been routed to the next closest available station: " +
+selectedStation.name +
+".";
 
-  /* Show routing information */
+}
 
-  const nearestOverall =
-    result.ranked[0];
+else {
 
+message =
 
-  let routingMessage = "";
+"The nearest available police station is " +
+selectedStation.name +
+".";
 
+}
 
-  if(
-    nearestOverall.name !==
-    selectedStation.name
-  ){
 
-    routingMessage =
-      "Nearest station (" +
-      nearestOverall.name +
-      ") is currently busy. " +
-      "Alert automatically routed to " +
-      selectedStation.name +
-      ".";
+/* SHOW INFORMATION */
 
-  }
+document.getElementById(
+"selectedInfo"
+).innerHTML =
 
-  else{
+"<strong>🚓 Response Station:</strong> " +
+selectedStation.name +
 
-    routingMessage =
-      "Nearest available police station selected: " +
-      selectedStation.name +
-      ".";
+"<br><br>" +
 
-  }
+"<strong>📏 Approximate distance:</strong> " +
+selectedStation.distance.toFixed(2) +
+" km" +
 
+"<br><br>" +
 
-  document.getElementById(
-    "selectedInfo"
-  ).innerHTML =
+message;
 
-    "<strong>🚓 Selected Response Station:</strong> " +
-    selectedStation.name +
 
-    "<br><br>" +
+/* ENABLE RESPONSE BUTTONS */
 
-    "📏 Approximate distance: " +
-    selectedStation.distance.toFixed(2) +
-    " km" +
+document.getElementById(
+"droneButton"
+).disabled = false;
 
-    "<br><br>" +
 
-    routingMessage;
+document.getElementById(
+"manpowerButton"
+).disabled = false;
 
 
-  document.getElementById(
-    "responseStatus"
-  ).textContent =
-    "🚨 SOS received. " +
-    routingMessage;
+/* RESPONSE STATUS */
 
+document.getElementById(
+"responseStatus"
+).innerHTML =
 
-  document.getElementById(
-    "droneButton"
-  ).disabled = false;
+"🚨 <strong>SOS RECEIVED</strong><br><br>" +
 
-
-  document.getElementById(
-    "manpowerButton"
-  ).disabled = false;
+message;
 
 }
 
@@ -1640,30 +933,30 @@ function receiveSOS(data){
    DISPATCH DRONE
    ========================================================= */
 
-function dispatchDrone(){
+function dispatchDrone() {
 
-  if(!selectedStation){
+if(!selectedStation) {
 
-    alert(
-      "No available police station selected."
-    );
+alert(
+"No response station has been selected."
+);
 
-    return;
+return;
 
-  }
+}
 
 
-  document.getElementById(
-    "responseStatus"
-  ).innerHTML =
+document.getElementById(
+"responseStatus"
+).innerHTML =
 
-    "🚁 <strong>DRONE DISPATCHED</strong><br><br>" +
+"🚁 <strong>GUARDIAN DRONE DISPATCHED</strong><br><br>" +
 
-    "The demonstration drone from " +
+"Demonstration drone dispatched from " +
 
-    selectedStation.name +
+selectedStation.name +
 
-    " is being sent toward the victim's location.";
+" toward the victim's location.";
 
 }
 
@@ -1672,154 +965,181 @@ function dispatchDrone(){
    DISPATCH MANPOWER
    ========================================================= */
 
-function dispatchManpower(){
+function dispatchManpower() {
 
-  if(!selectedStation){
+if(!selectedStation) {
 
-    alert(
-      "No available police station selected."
-    );
+alert(
+"No response station has been selected."
+);
 
-    return;
+return;
 
-  }
+}
 
 
-  document.getElementById(
-    "responseStatus"
-  ).innerHTML =
+document.getElementById(
+"responseStatus"
+).innerHTML =
 
-    "👮 <strong>MANPOWER DISPATCHED</strong><br><br>" +
+"👮 <strong>MANPOWER DISPATCHED</strong><br><br>" +
 
-    "Response personnel from " +
+"Response team from " +
 
-    selectedStation.name +
+selectedStation.name +
 
-    " are proceeding toward the victim's location.";
+" is proceeding toward the victim's location.";
 
 }
 
 
 /* =========================================================
-   DEMONSTRATION BUTTON
+   DEMONSTRATION TEST
    ========================================================= */
 
-function demoLocation(){
+function demoLocation() {
 
-  const demoData = {
+const demoData = {
 
-    lat:12.9716,
+lat: 12.9716,
 
-    lng:77.5946,
+lng: 77.5946
 
-    time:
-      new Date().toLocaleString()
-
-  };
+};
 
 
-  receiveSOS(
-    demoData
-  );
+receiveSOS(
+demoData
+);
 
 }
 
 
 /* =========================================================
-   PEERJS CONNECTION
+   CREATE QR CODE
    =========================================================
 
-   IMPORTANT:
-   The victim's index.html must connect to the
-   SAME PeerJS ID:
-
-   bangalore-police-demo
+   The QR contains the victim page URL plus the
+   police PeerJS ID.
 
    ========================================================= */
 
-const POLICE_PEER_ID =
-  "bangalore-police-demo";
+const victimPageURL =
+window.location.origin +
+window.location.pathname.replace(
+"police.html",
+"index.html"
+) +
+"?police=" +
+encodeURIComponent(
+POLICE_PEER_ID
+);
 
+
+new QRCode(
+document.getElementById("qrcode"),
+{
+text: victimPageURL,
+width: 240,
+height: 240
+}
+);
+
+
+/* =========================================================
+   PEERJS POLICE CONNECTION
+   ========================================================= */
 
 const peer =
-  new Peer(
-    POLICE_PEER_ID
-  );
-
-
-peer.on(
-  "open",
-  function(id){
-
-    document.getElementById(
-      "connectionStatus"
-    ).textContent =
-      "🟢 Police response system online";
-
-    console.log(
-      "Police Peer ID:",
-      id
-    );
-
-  }
+new Peer(
+POLICE_PEER_ID
 );
 
 
+/* PEER READY */
+
 peer.on(
-  "connection",
-  function(conn){
+"open",
+function(id) {
 
-    document.getElementById(
-      "connectionStatus"
-    ).textContent =
-      "🟢 Guardian Drone connected";
+document.getElementById(
+"connectionStatus"
+).textContent =
+"🟢 Police dashboard online";
 
-    conn.on(
-      "data",
-      function(data){
+console.log(
+"Police Peer ID:",
+id
+);
 
-        console.log(
-          "Received:",
-          data
-        );
+});
 
 
-        if(
-          data &&
-          data.type === "SOS"
-        ){
+/* VICTIM CONNECTS */
 
-          receiveSOS(
-            data
-          );
+peer.on(
+"connection",
+function(conn) {
 
-        }
+document.getElementById(
+"connectionStatus"
+).textContent =
+"🟢 Victim device connected";
 
-      }
-    );
-
-  }
+console.log(
+"Victim connected:",
+conn.peer
 );
 
 
-peer.on(
-  "error",
-  function(error){
+conn.on(
+"data",
+function(data) {
 
-    console.log(
-      "PeerJS error:",
-      error
-    );
-
-    document.getElementById(
-      "connectionStatus"
-    ).textContent =
-      "⚠️ Connection error";
-
-  }
+console.log(
+"Data received:",
+data
 );
+
+
+if(
+data &&
+data.type === "SOS"
+) {
+
+receiveSOS(
+data
+);
+
+}
+
+});
+
+});
+
+
+/* PEER ERROR */
+
+peer.on(
+"error",
+function(error) {
+
+console.log(
+"PeerJS error:",
+error
+);
+
+document.getElementById(
+"connectionStatus"
+).textContent =
+"⚠️ Connection problem";
+
+});
+
 
 </script>
 
+
 </body>
+
 </html>
