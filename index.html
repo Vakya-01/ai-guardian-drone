@@ -1,548 +1,241 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>AI Guardian Drone - SOS</title>
 
-<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-
 <style>
-
-* {
-  box-sizing: border-box;
+*{
+  box-sizing:border-box;
 }
 
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #eef4fb;
-  color: #17233c;
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f4f7fb;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
 }
 
-.container {
-  width: 95%;
-  max-width: 850px;
-  margin: 25px auto;
-  background: white;
-  padding: 25px;
-  border-radius: 25px;
-  box-shadow: 0 5px 25px rgba(0,0,0,.12);
-  text-align: center;
+.card{
+  width:92%;
+  max-width:430px;
+  background:white;
+  padding:30px;
+  border-radius:25px;
+  text-align:center;
+  box-shadow:0 10px 35px rgba(0,0,0,.12);
 }
 
-h1 {
-  margin-bottom: 5px;
+h1{
+  color:#17233c;
+  margin-bottom:5px;
 }
 
-.subtitle {
-  color: #65738b;
-  font-size: 18px;
+.sub{
+  color:#667085;
+  margin-bottom:30px;
 }
 
-#sos {
-  width: 210px;
-  height: 210px;
-  border-radius: 50%;
-  border: 12px solid #ffd1d1;
-  background: #ed3030;
-  color: white;
-  font-size: 42px;
-  font-weight: bold;
-  cursor: pointer;
-  margin: 25px auto;
-  box-shadow: 0 0 25px rgba(237,48,48,.35);
+#sos{
+  width:220px;
+  height:220px;
+  border-radius:50%;
+  border:none;
+  background:#e53935;
+  color:white;
+  font-size:48px;
+  font-weight:bold;
+  cursor:pointer;
+  box-shadow:0 0 0 15px #ffd8d8;
 }
 
-#sos:disabled {
-  background: #888;
+#sos:active{
+  transform:scale(.96);
 }
 
-.status {
-  padding: 15px;
-  border-radius: 15px;
-  background: #e8f7eb;
-  color: #176b2c;
-  font-weight: bold;
-  margin: 15px 0;
+#status{
+  margin-top:30px;
+  padding:18px;
+  border-radius:15px;
+  background:#fff3f3;
+  color:#b42318;
+  font-size:17px;
 }
 
-.card {
-  background: #f2f8f2;
-  border: 1px solid #b9dfc0;
-  border-radius: 18px;
-  padding: 20px;
-  margin-top: 20px;
-  text-align: left;
+.location{
+  margin-top:20px;
+  padding:18px;
+  background:#eef9f0;
+  border:1px solid #b8dfc0;
+  border-radius:15px;
+  display:none;
 }
 
-.map {
-  display: block;
-  width: 100%;
-  padding: 14px;
-  border: 0;
-  border-radius: 10px;
-  background: #1976d2;
-  color: white;
-  font-size: 17px;
-  margin-top: 15px;
+.location b{
+  color:#18733b;
 }
 
-.qrbox {
-  margin-top: 30px;
-  padding: 20px;
-  border-radius: 18px;
-  background: #f7f7f7;
-  text-align: center;
+.mapbutton{
+  display:inline-block;
+  margin-top:15px;
+  padding:12px 18px;
+  background:#1976d2;
+  color:white;
+  text-decoration:none;
+  border-radius:10px;
 }
-
-#qrcode {
-  display: flex;
-  justify-content: center;
-  margin-top: 15px;
-}
-
-.note {
-  color: #777;
-  font-size: 13px;
-  margin-top: 20px;
-}
-
 </style>
-
 </head>
 
 <body>
 
-<div class="container">
+<div class="card">
 
 <h1>AI Guardian Drone</h1>
 
-<div class="subtitle">
+<div class="sub">
 Women's Safety & Emergency Response
 </div>
 
-<button id="sos">
-SOS
-</button>
+<button id="sos">SOS</button>
 
-<div id="status" class="status">
-Waiting for emergency alert...
+<div id="status">
+Press SOS in an emergency
 </div>
 
-<div class="card">
+<div class="location" id="locationBox">
 
-<h2>📍 Victim's Location</h2>
+<b>Victim's Location</b>
 
 <p>
-<b>Latitude:</b>
-<span id="latitude">Getting location...</span>
+Latitude:
+<span id="lat">--</span>
 </p>
 
 <p>
-<b>Longitude:</b>
-<span id="longitude">Getting location...</span>
+Longitude:
+<span id="lng">--</span>
 </p>
 
-<p>
-<b>Nearest Police Station:</b>
-<span id="station">Calculating...</span>
-</p>
-
-<button
-class="map"
-id="mapButton"
-style="display:none;">
-
-View Location on Bengaluru Map
-
-</button>
+<a id="mapLink"
+class="mapbutton"
+target="_blank">
+View Location on Map
+</a>
 
 </div>
 
-<div class="qrbox">
-
-<h2>📱 Emergency QR Code</h2>
-
-<p>
-Scan this QR code to open the AI Guardian Drone SOS system.
-</p>
-
-<div id="qrcode"></div>
-
 </div>
-
-<div class="note">
-School demonstration only — does not contact real emergency services.
-</div>
-
-</div>
-
 
 <script>
 
-/* -----------------------------------
-   BENGALURU POLICE STATIONS
------------------------------------ */
+const sos = document.getElementById("sos");
+const statusBox = document.getElementById("status");
+const locationBox = document.getElementById("locationBox");
+const latBox = document.getElementById("lat");
+const lngBox = document.getElementById("lng");
+const mapLink = document.getElementById("mapLink");
 
-const policeStations = [
+sos.onclick = function(){
 
-{
-name: "Yelahanka Police Station",
-lat: 13.1007,
-lng: 77.5963,
-available: true
-},
+  statusBox.innerHTML =
+    "📍 Getting your location...";
 
-{
-name: "Hebbal Police Station",
-lat: 13.0358,
-lng: 77.5970,
-available: false
-},
+  if(!navigator.geolocation){
 
-{
-name: "Indiranagar Police Station",
-lat: 12.9784,
-lng: 77.6408,
-available: true
-},
+    statusBox.innerHTML =
+      "Location services are not supported on this device.";
 
-{
-name: "Ulsoor Police Station",
-lat: 12.9817,
-lng: 77.6192,
-available: true
-},
+    return;
+  }
 
-{
-name: "Electronic City Police Station",
-lat: 12.8452,
-lng: 77.6602,
-available: true
-},
+  navigator.geolocation.getCurrentPosition(
 
-{
-name: "Whitefield Police Station",
-lat: 12.9698,
-lng: 77.7499,
-available: true
-}
+    function(position){
 
-];
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
 
+      latBox.textContent = lat.toFixed(6);
+      lngBox.textContent = lng.toFixed(6);
 
-/* -----------------------------------
-   CALCULATE DISTANCE
------------------------------------ */
+      locationBox.style.display = "block";
 
-function distance(lat1,lon1,lat2,lon2) {
+      mapLink.href =
+        "https://www.openstreetmap.org/?mlat="
+        + lat
+        + "&mlon="
+        + lng
+        + "#map=17/"
+        + lat
+        + "/"
+        + lng;
 
-const R = 6371;
+      statusBox.innerHTML =
+        "✓ SOS sent with victim's location.";
 
-const dLat =
-(lat2-lat1)*Math.PI/180;
+      sos.disabled = true;
+      sos.textContent = "SENT";
 
-const dLon =
-(lon2-lon1)*Math.PI/180;
+      /*
+       * Send the emergency information to the
+       * police dashboard using the URL.
+       */
 
-const a =
-Math.sin(dLat/2) *
-Math.sin(dLat/2) +
+      const policeURL =
+        "police.html?lat="
+        + encodeURIComponent(lat)
+        + "&lng="
+        + encodeURIComponent(lng)
+        + "&time="
+        + encodeURIComponent(new Date().toLocaleString());
 
-Math.cos(lat1*Math.PI/180) *
-Math.cos(lat2*Math.PI/180) *
-Math.sin(dLon/2) *
-Math.sin(dLon/2);
+      /*
+       * For the exhibition:
+       * save the latest emergency locally.
+       */
+      localStorage.setItem(
+        "guardianEmergency",
+        JSON.stringify({
+          latitude:lat,
+          longitude:lng,
+          time:new Date().toLocaleString()
+        })
+      );
 
-return R *
-2 *
-Math.atan2(
-Math.sqrt(a),
-Math.sqrt(1-a)
-);
+      console.log("Emergency location:", lat, lng);
 
-}
+      /*
+       * IMPORTANT:
+       * Do not automatically redirect the victim.
+       * The police dashboard should be opened separately.
+       */
 
+    },
 
-/* -----------------------------------
-   FIND NEAREST AVAILABLE STATION
------------------------------------ */
+    function(error){
 
-function findNearestStation(lat,lng) {
+      statusBox.innerHTML =
+        "Unable to get location. Please allow location permission and try again.";
 
-const sorted =
-policeStations
-.map(function(station) {
+      console.log(error);
 
-return {
+    },
 
-name: station.name,
+    {
+      enableHighAccuracy:true,
+      timeout:10000,
+      maximumAge:0
+    }
 
-lat: station.lat,
-
-lng: station.lng,
-
-available: station.available,
-
-distance:
-distance(
-lat,
-lng,
-station.lat,
-station.lng
-)
+  );
 
 };
-
-})
-.sort(function(a,b) {
-
-return a.distance-b.distance;
-
-});
-
-return sorted.find(function(station) {
-
-return station.available === true;
-
-}) || sorted[0];
-
-}
-
-
-/* -----------------------------------
-   GET VICTIM LOCATION
------------------------------------ */
-
-function getLocation() {
-
-if(!navigator.geolocation) {
-
-document.getElementById("status").textContent =
-"Location services are not supported.";
-
-return;
-
-}
-
-navigator.geolocation.getCurrentPosition(
-
-function(position) {
-
-const lat =
-position.coords.latitude;
-
-const lng =
-position.coords.longitude;
-
-
-document.getElementById("latitude")
-.textContent =
-lat.toFixed(6);
-
-document.getElementById("longitude")
-.textContent =
-lng.toFixed(6);
-
-
-const station =
-findNearestStation(lat,lng);
-
-
-document.getElementById("station")
-.textContent =
-station.name;
-
-
-document.getElementById("mapButton")
-.style.display =
-"block";
-
-
-document.getElementById("mapButton")
-.onclick = function() {
-
-window.open(
-
-"https://www.google.com/maps?q="
-+
-lat
-+
-","
-+
-lng,
-
-"_blank"
-
-);
-
-};
-
-},
-
-function() {
-
-document.getElementById("status")
-.textContent =
-"Please allow location permission.";
-
-},
-
-{
-enableHighAccuracy:true,
-timeout:10000
-}
-
-);
-
-}
-
-
-/* -----------------------------------
-   SOS BUTTON
------------------------------------ */
-
-document.getElementById("sos")
-.onclick = function() {
-
-const button = this;
-
-button.disabled = true;
-
-document.getElementById("status")
-.textContent =
-"🚨 SOS activated. Getting your location...";
-
-
-if(!navigator.geolocation) {
-
-document.getElementById("status")
-.textContent =
-"Location is not supported.";
-
-button.disabled = false;
-
-return;
-
-}
-
-
-navigator.geolocation.getCurrentPosition(
-
-function(position) {
-
-const lat =
-position.coords.latitude;
-
-const lng =
-position.coords.longitude;
-
-
-document.getElementById("latitude")
-.textContent =
-lat.toFixed(6);
-
-document.getElementById("longitude")
-.textContent =
-lng.toFixed(6);
-
-
-const station =
-findNearestStation(lat,lng);
-
-
-document.getElementById("station")
-.textContent =
-station.name;
-
-
-document.getElementById("status")
-.textContent =
-
-"✓ SOS sent with victim's location to "
-+
-station.name
-+
-". Response team and Guardian Drone alerted.";
-
-
-document.getElementById("mapButton")
-.style.display =
-"block";
-
-
-document.getElementById("mapButton")
-.onclick = function() {
-
-window.open(
-
-"https://www.google.com/maps?q="
-+
-lat
-+
-","
-+
-lng,
-
-"_blank"
-
-);
-
-};
-
-},
-
-function() {
-
-document.getElementById("status")
-.textContent =
-"Unable to get your location. Please allow location access.";
-
-button.disabled = false;
-
-},
-
-{
-enableHighAccuracy:true,
-timeout:10000
-}
-
-);
-
-};
-
-
-/* -----------------------------------
-   CREATE QR CODE
------------------------------------ */
-
-const emergencyURL =
-window.location.href.split("?")[0];
-
-
-new QRCode(
-
-document.getElementById("qrcode"),
-
-{
-text: emergencyURL,
-width: 220,
-height: 220
-}
-
-);
-
-
-/* -----------------------------------
-   START LOCATION
------------------------------------ */
-
-getLocation();
 
 </script>
 
