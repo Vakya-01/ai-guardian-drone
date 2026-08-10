@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
 <title>AI Guardian Drone - SOS</title>
 
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 
 <style>
+
 * {
   box-sizing: border-box;
 }
@@ -20,7 +25,8 @@ body {
 }
 
 .container {
-  width: min(95%, 850px);
+  width: 95%;
+  max-width: 850px;
   margin: 25px auto;
   background: white;
   padding: 25px;
@@ -54,7 +60,6 @@ h1 {
 
 #sos:disabled {
   background: #888;
-  cursor: not-allowed;
 }
 
 .status {
@@ -75,7 +80,7 @@ h1 {
   text-align: left;
 }
 
-button.map {
+.map {
   display: block;
   width: 100%;
   padding: 14px;
@@ -85,7 +90,6 @@ button.map {
   color: white;
   font-size: 17px;
   margin-top: 15px;
-  cursor: pointer;
 }
 
 .qrbox {
@@ -93,6 +97,7 @@ button.map {
   padding: 20px;
   border-radius: 18px;
   background: #f7f7f7;
+  text-align: center;
 }
 
 #qrcode {
@@ -106,7 +111,9 @@ button.map {
   font-size: 13px;
   margin-top: 20px;
 }
+
 </style>
+
 </head>
 
 <body>
@@ -119,23 +126,26 @@ button.map {
 Women's Safety & Emergency Response
 </div>
 
-<button id="sos">SOS</button>
+<button id="sos">
+SOS
+</button>
 
 <div id="status" class="status">
 Waiting for emergency alert...
 </div>
 
 <div class="card">
+
 <h2>📍 Victim's Location</h2>
 
 <p>
 <b>Latitude:</b>
-<span id="latitude">Waiting...</span>
+<span id="latitude">Getting location...</span>
 </p>
 
 <p>
 <b>Longitude:</b>
-<span id="longitude">Waiting...</span>
+<span id="longitude">Getting location...</span>
 </p>
 
 <p>
@@ -143,9 +153,15 @@ Waiting for emergency alert...
 <span id="station">Calculating...</span>
 </p>
 
-<button class="map" id="mapButton" style="display:none;">
-View Location on Map
+<button
+class="map"
+id="mapButton"
+style="display:none;">
+
+View Location on Bengaluru Map
+
 </button>
+
 </div>
 
 <div class="qrbox">
@@ -153,7 +169,7 @@ View Location on Map
 <h2>📱 Emergency QR Code</h2>
 
 <p>
-Scan this QR code to open the AI Guardian Drone emergency system.
+Scan this QR code to open the AI Guardian Drone SOS system.
 </p>
 
 <div id="qrcode"></div>
@@ -166,16 +182,12 @@ School demonstration only — does not contact real emergency services.
 
 </div>
 
+
 <script>
 
-let victimLatitude = null;
-let victimLongitude = null;
-
-/*
-Bangalore demonstration police stations.
-The coordinates are used to demonstrate
-nearest-station selection.
-*/
+/* -----------------------------------
+   BENGALURU POLICE STATIONS
+----------------------------------- */
 
 const policeStations = [
 
@@ -224,52 +236,88 @@ available: true
 ];
 
 
-/* Distance calculation */
+/* -----------------------------------
+   CALCULATE DISTANCE
+----------------------------------- */
 
-function distance(lat1, lon1, lat2, lon2) {
+function distance(lat1,lon1,lat2,lon2) {
 
 const R = 6371;
 
-const dLat = (lat2-lat1) * Math.PI/180;
-const dLon = (lon2-lon1) * Math.PI/180;
+const dLat =
+(lat2-lat1)*Math.PI/180;
+
+const dLon =
+(lon2-lon1)*Math.PI/180;
 
 const a =
-Math.sin(dLat/2) * Math.sin(dLat/2) +
+Math.sin(dLat/2) *
+Math.sin(dLat/2) +
+
 Math.cos(lat1*Math.PI/180) *
 Math.cos(lat2*Math.PI/180) *
 Math.sin(dLon/2) *
 Math.sin(dLon/2);
 
-return R * 2 * Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+return R *
+2 *
+Math.atan2(
+Math.sqrt(a),
+Math.sqrt(1-a)
+);
+
 }
 
 
-/* Find nearest available police station */
+/* -----------------------------------
+   FIND NEAREST AVAILABLE STATION
+----------------------------------- */
 
 function findNearestStation(lat,lng) {
 
-let sorted = policeStations
-.map(station => {
+const sorted =
+policeStations
+.map(function(station) {
 
 return {
-...station,
-distance: distance(
+
+name: station.name,
+
+lat: station.lat,
+
+lng: station.lng,
+
+available: station.available,
+
+distance:
+distance(
 lat,
 lng,
 station.lat,
 station.lng
 )
+
 };
 
 })
-.sort((a,b)=>a.distance-b.distance);
+.sort(function(a,b) {
 
-return sorted.find(station=>station.available) || sorted[0];
+return a.distance-b.distance;
+
+});
+
+return sorted.find(function(station) {
+
+return station.available === true;
+
+}) || sorted[0];
 
 }
 
 
-/* Get victim location */
+/* -----------------------------------
+   GET VICTIM LOCATION
+----------------------------------- */
 
 function getLocation() {
 
@@ -279,45 +327,58 @@ document.getElementById("status").textContent =
 "Location services are not supported.";
 
 return;
+
 }
 
 navigator.geolocation.getCurrentPosition(
 
 function(position) {
 
-victimLatitude =
+const lat =
 position.coords.latitude;
 
-victimLongitude =
+const lng =
 position.coords.longitude;
 
-document.getElementById("latitude").textContent =
-victimLatitude.toFixed(6);
 
-document.getElementById("longitude").textContent =
-victimLongitude.toFixed(6);
+document.getElementById("latitude")
+.textContent =
+lat.toFixed(6);
+
+document.getElementById("longitude")
+.textContent =
+lng.toFixed(6);
+
 
 const station =
-findNearestStation(
-victimLatitude,
-victimLongitude
-);
+findNearestStation(lat,lng);
 
-document.getElementById("station").textContent =
+
+document.getElementById("station")
+.textContent =
 station.name;
 
-document.getElementById("mapButton").style.display =
+
+document.getElementById("mapButton")
+.style.display =
 "block";
 
-document.getElementById("mapButton").onclick =
-function() {
+
+document.getElementById("mapButton")
+.onclick = function() {
 
 window.open(
-"https://www.google.com/maps?q=" +
-victimLatitude +
-"," +
-victimLongitude,
+
+"https://www.google.com/maps?q="
++
+lat
++
+","
++
+lng,
+
 "_blank"
+
 );
 
 };
@@ -326,8 +387,9 @@ victimLongitude,
 
 function() {
 
-document.getElementById("status").textContent =
-"Location permission was not granted.";
+document.getElementById("status")
+.textContent =
+"Please allow location permission.";
 
 },
 
@@ -341,269 +403,146 @@ timeout:10000
 }
 
 
-/* SOS */
+/* -----------------------------------
+   SOS BUTTON
+----------------------------------- */
 
-document.getElementById("sos").onclick =
-function() {
+document.getElementById("sos")
+.onclick = function() {
 
-getLocation();
+const button = this;
 
-document.getElementById("status").textContent =
-"🚨 SOS activated. Finding nearest available police station...";
+button.disabled = true;
 
-this.disabled = true;
+document.getElementById("status")
+.textContent =
+"🚨 SOS activated. Getting your location...";
 
-setTimeout(function(){
 
-if(victimLatitude && victimLongitude) {
+if(!navigator.geolocation) {
 
-const station =
-findNearestStation(
-victimLatitude,
-victimLongitude
-);
+document.getElementById("status")
+.textContent =
+"Location is not supported.";
 
-document.getElementById("status").textContent =
-"✓ SOS sent with victim's location to " +
-station.name +
-". Drone and response team alerted.";
+button.disabled = false;
+
+return;
 
 }
 
-},1500);
+
+navigator.geolocation.getCurrentPosition(
+
+function(position) {
+
+const lat =
+position.coords.latitude;
+
+const lng =
+position.coords.longitude;
+
+
+document.getElementById("latitude")
+.textContent =
+lat.toFixed(6);
+
+document.getElementById("longitude")
+.textContent =
+lng.toFixed(6);
+
+
+const station =
+findNearestStation(lat,lng);
+
+
+document.getElementById("station")
+.textContent =
+station.name;
+
+
+document.getElementById("status")
+.textContent =
+
+"✓ SOS sent with victim's location to "
++
+station.name
++
+". Response team and Guardian Drone alerted.";
+
+
+document.getElementById("mapButton")
+.style.display =
+"block";
+
+
+document.getElementById("mapButton")
+.onclick = function() {
+
+window.open(
+
+"https://www.google.com/maps?q="
++
+lat
++
+","
++
+lng,
+
+"_blank"
+
+);
+
+};
+
+},
+
+function() {
+
+document.getElementById("status")
+.textContent =
+"Unable to get your location. Please allow location access.";
+
+button.disabled = false;
+
+},
+
+{
+enableHighAccuracy:true,
+timeout:10000
+}
+
+);
 
 };
 
 
-/*
-QR CODE
-
-The QR opens this same website.
-*/
+/* -----------------------------------
+   CREATE QR CODE
+----------------------------------- */
 
 const emergencyURL =
-window.location.origin +
-window.location.pathname;
+window.location.href.split("?")[0];
+
 
 new QRCode(
+
 document.getElementById("qrcode"),
+
 {
 text: emergencyURL,
 width: 220,
 height: 220
 }
+
 );
 
 
-/* Automatically request location */
+/* -----------------------------------
+   START LOCATION
+----------------------------------- */
 
 getLocation();
-
-</script>
-
-</body>
-</html>}
-
-.sub{
-  color:#667085;
-  margin-bottom:30px;
-}
-
-#sos{
-  width:220px;
-  height:220px;
-  border-radius:50%;
-  border:none;
-  background:#e53935;
-  color:white;
-  font-size:48px;
-  font-weight:bold;
-  cursor:pointer;
-  box-shadow:0 0 0 15px #ffd8d8;
-}
-
-#sos:active{
-  transform:scale(.96);
-}
-
-#status{
-  margin-top:30px;
-  padding:18px;
-  border-radius:15px;
-  background:#fff3f3;
-  color:#b42318;
-  font-size:17px;
-}
-
-.location{
-  margin-top:20px;
-  padding:18px;
-  background:#eef9f0;
-  border:1px solid #b8dfc0;
-  border-radius:15px;
-  display:none;
-}
-
-.location b{
-  color:#18733b;
-}
-
-.mapbutton{
-  display:inline-block;
-  margin-top:15px;
-  padding:12px 18px;
-  background:#1976d2;
-  color:white;
-  text-decoration:none;
-  border-radius:10px;
-}
-</style>
-</head>
-
-<body>
-
-<div class="card">
-
-<h1>AI Guardian Drone</h1>
-
-<div class="sub">
-Women's Safety & Emergency Response
-</div>
-
-<button id="sos">SOS</button>
-
-<div id="status">
-Press SOS in an emergency
-</div>
-
-<div class="location" id="locationBox">
-
-<b>Victim's Location</b>
-
-<p>
-Latitude:
-<span id="lat">--</span>
-</p>
-
-<p>
-Longitude:
-<span id="lng">--</span>
-</p>
-
-<a id="mapLink"
-class="mapbutton"
-target="_blank">
-View Location on Map
-</a>
-
-</div>
-
-</div>
-
-<script>
-
-const sos = document.getElementById("sos");
-const statusBox = document.getElementById("status");
-const locationBox = document.getElementById("locationBox");
-const latBox = document.getElementById("lat");
-const lngBox = document.getElementById("lng");
-const mapLink = document.getElementById("mapLink");
-
-sos.onclick = function(){
-
-  statusBox.innerHTML =
-    "📍 Getting your location...";
-
-  if(!navigator.geolocation){
-
-    statusBox.innerHTML =
-      "Location services are not supported on this device.";
-
-    return;
-  }
-
-  navigator.geolocation.getCurrentPosition(
-
-    function(position){
-
-      const lat = position.coords.latitude;
-      const lng = position.coords.longitude;
-
-      latBox.textContent = lat.toFixed(6);
-      lngBox.textContent = lng.toFixed(6);
-
-      locationBox.style.display = "block";
-
-      mapLink.href =
-        "https://www.openstreetmap.org/?mlat="
-        + lat
-        + "&mlon="
-        + lng
-        + "#map=17/"
-        + lat
-        + "/"
-        + lng;
-
-      statusBox.innerHTML =
-        "✓ SOS sent with victim's location.";
-
-      sos.disabled = true;
-      sos.textContent = "SENT";
-
-      /*
-       * Send the emergency information to the
-       * police dashboard using the URL.
-       */
-
-      const policeURL =
-        "police.html?lat="
-        + encodeURIComponent(lat)
-        + "&lng="
-        + encodeURIComponent(lng)
-        + "&time="
-        + encodeURIComponent(new Date().toLocaleString());
-
-      /*
-       * For the exhibition:
-       * save the latest emergency locally.
-       */
-      localStorage.setItem(
-        "guardianEmergency",
-        JSON.stringify({
-          latitude:lat,
-          longitude:lng,
-          time:new Date().toLocaleString()
-        })
-      );
-
-      console.log("Emergency location:", lat, lng);
-
-      /*
-       * IMPORTANT:
-       * Do not automatically redirect the victim.
-       * The police dashboard should be opened separately.
-       */
-
-    },
-
-    function(error){
-
-      statusBox.innerHTML =
-        "Unable to get location. Please allow location permission and try again.";
-
-      console.log(error);
-
-    },
-
-    {
-      enableHighAccuracy:true,
-      timeout:10000,
-      maximumAge:0
-    }
-
-  );
-
-};
 
 </script>
 
