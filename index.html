@@ -1,322 +1,243 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>AI Guardian Drone - SOS</title>
+<title>AI Guardian Drone - SOS</title>
 
-  <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<style>
+*{
+  box-sizing:border-box;
+}
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f4f7fb;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
 
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4f7fb;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+.card{
+  width:92%;
+  max-width:430px;
+  background:white;
+  padding:30px;
+  border-radius:25px;
+  text-align:center;
+  box-shadow:0 10px 35px rgba(0,0,0,.12);
+}
 
-    .card {
-      background: white;
-      width: 92%;
-      max-width: 430px;
-      padding: 30px;
-      border-radius: 25px;
-      text-align: center;
-      box-shadow: 0 10px 35px rgba(0,0,0,0.12);
-    }
+h1{
+  color:#17233c;
+  margin-bottom:5px;
+}
 
-    h1 {
-      color: #17233c;
-      margin: 0 0 8px;
-      font-size: 30px;
-    }
+.sub{
+  color:#667085;
+  margin-bottom:30px;
+}
 
-    .sub {
-      color: #667085;
-      font-size: 17px;
-      margin-bottom: 25px;
-    }
+#sos{
+  width:220px;
+  height:220px;
+  border-radius:50%;
+  border:none;
+  background:#e53935;
+  color:white;
+  font-size:48px;
+  font-weight:bold;
+  cursor:pointer;
+  box-shadow:0 0 0 15px #ffd8d8;
+}
 
-    #sos {
-      width: 215px;
-      height: 215px;
-      border-radius: 50%;
-      border: 12px solid #ffd5d5;
-      background: #e53935;
-      color: white;
-      font-size: 40px;
-      font-weight: bold;
-      cursor: pointer;
-      box-shadow: 0 0 30px rgba(229,57,53,0.35);
-    }
+#sos:active{
+  transform:scale(.96);
+}
 
-    #sos:active {
-      transform: scale(0.96);
-    }
+#status{
+  margin-top:30px;
+  padding:18px;
+  border-radius:15px;
+  background:#fff3f3;
+  color:#b42318;
+  font-size:17px;
+}
 
-    #sos:disabled {
-      background: #888;
-      cursor: not-allowed;
-    }
+.location{
+  margin-top:20px;
+  padding:18px;
+  background:#eef9f0;
+  border:1px solid #b8dfc0;
+  border-radius:15px;
+  display:none;
+}
 
-    #status {
-      margin-top: 25px;
-      padding: 15px;
-      border-radius: 15px;
-      background: #fff4f4;
-      color: #a00000;
-      font-size: 16px;
-    }
+.location b{
+  color:#18733b;
+}
 
-    .location {
-      display: none;
-      margin-top: 18px;
-      padding: 18px;
-      border-radius: 15px;
-      background: #eef9ee;
-      border: 1px solid #b8dfb8;
-      color: #176b2c;
-      text-align: left;
-    }
-
-    .location h3 {
-      margin-top: 0;
-      text-align: center;
-    }
-
-    .map-button {
-      display: block;
-      margin-top: 15px;
-      padding: 13px;
-      background: #1976d2;
-      color: white;
-      text-decoration: none;
-      border-radius: 10px;
-      text-align: center;
-    }
-
-    .note {
-      margin-top: 20px;
-      font-size: 12px;
-      color: #667085;
-    }
-  </style>
+.mapbutton{
+  display:inline-block;
+  margin-top:15px;
+  padding:12px 18px;
+  background:#1976d2;
+  color:white;
+  text-decoration:none;
+  border-radius:10px;
+}
+</style>
 </head>
 
 <body>
 
-  <div class="card">
+<div class="card">
 
-    <h1>AI Guardian Drone</h1>
+<h1>AI Guardian Drone</h1>
 
-    <div class="sub">
-      Women's Safety & Emergency Response
-    </div>
+<div class="sub">
+Women's Safety & Emergency Response
+</div>
 
-    <button id="sos">SOS</button>
+<button id="sos">SOS</button>
 
-    <div id="status">
-      Ready. Press SOS in an emergency.
-    </div>
+<div id="status">
+Press SOS in an emergency
+</div>
 
-    <div id="locationBox" class="location">
-      <h3>📍 Victim's Location</h3>
+<div class="location" id="locationBox">
 
-      <div>
-        <b>Latitude:</b>
-        <span id="latitude">-</span>
-      </div>
+<b>Victim's Location</b>
 
-      <div>
-        <b>Longitude:</b>
-        <span id="longitude">-</span>
-      </div>
+<p>
+Latitude:
+<span id="lat">--</span>
+</p>
 
-      <a id="mapLink"
-         class="map-button"
-         target="_blank">
-        View Location on Map
-      </a>
-    </div>
+<p>
+Longitude:
+<span id="lng">--</span>
+</p>
 
-    <div class="note">
-      School demonstration only — does not contact real emergency services.
-    </div>
+<a id="mapLink"
+class="mapbutton"
+target="_blank">
+View Location on Map
+</a>
 
-  </div>
+</div>
+
+</div>
 
 <script>
 
-const params = new URLSearchParams(window.location.search);
-
-const policeId = params.get("police");
-
 const sos = document.getElementById("sos");
 const statusBox = document.getElementById("status");
-
 const locationBox = document.getElementById("locationBox");
-const latitudeText = document.getElementById("latitude");
-const longitudeText = document.getElementById("longitude");
+const latBox = document.getElementById("lat");
+const lngBox = document.getElementById("lng");
 const mapLink = document.getElementById("mapLink");
 
-let peer = null;
-let connection = null;
+sos.onclick = function(){
 
+  statusBox.innerHTML =
+    "📍 Getting your location...";
 
-/* --------------------------------
-   CONNECT TO POLICE STATION
--------------------------------- */
+  if(!navigator.geolocation){
 
-if (!policeId) {
-
-  statusBox.textContent =
-    "⚠️ Police station connection is missing. Please open the SOS page using the QR code.";
-
-} else {
-
-  statusBox.textContent =
-    "Connecting to demonstration police station...";
-
-  peer = new Peer();
-
-  peer.on("open", function() {
-
-    connection = peer.connect(policeId, {
-      reliable: true
-    });
-
-    connection.on("open", function() {
-
-      statusBox.textContent =
-        "✓ Connected to demonstration police station.";
-
-    });
-
-    connection.on("error", function() {
-
-      statusBox.textContent =
-        "⚠️ Could not connect to the police station.";
-
-    });
-
-  });
-
-  peer.on("error", function() {
-
-    statusBox.textContent =
-      "⚠️ Internet connection unavailable. Please try again.";
-
-  });
-
-}
-
-
-/* --------------------------------
-   GET LOCATION
--------------------------------- */
-
-function getLocation() {
-
-  if (!navigator.geolocation) {
-
-    statusBox.textContent =
+    statusBox.innerHTML =
       "Location services are not supported on this device.";
 
     return;
-
   }
-
-  statusBox.textContent =
-    "📍 Getting your current location...";
 
   navigator.geolocation.getCurrentPosition(
 
-    function(position) {
+    function(position){
 
-      const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
 
-      latitudeText.textContent =
-        latitude.toFixed(6);
-
-      longitudeText.textContent =
-        longitude.toFixed(6);
+      latBox.textContent = lat.toFixed(6);
+      lngBox.textContent = lng.toFixed(6);
 
       locationBox.style.display = "block";
 
       mapLink.href =
-        "https://www.google.com/maps?q=" +
-        latitude + "," + longitude;
+        "https://www.openstreetmap.org/?mlat="
+        + lat
+        + "&mlon="
+        + lng
+        + "#map=17/"
+        + lat
+        + "/"
+        + lng;
 
-
-      /* Send location to police station */
-
-      if (connection && connection.open) {
-
-        connection.send({
-
-          type: "SOS",
-
-          latitude: latitude,
-
-          longitude: longitude,
-
-          time: new Date().toLocaleString()
-
-        });
-
-        statusBox.textContent =
-          "✓ SOS sent with victim's location.";
-
-      } else {
-
-        statusBox.textContent =
-          "📍 Location found, but police station is not connected.";
-
-      }
+      statusBox.innerHTML =
+        "✓ SOS sent with victim's location.";
 
       sos.disabled = true;
       sos.textContent = "SENT";
 
+      /*
+       * Send the emergency information to the
+       * police dashboard using the URL.
+       */
+
+      const policeURL =
+        "police.html?lat="
+        + encodeURIComponent(lat)
+        + "&lng="
+        + encodeURIComponent(lng)
+        + "&time="
+        + encodeURIComponent(new Date().toLocaleString());
+
+      /*
+       * For the exhibition:
+       * save the latest emergency locally.
+       */
+      localStorage.setItem(
+        "guardianEmergency",
+        JSON.stringify({
+          latitude:lat,
+          longitude:lng,
+          time:new Date().toLocaleString()
+        })
+      );
+
+      console.log("Emergency location:", lat, lng);
+
+      /*
+       * IMPORTANT:
+       * Do not automatically redirect the victim.
+       * The police dashboard should be opened separately.
+       */
+
     },
 
-    function(error) {
+    function(error){
 
-      statusBox.textContent =
-        "⚠️ Unable to get location. Please allow location permission.";
+      statusBox.innerHTML =
+        "Unable to get location. Please allow location permission and try again.";
+
+      console.log(error);
 
     },
 
     {
-      enableHighAccuracy: true,
-      timeout: 15000,
-      maximumAge: 0
+      enableHighAccuracy:true,
+      timeout:10000,
+      maximumAge:0
     }
 
   );
-
-}
-
-
-/* --------------------------------
-   SOS BUTTON
--------------------------------- */
-
-sos.onclick = function() {
-
-  getLocation();
 
 };
 
 </script>
 
 </body>
-  </html>
+</html>
