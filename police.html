@@ -10,14 +10,31 @@
     content="width=device-width, initial-scale=1.0"
 >
 
-<title>AI Guardian Drone — Police Dashboard</title>
+<title>
+    AI Guardian Drone — Police Dashboard
+</title>
+
+
+<!-- =====================================================
+     LEAFLET MAP
+     ===================================================== -->
 
 <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
 />
 
+
+<!-- =====================================================
+     QR CODE
+     ===================================================== -->
+
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+
+
+<!-- =====================================================
+     PEERJS
+     ===================================================== -->
 
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 
@@ -26,13 +43,14 @@
 
 /* =====================================================
    GENERAL
-===================================================== */
+   ===================================================== */
 
 * {
     box-sizing: border-box;
 }
 
 body {
+
     margin: 0;
 
     font-family:
@@ -40,13 +58,17 @@ body {
         Helvetica,
         sans-serif;
 
-    background: #071521;
+    background:
+        #071521;
 
-    color: #eef7ff;
+    color:
+        #eef7ff;
 }
 
 .container {
+
     width: 94%;
+
     max-width: 1250px;
 
     margin:
@@ -54,52 +76,71 @@ body {
 }
 
 section {
-    background: #102a3d;
+
+    background:
+        #102a3d;
 
     border:
         1px solid #244961;
 
-    border-radius: 16px;
+    border-radius:
+        16px;
 
-    padding: 24px;
+    padding:
+        24px;
 
-    margin-bottom: 22px;
+    margin-bottom:
+        22px;
 
     box-shadow:
         0 8px 25px
-        rgba(0,0,0,.22);
+        rgba(0,0,0,0.22);
 }
 
 h1 {
-    margin-bottom: 5px;
 
-    color: #5ee7ff;
+    margin-bottom:
+        5px;
 
-    font-size: 34px;
+    color:
+        #5ee7ff;
+
+    font-size:
+        34px;
 }
 
 h2 {
+
     margin-top: 0;
 
-    color: #68e8a2;
+    color:
+        #68e8a2;
 }
 
 h3 {
-    color: #80dfff;
+
+    color:
+        #80dfff;
 }
 
 p {
-    color: #d0dce5;
-    line-height: 1.55;
+
+    color:
+        #d0dce5;
+
+    line-height:
+        1.55;
 }
 
 
 /* =====================================================
    HEADER
-===================================================== */
+   ===================================================== */
 
 .header {
-    text-align: center;
+
+    text-align:
+        center;
 
     background:
         linear-gradient(
@@ -110,139 +151,195 @@ p {
 }
 
 .header p {
-    font-size: 17px;
+
+    font-size:
+        17px;
 }
 
 
 /* =====================================================
    CONNECTION
-===================================================== */
+   ===================================================== */
 
 #connectionStatus {
-    padding: 12px;
 
-    border-radius: 10px;
+    padding:
+        12px;
 
-    background: #0b1d2a;
+    border-radius:
+        10px;
 
-    color: #7ee8a9;
+    background:
+        #0b1d2a;
 
-    margin-bottom: 20px;
+    color:
+        #7ee8a9;
+
+    margin-bottom:
+        20px;
 }
 
 .qr-area {
-    display: grid;
+
+    display:
+        grid;
 
     grid-template-columns:
         260px 1fr;
 
-    gap: 35px;
+    gap:
+        35px;
 
-    align-items: center;
+    align-items:
+        center;
 }
 
 .qr-card {
-    background: white;
 
-    padding: 18px;
+    background:
+        white;
 
-    border-radius: 15px;
+    padding:
+        18px;
 
-    text-align: center;
+    border-radius:
+        15px;
 
-    color: #111;
+    text-align:
+        center;
+
+    color:
+        #111;
 }
 
 #qrcode {
-    display: flex;
 
-    justify-content: center;
+    display:
+        flex;
 
-    align-items: center;
+    justify-content:
+        center;
 
-    min-height: 200px;
+    align-items:
+        center;
+
+    min-height:
+        200px;
 }
 
 .qr-card p {
-    color: #222;
 
-    font-size: 13px;
+    color:
+        #222;
+
+    font-size:
+        13px;
 }
 
 .peer-id {
-    background: #06131d;
+
+    background:
+        #06131d;
 
     border:
         1px solid #36c9e8;
 
-    padding: 15px;
+    padding:
+        15px;
 
-    border-radius: 10px;
+    border-radius:
+        10px;
 
-    font-family: monospace;
+    font-family:
+        monospace;
 
-    color: #7deaff;
+    color:
+        #7deaff;
 
-    word-break: break-all;
+    word-break:
+        break-all;
 }
 
 
 /* =====================================================
    SIREN
-===================================================== */
+   ===================================================== */
 
 .siren-enable {
-    border: none;
 
-    background: #e02d3c;
+    border:
+        none;
 
-    color: white;
+    background:
+        #e02d3c;
 
-    padding: 14px 22px;
+    color:
+        white;
 
-    border-radius: 10px;
+    padding:
+        14px 22px;
 
-    font-size: 16px;
+    border-radius:
+        10px;
 
-    font-weight: bold;
+    font-size:
+        16px;
 
-    cursor: pointer;
+    font-weight:
+        bold;
+
+    cursor:
+        pointer;
 }
 
 .siren-enable:hover {
-    background: #ff3d4c;
+
+    background:
+        #ff3d4c;
 }
 
 .siren-enable.enabled {
-    background: #168c58;
+
+    background:
+        #168c58;
 }
 
 .siren-status {
-    margin-top: 12px;
 
-    color: #a9bdc9;
+    margin-top:
+        12px;
+
+    color:
+        #a9bdc9;
 }
 
 
 /* =====================================================
    ALERT
-===================================================== */
+   ===================================================== */
 
 .alert-box {
-    display: none;
 
-    background: #3a1016;
+    display:
+        none;
+
+    background:
+        #3a1016;
 
     border:
         2px solid #ef3948;
 
-    border-radius: 12px;
+    border-radius:
+        12px;
 
-    padding: 18px;
+    padding:
+        18px;
 }
 
 .alert-box.active {
-    display: block;
+
+    display:
+        block;
 
     animation:
         alertPulse
@@ -255,76 +352,99 @@ p {
     from {
         box-shadow:
             0 0 5px
-            rgba(255,50,60,.2);
+            rgba(255,50,60,0.2);
     }
 
     to {
         box-shadow:
             0 0 25px
-            rgba(255,50,60,.7);
+            rgba(255,50,60,0.7);
     }
 }
 
 .alert-title {
-    color: #ff5c66;
 
-    font-size: 23px;
+    color:
+        #ff5c66;
 
-    font-weight: bold;
+    font-size:
+        23px;
+
+    font-weight:
+        bold;
 }
 
 
 /* =====================================================
    MAP
-===================================================== */
+   ===================================================== */
 
 #map {
-    width: 100%;
 
-    height: 450px;
+    width:
+        100%;
 
-    border-radius: 14px;
+    height:
+        450px;
 
-    overflow: hidden;
+    border-radius:
+        14px;
+
+    overflow:
+        hidden;
 
     border:
         2px solid #2f6b87;
 }
 
 .location-info {
-    display: grid;
+
+    display:
+        grid;
 
     grid-template-columns:
-        repeat(2,1fr);
+        repeat(2, 1fr);
 
-    gap: 10px;
+    gap:
+        10px;
 
-    margin-top: 18px;
+    margin-top:
+        18px;
 }
 
 .location-info p {
-    margin: 0;
 
-    background: #0a1d2b;
+    margin:
+        0;
 
-    padding: 12px;
+    background:
+        #0a1d2b;
 
-    border-radius: 8px;
+    padding:
+        12px;
+
+    border-radius:
+        8px;
 }
 
 .green {
-    color: #62e99a;
 
-    font-weight: bold;
+    color:
+        #62e99a;
+
+    font-weight:
+        bold;
 }
 
 
 /* =====================================================
    POLICE STATIONS
-===================================================== */
+   ===================================================== */
 
 .station-grid {
-    display: grid;
+
+    display:
+        grid;
 
     grid-template-columns:
         repeat(
@@ -332,166 +452,231 @@ p {
             minmax(220px,1fr)
         );
 
-    gap: 14px;
+    gap:
+        14px;
 }
 
 .station-card {
-    padding: 16px;
 
-    border-radius: 12px;
+    padding:
+        16px;
 
-    background: #0a2030;
+    border-radius:
+        12px;
+
+    background:
+        #0a2030;
 
     border:
         1px solid #29536b;
 }
 
 .station-card.available {
+
     border-left:
         5px solid #42dc8c;
 }
 
 .station-card.busy {
+
     border-left:
         5px solid #ffb83d;
 }
 
 .station-card h3 {
-    margin: 0 0 8px;
+
+    margin:
+        0 0 8px;
 }
 
 .station-status {
-    font-weight: bold;
 
-    color: #62e99a;
+    font-weight:
+        bold;
+
+    color:
+        #62e99a;
 }
 
 
 /* =====================================================
    RESPONSE
-===================================================== */
+   ===================================================== */
 
 .response-grid {
-    display: grid;
+
+    display:
+        grid;
 
     grid-template-columns:
         repeat(3,1fr);
 
-    gap: 18px;
+    gap:
+        18px;
 }
 
 .response-card {
-    background: #0b2030;
+
+    background:
+        #0b2030;
 
     border:
         1px solid #28536b;
 
-    border-radius: 14px;
+    border-radius:
+        14px;
 
-    padding: 20px;
+    padding:
+        20px;
 
-    min-height: 190px;
+    min-height:
+        190px;
 }
 
 .response-card .icon {
-    font-size: 36px;
+
+    font-size:
+        36px;
 }
 
 .dispatch-button {
-    margin-top: 10px;
 
-    padding: 12px 18px;
+    margin-top:
+        10px;
 
-    border: none;
+    padding:
+        12px 18px;
 
-    border-radius: 8px;
+    border:
+        none;
 
-    background: #188dce;
+    border-radius:
+        8px;
 
-    color: white;
+    background:
+        #188dce;
 
-    font-weight: bold;
+    color:
+        white;
 
-    cursor: pointer;
+    font-weight:
+        bold;
+
+    cursor:
+        pointer;
 }
 
 .dispatch-button:hover {
-    background: #21a9ed;
+
+    background:
+        #21a9ed;
 }
 
 .dispatch-button:disabled {
-    background: #425764;
 
-    cursor: not-allowed;
+    background:
+        #425764;
+
+    cursor:
+        not-allowed;
 }
 
 
 /* =====================================================
    DRONE CAMERA
-===================================================== */
+   ===================================================== */
 
 .drone-section {
-    display: block;
+
+    display:
+        block;
 }
 
 .simulated-label {
-    display: inline-block;
 
-    padding: 8px 12px;
+    display:
+        inline-block;
 
-    border-radius: 8px;
+    padding:
+        8px 12px;
 
-    background: #4a3210;
+    border-radius:
+        8px;
 
-    color: #ffd76a;
+    background:
+        #4a3210;
 
-    font-size: 13px;
+    color:
+        #ffd76a;
 
-    font-weight: bold;
+    font-size:
+        13px;
 
-    margin-bottom: 10px;
+    font-weight:
+        bold;
+
+    margin-bottom:
+        10px;
 }
 
 .drone-feed {
-    display: grid;
+
+    display:
+        grid;
 
     grid-template-columns:
         minmax(0,2fr)
         minmax(260px,1fr);
 
-    gap: 20px;
+    gap:
+        20px;
 }
 
 
 /* =====================================================
-   CAMERA
-===================================================== */
+   CAMERA SCREEN
+   ===================================================== */
 
 .camera-screen {
-    position: relative;
 
-    height: 500px;
+    position:
+        relative;
 
-    overflow: hidden;
+    height:
+        500px;
+
+    overflow:
+        hidden;
 
     border:
         3px solid #3ce38e;
 
-    border-radius: 16px;
+    border-radius:
+        16px;
 
-    background: #07141d;
+    background:
+        #07141d;
 
     box-shadow:
         0 0 30px
-        rgba(50,220,140,.15);
+        rgba(50,220,140,0.15);
 }
 
+
+/* =====================================================
+   CAMERA WORLD
+   ===================================================== */
+
 .camera-world {
-    position: absolute;
 
-    inset: 0;
+    position:
+        absolute;
 
-    overflow: hidden;
+    inset:
+        0;
+
+    overflow:
+        hidden;
 
     background:
         linear-gradient(
@@ -510,6 +695,7 @@ p {
 }
 
 .camera-world.zoomed {
+
     transform:
         scale(1.35);
 }
@@ -517,20 +703,27 @@ p {
 
 /* =====================================================
    ROAD
-===================================================== */
+   ===================================================== */
 
 .road {
-    position: absolute;
 
-    left: 27%;
+    position:
+        absolute;
 
-    bottom: -22%;
+    left:
+        27%;
 
-    width: 46%;
+    bottom:
+        -22%;
 
-    height: 80%;
+    width:
+        46%;
 
-    background: #323638;
+    height:
+        80%;
+
+    background:
+        #323638;
 
     transform:
         perspective(400px)
@@ -541,17 +734,24 @@ p {
 }
 
 .road::after {
-    content: "";
 
-    position: absolute;
+    content:
+        "";
 
-    left: 48%;
+    position:
+        absolute;
 
-    top: 0;
+    left:
+        48%;
 
-    width: 7px;
+    top:
+        0;
 
-    height: 100%;
+    width:
+        7px;
+
+    height:
+        100%;
 
     background:
         repeating-linear-gradient(
@@ -564,12 +764,15 @@ p {
 
 /* =====================================================
    BUILDINGS
-===================================================== */
+   ===================================================== */
 
 .building {
-    position: absolute;
 
-    bottom: 31%;
+    position:
+        absolute;
+
+    bottom:
+        31%;
 
     background:
         linear-gradient(
@@ -583,15 +786,19 @@ p {
 
     box-shadow:
         0 8px 18px
-        rgba(0,0,0,.4);
+        rgba(0,0,0,0.4);
 }
 
 .building::after {
-    content: "";
 
-    position: absolute;
+    content:
+        "";
 
-    inset: 12px;
+    position:
+        absolute;
+
+    inset:
+        12px;
 
     background:
         repeating-linear-gradient(
@@ -600,65 +807,88 @@ p {
             #f0d878 21px 27px
         );
 
-    opacity: .65;
+    opacity:
+        0.65;
 }
 
 .b1 {
-    left: 4%;
 
-    width: 105px;
+    left:
+        4%;
 
-    height: 175px;
+    width:
+        105px;
+
+    height:
+        175px;
 }
 
 .b2 {
-    right: 4%;
 
-    width: 125px;
+    right:
+        4%;
 
-    height: 215px;
+    width:
+        125px;
+
+    height:
+        215px;
 }
 
 .b3 {
-    left: 28%;
 
-    width: 75px;
+    left:
+        28%;
 
-    height: 125px;
+    width:
+        75px;
+
+    height:
+        125px;
 }
 
 
 /* =====================================================
    TREES
-===================================================== */
+   ===================================================== */
 
 .tree {
-    position: absolute;
 
-    width: 50px;
+    position:
+        absolute;
 
-    height: 78px;
+    width:
+        50px;
 
-    border-radius: 50%;
+    height:
+        78px;
 
-    background: #19482e;
+    border-radius:
+        50%;
 
-    bottom: 27%;
+    background:
+        #19482e;
+
+    bottom:
+        27%;
 }
 
 .t1 {
-    left: 18%;
+    left:
+        18%;
 }
 
 .t2 {
-    right: 18%;
+    right:
+        18%;
 
     transform:
         scale(1.25);
 }
 
 .t3 {
-    left: 59%;
+    left:
+        59%;
 
     transform:
         scale(.8);
@@ -667,455 +897,646 @@ p {
 
 /* =====================================================
    STREET LIGHTS
-===================================================== */
+   ===================================================== */
 
 .street-light {
-    position: absolute;
 
-    width: 5px;
+    position:
+        absolute;
 
-    height: 115px;
+    width:
+        5px;
 
-    bottom: 29%;
+    height:
+        115px;
 
-    background: #252c30;
+    bottom:
+        29%;
 
-    z-index: 4;
+    background:
+        #252c30;
+
+    z-index:
+        4;
 }
 
 .street-light::after {
-    content: "";
 
-    position: absolute;
+    content:
+        "";
 
-    width: 28px;
+    position:
+        absolute;
 
-    height: 8px;
+    width:
+        28px;
 
-    right: -22px;
+    height:
+        8px;
 
-    top: 0;
+    right:
+        -22px;
 
-    background: #252c30;
+    top:
+        0;
 
-    border-radius: 8px;
+    background:
+        #252c30;
+
+    border-radius:
+        8px;
 }
 
 .street-light::before {
-    content: "";
 
-    position: absolute;
+    content:
+        "";
 
-    width: 10px;
+    position:
+        absolute;
 
-    height: 10px;
+    width:
+        10px;
 
-    right: -20px;
+    height:
+        10px;
 
-    top: 5px;
+    right:
+        -20px;
 
-    background: #ffe88a;
+    top:
+        5px;
 
-    border-radius: 50%;
+    background:
+        #ffe88a;
+
+    border-radius:
+        50%;
 
     box-shadow:
         0 0 12px #ffe88a;
 }
 
 .sl1 {
-    left: 12%;
+    left:
+        12%;
 }
 
 .sl2 {
-    right: 13%;
+    right:
+        13%;
 }
 
 
 /* =====================================================
-   PERSON
-===================================================== */
+   VICTIM
+   ===================================================== */
 
 .victim {
-    position: absolute;
 
-    left: 50%;
+    position:
+        absolute;
 
-    top: 57%;
+    left:
+        50%;
 
-    width: 55px;
+    top:
+        57%;
 
-    height: 120px;
+    width:
+        55px;
+
+    height:
+        120px;
 
     transform:
         translate(-50%,-50%);
 
-    z-index: 8;
+    z-index:
+        8;
 }
 
 .victim-head {
-    position: absolute;
 
-    left: 13px;
+    position:
+        absolute;
 
-    top: 0;
+    left:
+        13px;
 
-    width: 29px;
+    top:
+        0;
 
-    height: 29px;
+    width:
+        29px;
 
-    background: #d49a72;
+    height:
+        29px;
 
-    border-radius: 50%;
+    border-radius:
+        50%;
+
+    background:
+        #d39b73;
+}
+
+.victim-hair {
+
+    position:
+        absolute;
+
+    left:
+        10px;
+
+    top:
+        -3px;
+
+    width:
+        33px;
+
+    height:
+        18px;
+
+    background:
+        #241b1a;
+
+    border-radius:
+        50% 50% 20% 20%;
 }
 
 .victim-body {
-    position: absolute;
 
-    left: 7px;
+    position:
+        absolute;
 
-    top: 30px;
+    left:
+        10px;
 
-    width: 41px;
+    top:
+        29px;
 
-    height: 58px;
+    width:
+        35px;
 
-    background: #3f6888;
+    height:
+        50px;
+
+    background:
+        #416d94;
 
     border-radius:
-        14px 14px 8px 8px;
+        9px;
+}
+
+.victim-arm {
+
+    position:
+        absolute;
+
+    top:
+        31px;
+
+    width:
+        9px;
+
+    height:
+        43px;
+
+    background:
+        #d39b73;
+
+    border-radius:
+        8px;
+}
+
+.victim-arm.left {
+
+    left:
+        1px;
+
+    transform:
+        rotate(22deg);
+}
+
+.victim-arm.right {
+
+    right:
+        1px;
+
+    transform:
+        rotate(-22deg);
 }
 
 .victim-leg {
-    position: absolute;
 
-    top: 84px;
+    position:
+        absolute;
 
-    width: 13px;
+    top:
+        74px;
 
-    height: 37px;
+    width:
+        11px;
 
-    background: #263747;
+    height:
+        43px;
 
-    border-radius: 8px;
+    background:
+        #263b4a;
+
+    border-radius:
+        8px;
 }
 
 .victim-leg.left {
-    left: 10px;
+
+    left:
+        14px;
 
     transform:
-        rotate(6deg);
+        rotate(7deg);
 }
 
 .victim-leg.right {
-    right: 10px;
+
+    right:
+        14px;
 
     transform:
-        rotate(-6deg);
+        rotate(-7deg);
 }
 
 
 /* =====================================================
    AI TARGET
-===================================================== */
+   ===================================================== */
 
 .ai-target {
-    position: absolute;
 
-    left: 50%;
+    position:
+        absolute;
 
-    top: 57%;
+    left:
+        50%;
 
-    width: 220px;
+    top:
+        57%;
 
-    height: 310px;
+    width:
+        130px;
+
+    height:
+        180px;
 
     transform:
         translate(-50%,-50%);
 
     border:
-        4px solid #ff303b;
+        3px solid #ff3e49;
 
-    z-index: 7;
+    z-index:
+        12;
 
-    opacity: 0;
+    opacity:
+        0;
 
     transition:
-        opacity .4s ease;
-
-    box-shadow:
-        0 0 25px
-        rgba(255,0,0,.8);
+        opacity .7s ease;
 }
 
 .ai-target.visible {
-    opacity: 1;
+
+    opacity:
+        1;
+
+    animation:
+        targetPulse
+        .9s
+        infinite alternate;
 }
 
-.ai-target::before {
-    content:
-        "AI TARGET";
+.ai-target span {
 
-    position: absolute;
+    position:
+        absolute;
 
-    left: -4px;
+    top:
+        -29px;
 
-    top: -42px;
-
-    background: #e52a35;
-
-    color: white;
+    left:
+        -3px;
 
     padding:
-        8px 15px;
+        5px 9px;
 
-    font-size: 20px;
+    background:
+        #d5232d;
 
-    font-weight: bold;
+    color:
+        white;
+
+    font-size:
+        12px;
+
+    font-weight:
+        bold;
 }
 
-.ai-target::after {
-    content:
-        "⚠ AI ANALYSIS ACTIVE";
+@keyframes targetPulse {
 
-    position: absolute;
+    from {
+        box-shadow:
+            0 0 4px
+            rgba(255,0,0,.4);
+    }
 
-    left: -4px;
-
-    bottom: -52px;
-
-    background: #c8232c;
-
-    color: white;
-
-    padding:
-        13px 20px;
-
-    border-radius:
-        20px;
-
-    font-weight: bold;
-
-    white-space: nowrap;
+    to {
+        box-shadow:
+            0 0 24px
+            rgba(255,0,0,.9);
+    }
 }
 
 
 /* =====================================================
    DRONE
-===================================================== */
+   ===================================================== */
 
 .flying-drone {
-    position: absolute;
 
-    left: 6%;
+    position:
+        absolute;
 
-    top: 8%;
+    left:
+        6%;
 
-    width: 125px;
+    top:
+        8%;
 
-    height: 85px;
+    width:
+        125px;
 
-    z-index: 22;
+    height:
+        85px;
+
+    z-index:
+        22;
 
     transform:
         scale(.75);
 
-    transition: none;
+    transition:
+        none;
 }
 
 
-/* Drone body */
+/* actual drone body */
 
 .drone-body {
-    position: absolute;
 
-    left: 50%;
+    position:
+        absolute;
 
-    top: 50%;
+    left:
+        50%;
 
-    width: 62px;
+    top:
+        50%;
 
-    height: 38px;
+    width:
+        48px;
+
+    height:
+        25px;
 
     transform:
         translate(-50%,-50%);
 
+    border:
+        2px solid #202b31;
+
     background:
         linear-gradient(
-            180deg,
-            #e5e8ea,
-            #aeb8bd
+            #e5ebee,
+            #8b979d
         );
 
-    border:
-        2px solid #6e7c83;
-
     border-radius:
-        18px;
-
-    box-shadow:
-        0 5px 15px
-        rgba(0,0,0,.5);
-
-    z-index: 4;
+        14px;
 }
 
-.drone-body::after {
-    content: "";
+.drone-camera {
 
-    position: absolute;
+    position:
+        absolute;
 
-    width: 20px;
+    left:
+        50%;
 
-    height: 20px;
+    bottom:
+        -11px;
 
-    left: 50%;
+    width:
+        16px;
 
-    bottom: -14px;
+    height:
+        16px;
 
     transform:
         translateX(-50%);
-
-    border-radius: 50%;
-
-    background: #101a20;
-
-    border:
-        3px solid #65747b;
-}
-
-.drone-arm {
-    position: absolute;
-
-    left: 10px;
-
-    top: 40px;
-
-    width: 105px;
-
-    height: 7px;
-
-    background: #7d898f;
-
-    transform:
-        rotate(-25deg);
-
-    border-radius: 5px;
-}
-
-.drone-arm::after {
-    content: "";
-
-    position: absolute;
-
-    left: 0;
-
-    top: 0;
-
-    width: 105px;
-
-    height: 7px;
-
-    background: #7d898f;
-
-    transform:
-        rotate(50deg);
-
-    border-radius: 5px;
-}
-
-.drone-light {
-    position: absolute;
-
-    left: 50%;
-
-    top: 59px;
-
-    width: 16px;
-
-    height: 16px;
-
-    transform:
-        translateX(-50%);
-
-    background: #00d9ff;
-
-    border:
-        2px solid #277b8c;
-
-    border-radius: 50%;
-
-    box-shadow:
-        0 0 18px #00d9ff;
-
-    z-index: 8;
-}
-
-.propeller {
-    position: absolute;
-
-    width: 42px;
-
-    height: 6px;
 
     background:
-        rgba(235,240,242,.9);
+        #10171b;
 
-    border-radius: 50%;
+    border:
+        2px solid #7d898e;
+
+    border-radius:
+        50%;
+}
+
+.drone-camera::after {
+
+    content:
+        "";
+
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    top:
+        50%;
+
+    width:
+        7px;
+
+    height:
+        7px;
+
+    transform:
+        translate(-50%,-50%);
+
+    border-radius:
+        50%;
+
+    background:
+        #28bce9;
+
+    box-shadow:
+        0 0 10px #28bce9;
+}
+
+
+/* drone arms */
+
+.drone-arm {
+
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    top:
+        50%;
+
+    width:
+        92px;
+
+    height:
+        6px;
+
+    background:
+        #8e9ba1;
+
+    transform:
+        translate(-50%,-50%);
+}
+
+.arm1 {
+
+    transform:
+        translate(-50%,-50%)
+        rotate(27deg);
+}
+
+.arm2 {
+
+    transform:
+        translate(-50%,-50%)
+        rotate(-27deg);
+}
+
+
+/* rotors */
+
+.drone-rotor {
+
+    position:
+        absolute;
+
+    width:
+        39px;
+
+    height:
+        8px;
+
+    background:
+        #dce4e7;
+
+    border-radius:
+        50%;
 
     animation:
-        propellerSpin
-        .25s
+        rotorSpin
+        .11s
         linear
         infinite;
 }
 
-.prop1 {
-    left: -2px;
+.rotor1 {
 
-    top: 4px;
+    left:
+        0;
+
+    top:
+        3px;
 }
 
-.prop2 {
-    right: -2px;
+.rotor2 {
 
-    top: 4px;
+    right:
+        0;
+
+    top:
+        3px;
 }
 
-.prop3 {
-    left: -2px;
-
-    bottom: 3px;
-}
-
-.prop4 {
-    right: -2px;
-
-    bottom: 3px;
-}
-
-@keyframes propellerSpin {
+@keyframes rotorSpin {
 
     0% {
         transform:
-            scaleX(1);
+            scaleY(1);
     }
 
     50% {
         transform:
-            scaleX(.25);
+            scaleY(.15);
     }
 
     100% {
         transform:
-            scaleX(1);
+            scaleY(1);
     }
 }
 
 
 /* =====================================================
+   DRONE SPOTLIGHT
+   ===================================================== */
+
+.drone-light {
+
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    top:
+        65px;
+
+    width:
+        100px;
+
+    height:
+        170px;
+
+    transform:
+        translateX(-50%);
+
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(75,220,255,.25),
+            rgba(75,220,255,0)
+        );
+
+    clip-path:
+        polygon(
+            42% 0,
+            58% 0,
+            100% 100%,
+            0 100%
+        );
+}
+
+
+/* =====================================================
    DRONE MOVEMENT
-   CENTER OF DRONE = CENTER OF PERSON
-===================================================== */
+   ===================================================== */
 
 .flying-drone.fly {
 
@@ -1133,161 +1554,124 @@ p {
 
 @keyframes droneApproach {
 
-    /* START */
-
     0% {
 
-        left: 5%;
+        left:
+            5%;
 
-        top: 8%;
+        top:
+            8%;
 
         transform:
-            translateX(0)
             scale(.65)
             rotate(-8deg);
     }
 
-
-    /* MOVING IN */
-
     18% {
 
-        left: 18%;
+        left:
+            18%;
 
-        top: 14%;
+        top:
+            15%;
 
         transform:
-            translateX(0)
             scale(.72)
             rotate(5deg);
     }
 
-
-    /* MOVING TO CENTER */
-
     38% {
 
-        left: 32%;
+        left:
+            32%;
 
-        top: 18%;
+        top:
+            22%;
 
         transform:
-            translateX(0)
             scale(.82)
             rotate(-4deg);
     }
 
-
-    /* APPROACHING PERSON */
-
     58% {
 
-        left: 43%;
+        left:
+            45%;
 
-        top: 20%;
+        top:
+            31%;
 
         transform:
-            translateX(0)
             scale(.94)
             rotate(3deg);
     }
 
-
-    /* CENTER OF DRONE
-       ALIGNS WITH PERSON */
-
     78% {
 
-        left: 50%;
+        left:
+            50%;
 
-        top: 20%;
+        top:
+            41%;
 
         transform:
-            translateX(-50%)
-            scale(1.05)
+            scale(1.08)
             rotate(-2deg);
     }
 
-
-    /* FINAL POSITION */
-
     100% {
 
-        left: 50%;
+        left:
+            50%;
 
-        top: 20%;
+        top:
+            46%;
 
         transform:
-            translateX(-50%)
-            scale(1.08)
+            scale(1.18)
             rotate(0deg);
     }
 }
 
 
 /* =====================================================
-   HOVER ABOVE PERSON
-===================================================== */
-
-.flying-drone.hovering {
-
-    animation:
-        droneHover
-        1.8s
-        ease-in-out
-        infinite;
-}
-
-@keyframes droneHover {
-
-    0%,
-    100% {
-
-        transform:
-            translateX(-50%)
-            translateY(0)
-            scale(1.08);
-    }
-
-    50% {
-
-        transform:
-            translateX(-50%)
-            translateY(-8px)
-            scale(1.08);
-    }
-}
-
-
-/* =====================================================
    SCANNING LINE
-===================================================== */
+   ===================================================== */
 
 .scan-line {
 
-    position: absolute;
+    position:
+        absolute;
 
-    left: 0;
+    left:
+        0;
 
-    right: 0;
+    right:
+        0;
 
-    top: 10%;
+    top:
+        10%;
 
-    height: 4px;
+    height:
+        4px;
 
-    background: #3aff9a;
+    background:
+        #3aff9a;
 
     box-shadow:
         0 0 15px #3aff9a;
 
-    z-index: 15;
+    z-index:
+        15;
 
-    opacity: 0;
+    opacity:
+        0;
 }
 
 .scan-line.active {
 
-    opacity: 1;
+    opacity:
+        1;
 
     animation:
         scanning
@@ -1299,111 +1683,179 @@ p {
 @keyframes scanning {
 
     0% {
-        top: 8%;
+        top:
+            8%;
     }
 
     100% {
-        top: 95%;
+        top:
+            92%;
     }
 }
 
 
 /* =====================================================
    CAMERA HUD
-===================================================== */
+   ===================================================== */
 
-.camera-hud {
+.camera-top {
 
-    position: absolute;
+    position:
+        absolute;
 
-    left: 18px;
+    left:
+        0;
 
-    top: 18px;
+    right:
+        0;
 
-    z-index: 30;
+    top:
+        0;
 
-    font-family: monospace;
+    z-index:
+        40;
 
-    font-size: 14px;
+    display:
+        flex;
 
-    line-height: 1.7;
+    justify-content:
+        space-between;
 
-    color: #b9ffe0;
+    padding:
+        14px 18px;
+
+    background:
+        rgba(0,0,0,.72);
+
+    font-size:
+        14px;
 }
 
-.rec-indicator {
+.recording {
 
-    color: #ff3f4d;
+    color:
+        #ff414d;
 
-    font-weight: bold;
+    font-weight:
+        bold;
+
+    animation:
+        recBlink
+        1s
+        infinite;
 }
 
-.camera-title {
+@keyframes recBlink {
 
-    position: absolute;
+    0%,
+    50% {
+        opacity:
+            1;
+    }
 
-    top: 25px;
+    51%,
+    100% {
+        opacity:
+            .3;
+    }
+}
 
-    left: 50%;
+
+/* =====================================================
+   FLIGHT MESSAGE
+   ===================================================== */
+
+.flight-message {
+
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    top:
+        62px;
 
     transform:
         translateX(-50%);
 
-    z-index: 30;
+    z-index:
+        41;
 
     padding:
-        13px 25px;
-
-    background:
-        rgba(0,0,0,.78);
+        10px 17px;
 
     border-radius:
-        30px;
+        22px;
 
-    font-size: 18px;
+    background:
+        rgba(0,0,0,.82);
 
-    font-weight: bold;
+    color:
+        #76e4ff;
 
-    white-space: nowrap;
+    font-size:
+        13px;
 
-    color: #63e8ff;
+    font-weight:
+        bold;
+
+    white-space:
+        nowrap;
 }
+
+
+/* =====================================================
+   AI WARNING
+   ===================================================== */
 
 .ai-warning {
 
-    position: absolute;
+    position:
+        absolute;
 
-    right: 18px;
+    left:
+        50%;
 
-    top: 18px;
+    bottom:
+        72px;
 
-    z-index: 30;
+    transform:
+        translateX(-50%);
+
+    z-index:
+        41;
 
     padding:
-        12px 16px;
+        9px 15px;
+
+    border-radius:
+        20px;
 
     background:
-        rgba(160,0,0,.75);
+        #a91e27;
 
-    border:
-        1px solid #ff4753;
+    color:
+        white;
 
-    border-radius: 8px;
+    font-size:
+        13px;
 
-    color: white;
+    font-weight:
+        bold;
 
-    font-weight: bold;
-
-    opacity: 0;
+    opacity:
+        0;
 }
 
 .ai-warning.active {
 
-    opacity: 1;
+    opacity:
+        1;
 
     animation:
         warningPulse
-        1s
+        .8s
         infinite alternate;
 }
 
@@ -1411,90 +1863,231 @@ p {
 
     from {
         box-shadow:
-            0 0 5px
+            0 0 4px
             rgba(255,0,0,.3);
     }
 
     to {
         box-shadow:
-            0 0 25px
+            0 0 20px
             rgba(255,0,0,.9);
     }
 }
 
 
 /* =====================================================
-   CAMERA BOTTOM BAR
-===================================================== */
+   CROSSHAIR
+   ===================================================== */
 
-.camera-bottom {
+.camera-crosshair {
 
-    position: absolute;
+    position:
+        absolute;
 
-    left: 0;
+    left:
+        50%;
 
-    right: 0;
+    top:
+        55%;
 
-    bottom: 0;
+    width:
+        175px;
 
-    z-index: 30;
+    height:
+        175px;
 
-    display: grid;
+    transform:
+        translate(-50%,-50%);
 
-    grid-template-columns:
-        repeat(6,1fr);
+    z-index:
+        30;
 
-    gap: 10px;
+    opacity:
+        .7;
+}
 
-    padding: 14px;
+.cross-horizontal {
+
+    position:
+        absolute;
+
+    left:
+        0;
+
+    right:
+        0;
+
+    top:
+        50%;
+
+    height:
+        2px;
 
     background:
-        rgba(0,0,0,.82);
-
-    border-top:
-        1px solid #29414d;
+        rgba(255,255,255,.7);
 }
 
-.telemetry {
-    font-size: 13px;
+.cross-vertical {
 
-    color: #c5d5df;
+    position:
+        absolute;
+
+    top:
+        0;
+
+    bottom:
+        0;
+
+    left:
+        50%;
+
+    width:
+        2px;
+
+    background:
+        rgba(255,255,255,.7);
 }
 
-.telemetry strong {
-    color: #5ee7a3;
+.cross-circle {
+
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    top:
+        50%;
+
+    width:
+        100px;
+
+    height:
+        100px;
+
+    transform:
+        translate(-50%,-50%);
+
+    border:
+        2px solid
+        rgba(255,255,255,.65);
+
+    border-radius:
+        50%;
 }
 
 
 /* =====================================================
-   OBSERVATION PANEL
-===================================================== */
+   CAMERA BOTTOM
+   ===================================================== */
 
-.observation {
-    background: #091b28;
+.camera-bottom {
 
-    border:
-        1px solid #27516a;
+    position:
+        absolute;
 
-    border-radius: 14px;
+    left:
+        0;
 
-    padding: 20px;
+    right:
+        0;
+
+    bottom:
+        0;
+
+    z-index:
+        40;
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    gap:
+        10px;
+
+    padding:
+        11px 14px;
+
+    background:
+        rgba(0,0,0,.78);
+
+    font-size:
+        11px;
 }
 
-.observation h3 {
-    margin-top: 0;
+.camera-bottom b {
+
+    color:
+        #79ffa8;
 }
 
-#aiObservation {
-    min-height: 90px;
+
+/* =====================================================
+   INFO
+   ===================================================== */
+
+.drone-info {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        12px;
+}
+
+.info-box {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        15px;
+
+    padding:
+        17px;
+
+    border-radius:
+        12px;
+
+    background:
+        #0b2233;
+
+    border-left:
+        5px solid #39d98a;
+}
+
+.info-box > span {
+
+    font-size:
+        28px;
+}
+
+.info-box strong {
+
+    color:
+        #7ee6ff;
+}
+
+.info-box p {
+
+    margin:
+        5px 0 0;
 }
 
 
 /* =====================================================
    RESPONSIVE
-===================================================== */
+   ===================================================== */
 
-@media(max-width:900px) {
+@media(max-width:800px) {
 
     .qr-area,
     .drone-feed,
@@ -1504,15 +2097,6 @@ p {
             1fr;
     }
 
-    .camera-bottom {
-
-        grid-template-columns:
-            repeat(3,1fr);
-    }
-}
-
-@media(max-width:600px) {
-
     .location-info {
 
         grid-template-columns:
@@ -1521,21 +2105,23 @@ p {
 
     .camera-screen {
 
-        height: 450px;
-    }
-
-    .camera-title {
-
-        font-size: 13px;
-
-        padding:
-            10px 15px;
+        height:
+            430px;
     }
 
     .camera-bottom {
 
-        grid-template-columns:
-            repeat(2,1fr);
+        flex-direction:
+            column;
+
+        gap:
+            3px;
+    }
+
+    .flight-message {
+
+        font-size:
+            10px;
     }
 }
 
@@ -1552,602 +2138,651 @@ p {
 
 <!-- =====================================================
      HEADER
-===================================================== -->
+     ===================================================== -->
 
 <section class="header">
 
-    <h1>
-        AI GUARDIAN DRONE
-    </h1>
+<h1>
+    🚔 AI Guardian Drone
+</h1>
 
-    <p>
-        Smart Women's Safety & Emergency Response
-        — Police Control Centre
-    </p>
+<p>
+    Bengaluru Emergency Response & Police Dashboard
+</p>
 
 </section>
 
 
 <!-- =====================================================
-     CONNECTION
-===================================================== -->
+     VICTIM DEVICE CONNECTION
+     ===================================================== -->
 
 <section>
 
-    <h2>
-        📡 Police Network
-    </h2>
+<h2>
+    📱 Victim Device Connection
+</h2>
 
-    <div id="connectionStatus">
-        Initialising secure police connection...
+<div id="connectionStatus">
+    Starting police connection...
+</div>
+
+<div class="qr-area">
+
+    <div class="qr-card">
+
+        <div id="qrcode"></div>
+
+        <p>
+            Scan this QR code from the victim device
+        </p>
+
     </div>
 
 
-    <div class="qr-area">
+    <div>
 
-        <div class="qr-card">
+        <h3>
+            Police Connection ID
+        </h3>
 
-            <div id="qrcode"></div>
+        <div
+            id="peerId"
+            class="peer-id">
 
-            <p>
-                Scan this QR code from the
-                Guardian Safety App.
-            </p>
+            Generating...
 
         </div>
 
-
-        <div>
-
-            <h3>
-                Police Peer ID
-            </h3>
-
-            <div
-                class="peer-id"
-                id="peerId"
-            >
-                Connecting...
-            </div>
-
-            <p>
-                Waiting for the victim device
-                to connect and send an SOS.
-            </p>
-
-        </div>
+        <p>
+            Keep this page open while the victim connects.
+        </p>
 
     </div>
+
+</div>
 
 </section>
 
 
 <!-- =====================================================
      SIREN
-===================================================== -->
+     ===================================================== -->
 
 <section>
 
-    <h2>
-        🚨 Emergency Siren
-    </h2>
+<h2>
+    🔊 Emergency Siren
+</h2>
 
-    <button
-        class="siren-enable"
-        id="sirenButton"
-        onclick="toggleSiren()"
-    >
-        🔊 ENABLE SIREN
-    </button>
+<button
+    id="enableSiren"
+    class="siren-enable">
 
-    <div
-        class="siren-status"
-        id="sirenStatus"
-    >
-        Siren disabled
-    </div>
+    🔊 Enable Emergency Siren
+
+</button>
+
+<div
+    id="sirenStatus"
+    class="siren-status">
+
+    Click the button once to activate the
+    emergency sound system.
+
+</div>
 
 </section>
 
 
 <!-- =====================================================
-     SOS ALERT
-===================================================== -->
+     ALERT
+     ===================================================== -->
 
-<section>
+<section
+    id="alertBox"
+    class="alert-box">
 
-    <div
-        class="alert-box"
-        id="sosAlert"
-    >
+<div class="alert-title">
+    🚨 EMERGENCY SOS RECEIVED
+</div>
 
-        <div class="alert-title">
-            🔴 SOS ALERT RECEIVED
-        </div>
-
-        <p>
-            Emergency request received from
-            the Guardian Safety App.
-        </p>
-
-        <p>
-            <strong>
-                Emergency ID:
-            </strong>
-
-            #AGD-1042
-        </p>
-
-    </div>
+<p id="alertDetails">
+    SOS information will appear here.
+</p>
 
 </section>
 
 
 <!-- =====================================================
      LOCATION
-===================================================== -->
+     ===================================================== -->
 
 <section>
 
-    <h2>
-        📍 Live Victim Location
-    </h2>
+<h2>
+    📍 Bengaluru Live Victim Location
+</h2>
 
-    <div id="map"></div>
+<p>
+    The map starts over Bengaluru and automatically
+    moves to the victim's actual GPS position.
+</p>
 
+<div id="map"></div>
 
-    <div class="location-info">
+<div class="location-info">
 
-        <p>
-            Latitude:
-            <strong
-                class="green"
-                id="victimLat"
-            >
-                Waiting
-            </strong>
-        </p>
+    <p>
+        <strong>Latitude:</strong>
 
-        <p>
-            Longitude:
-            <strong
-                class="green"
-                id="victimLng"
-            >
-                Waiting
-            </strong>
-        </p>
+        <span
+            id="victimLat"
+            class="green">
 
-        <p>
-            GPS Status:
-            <strong
-                class="green"
-                id="gpsStatus"
-            >
-                WAITING
-            </strong>
-        </p>
+            Waiting...
 
-        <p>
-            Last Update:
-            <strong
-                class="green"
-                id="gpsTime"
-            >
-                --
-            </strong>
-        </p>
+        </span>
+    </p>
 
-    </div>
+    <p>
+        <strong>Longitude:</strong>
+
+        <span
+            id="victimLng"
+            class="green">
+
+            Waiting...
+
+        </span>
+    </p>
+
+    <p>
+        <strong>GPS Status:</strong>
+
+        <span
+            id="locationStatus"
+            class="green">
+
+            Waiting for victim GPS...
+
+        </span>
+    </p>
+
+    <p>
+        <strong>Last GPS Update:</strong>
+
+        <span
+            id="gpsTime"
+            class="green">
+
+            --
+
+        </span>
+    </p>
+
+</div>
 
 </section>
 
 
 <!-- =====================================================
-     POLICE STATIONS
-===================================================== -->
+     POLICE STATION NETWORK
+     ===================================================== -->
 
 <section>
 
-    <h2>
-        🚔 Nearby Police Stations
-    </h2>
+<h2>
+    🚔 Bengaluru Police Station Network
+</h2>
 
-    <div
-        class="station-grid"
-        id="stationGrid"
-    ></div>
+<div
+    id="stationGrid"
+    class="station-grid">
+</div>
 
 </section>
 
 
 <!-- =====================================================
-     EMERGENCY RESPONSE
-===================================================== -->
+     RESPONSE
+     ===================================================== -->
 
 <section>
 
-    <h2>
-        🚨 Emergency Response
-    </h2>
+<h2>
+    🚨 Emergency Response
+</h2>
 
-    <div class="response-grid">
+<div class="response-grid">
 
 
-        <div class="response-card">
+    <!-- POLICE -->
 
-            <div class="icon">
-                🚔
-            </div>
+    <div class="response-card">
 
-            <h3>
-                Police Unit
-            </h3>
-
-            <p>
-                Nearest police unit is
-                notified about the emergency.
-            </p>
-
-            <button
-                class="dispatch-button"
-                onclick="dispatchPolice()"
-            >
-                DISPATCH POLICE
-            </button>
-
+        <div class="icon">
+            🚔
         </div>
 
+        <h3>
+            Police Response
+        </h3>
 
-        <div class="response-card">
-
-            <div class="icon">
-                🚁
-            </div>
-
-            <h3>
-                Guardian Drone
-            </h3>
-
-            <p>
-                Dispatch the simulated drone
-                to the victim's location.
-            </p>
-
-            <button
-                class="dispatch-button"
-                id="dispatchDroneButton"
-                onclick="dispatchDrone()"
-            >
-                DISPATCH DRONE
-            </button>
-
-        </div>
-
-
-        <div class="response-card">
-
-            <div class="icon">
-                📞
-            </div>
-
-            <h3>
-                Emergency Response
-            </h3>
-
-            <p id="droneResponse">
-                Waiting for emergency response.
-            </p>
-
-        </div>
+        <p id="policeResponse">
+            Waiting for SOS...
+        </p>
 
     </div>
+
+
+    <!-- DRONE -->
+
+    <div class="response-card">
+
+        <div class="icon">
+            🚁
+        </div>
+
+        <h3>
+            Drone Response
+        </h3>
+
+        <p id="droneResponse">
+            Waiting for SOS...
+        </p>
+
+        <button
+            id="dispatchDrone"
+            class="dispatch-button"
+            onclick="dispatchDrone()">
+
+            🚁 DISPATCH DRONE
+
+        </button>
+
+    </div>
+
+
+    <!-- MANPOWER — UNCHANGED -->
+
+    <div class="response-card">
+
+        <div class="icon">
+            👮
+        </div>
+
+        <h3>
+            Manpower Response
+        </h3>
+
+        <p id="manpowerResponse">
+            Waiting for SOS...
+        </p>
+
+    </div>
+
+</div>
 
 </section>
 
 
 <!-- =====================================================
      DRONE CAMERA
-===================================================== -->
+     ===================================================== -->
 
 <section class="drone-section">
 
-    <h2>
-        🎥 AI Guardian Drone Camera
-    </h2>
+<h2>
+    🚁 AI Guardian Drone — Camera Feed
+</h2>
 
-    <div class="simulated-label">
-        SIMULATED AI CAMERA FEED —
-        EXHIBITION DEMONSTRATION
+<div class="simulated-label">
+
+    ⚠ SIMULATED AI CAMERA FEED —
+    EXHIBITION DEMONSTRATION
+
+</div>
+
+<p>
+    The following animation demonstrates how the
+    Guardian Drone approaches an emergency location,
+    identifies the victim and begins AI-assisted
+    monitoring.
+</p>
+
+
+<div class="drone-feed">
+
+
+<!-- =====================================================
+     CAMERA
+     ===================================================== -->
+
+<div class="camera-screen">
+
+
+<div
+    class="camera-world"
+    id="cameraWorld">
+
+
+    <div class="building b1"></div>
+
+    <div class="building b2"></div>
+
+    <div class="building b3"></div>
+
+
+    <div class="tree t1"></div>
+
+    <div class="tree t2"></div>
+
+    <div class="tree t3"></div>
+
+
+    <div class="road"></div>
+
+
+    <div class="street-light sl1"></div>
+
+    <div class="street-light sl2"></div>
+
+
+    <!-- VICTIM -->
+
+    <div
+        class="victim"
+        id="victim">
+
+        <div class="victim-head"></div>
+
+        <div class="victim-hair"></div>
+
+        <div class="victim-body"></div>
+
+        <div class="victim-arm left"></div>
+
+        <div class="victim-arm right"></div>
+
+        <div class="victim-leg left"></div>
+
+        <div class="victim-leg right"></div>
+
     </div>
 
 
-    <div class="drone-feed">
+    <!-- AI TARGET -->
 
+    <div
+        class="ai-target"
+        id="aiTarget">
 
-        <!-- CAMERA -->
+        <span>
+            AI TARGET
+        </span>
 
-        <div class="camera-screen">
+    </div>
 
-            <div
-                class="camera-world"
-                id="cameraWorld"
-            >
 
+    <!-- DRONE -->
 
-                <!-- HUD -->
+    <div
+        class="flying-drone"
+        id="flyingDrone">
 
-                <div class="camera-hud">
+        <div class="drone-rotor rotor1"></div>
 
-                    <div class="rec-indicator">
-                        ● REC
-                    </div>
+        <div class="drone-rotor rotor2"></div>
 
-                    AI GUARDIAN DRONE<br>
+        <div class="drone-arm arm1"></div>
 
-                    CAMERA: AGD-01<br>
+        <div class="drone-arm arm2"></div>
 
-                    GPS:
-                    <span id="droneLocation">
-                        WAITING
-                    </span>
+        <div class="drone-body">
 
-                </div>
+            <div class="drone-camera"></div>
 
-
-                <!-- TITLE -->
-
-                <div class="camera-title">
-
-                    🔴 LIVE SIMULATION —
-                    RECORDING VICTIM AREA
-
-                </div>
-
-
-                <!-- WARNING -->
-
-                <div
-                    class="ai-warning"
-                    id="aiWarning"
-                >
-                    ⚠ PERSON DETECTED
-                </div>
-
-
-                <!-- BUILDINGS -->
-
-                <div class="building b1"></div>
-
-                <div class="building b2"></div>
-
-                <div class="building b3"></div>
-
-
-                <!-- TREES -->
-
-                <div class="tree t1"></div>
-
-                <div class="tree t2"></div>
-
-                <div class="tree t3"></div>
-
-
-                <!-- STREET LIGHTS -->
-
-                <div class="street-light sl1"></div>
-
-                <div class="street-light sl2"></div>
-
-
-                <!-- ROAD -->
-
-                <div class="road"></div>
-
-
-                <!-- =================================================
-                     PERSON
-                ================================================= -->
-
-                <div class="victim">
-
-                    <div
-                        class="victim-head"
-                    ></div>
-
-                    <div
-                        class="victim-body"
-                    ></div>
-
-                    <div
-                        class="victim-leg left"
-                    ></div>
-
-                    <div
-                        class="victim-leg right"
-                    ></div>
-
-                </div>
-
-
-                <!-- =================================================
-                     AI TARGET
-                ================================================= -->
-
-                <div
-                    class="ai-target"
-                    id="aiTarget"
-                ></div>
-
-
-                <!-- =================================================
-                     SCANNING
-                ================================================= -->
-
-                <div
-                    class="scan-line"
-                    id="scanLine"
-                ></div>
-
-
-                <!-- =================================================
-                     DRONE
-                ================================================= -->
-
-                <div
-                    class="flying-drone"
-                    id="flyingDrone"
-                >
-
-                    <div
-                        class="drone-arm"
-                    ></div>
-
-                    <div
-                        class="drone-body"
-                    ></div>
-
-                    <div
-                        class="drone-light"
-                    ></div>
-
-                    <div
-                        class="propeller prop1"
-                    ></div>
-
-                    <div
-                        class="propeller prop2"
-                    ></div>
-
-                    <div
-                        class="propeller prop3"
-                    ></div>
-
-                    <div
-                        class="propeller prop4"
-                    ></div>
-
-                </div>
-
-
-                <!-- CAMERA BOTTOM -->
-
-                <div class="camera-bottom">
-
-                    <div class="telemetry">
-                        GPS:
-                        <strong>
-                            <span id="droneLat">
-                                --
-                            </span>
-                        </strong>
-                    </div>
-
-                    <div class="telemetry">
-                        LNG:
-                        <strong>
-                            <span id="droneLng">
-                                --
-                            </span>
-                        </strong>
-                    </div>
-
-                    <div class="telemetry">
-                        ALT:
-                        <strong>
-                            <span id="droneAltitude">
-                                25 m
-                            </span>
-                        </strong>
-                    </div>
-
-                    <div class="telemetry">
-                        DIST:
-                        <strong>
-                            <span id="droneDistance">
-                                800 m
-                            </span>
-                        </strong>
-                    </div>
-
-                    <div class="telemetry">
-                        AI:
-                        <strong>
-                            <span id="droneStatus">
-                                STANDBY
-                            </span>
-                        </strong>
-                    </div>
-
-                    <div class="telemetry">
-                        TIME:
-                        <strong>
-                            <span id="feedTime">
-                                --
-                            </span>
-                        </strong>
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- OBSERVATION -->
-
-        <div class="observation">
-
-            <h3>
-                🤖 AI Analysis
-            </h3>
-
-            <p id="aiObservation">
-                Drone camera waiting for
-                dispatch.
-            </p>
-
-
-            <h3>
-                Drone Mission
-            </h3>
-
-            <p id="droneMission">
-                Drone is ready for
-                emergency response.
-            </p>
-
-
-            <h3>
-                Flight Status
-            </h3>
-
-            <p id="flightMessage">
-                🔴 SOS LOCATION —
-                DRONE WAITING FOR DISPATCH
-            </p>
+            <div class="drone-light"></div>
 
         </div>
 
     </div>
 
-</section>
+
+    <!-- SCAN -->
+
+    <div
+        class="scan-line"
+        id="scanLine">
+    </div>
 
 
 </div>
 
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- TOP HUD -->
+
+<div class="camera-top">
+
+    <span class="recording">
+        ● REC
+    </span>
+
+    <span>
+        AI GUARDIAN DRONE
+    </span>
+
+    <span id="feedTime">
+        LIVE
+    </span>
+
+</div>
+
+
+<!-- FLIGHT MESSAGE -->
+
+<div
+    class="flight-message"
+    id="flightMessage">
+
+    🚁 DRONE WAITING FOR DISPATCH
+
+</div>
+
+
+<!-- AI WARNING -->
+
+<div
+    class="ai-warning"
+    id="aiWarning">
+
+    ⚠ AI ANALYSIS ACTIVE
+
+</div>
+
+
+<!-- CROSSHAIR -->
+
+<div class="camera-crosshair">
+
+    <div class="cross-horizontal"></div>
+
+    <div class="cross-vertical"></div>
+
+    <div class="cross-circle"></div>
+
+</div>
+
+
+<!-- BOTTOM HUD -->
+
+<div class="camera-bottom">
+
+    <span>
+
+        GPS:
+
+        <b id="droneLat">
+            --
+        </b>
+
+        ,
+
+        <b id="droneLng">
+            --
+        </b>
+
+    </span>
+
+
+    <span>
+
+        ALT:
+
+        <b id="droneAltitude">
+            45 m
+        </b>
+
+    </span>
+
+
+    <span>
+
+        DIST:
+
+        <b id="droneDistance">
+            800 m
+        </b>
+
+    </span>
+
+
+    <span>
+
+        AI:
+
+        <b>
+            TRACKING
+        </b>
+
+    </span>
+
+
+    <span>
+
+        STATUS:
+
+        <b id="droneStatus">
+            WAITING
+        </b>
+
+    </span>
+
+</div>
+
+</div>
+
+
+<!-- =====================================================
+     DRONE INFORMATION
+     ===================================================== -->
+
+<div class="drone-info">
+
+
+<div class="info-box">
+
+    <span>
+        🚁
+    </span>
+
+    <div>
+
+        <strong>
+            Drone Status
+        </strong>
+
+        <p id="droneMission">
+            Waiting for dispatch
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="info-box">
+
+    <span>
+        📍
+    </span>
+
+    <div>
+
+        <strong>
+            Victim Location
+        </strong>
+
+        <p id="droneLocation">
+            Waiting for GPS
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="info-box">
+
+    <span>
+        🤖
+    </span>
+
+    <div>
+
+        <strong>
+            AI Observation
+        </strong>
+
+        <p id="aiObservation">
+            Waiting for emergency alert...
+        </p>
+
+    </div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
+</div>
+
+
+<!-- =====================================================
+     LEAFLET
+     ===================================================== -->
+
+<script
+src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
 
 
 <script>
 
 /* =====================================================
-   VARIABLES
-===================================================== */
+   GLOBAL VARIABLES
+   ===================================================== */
 
-let map;
+let peer = null;
+
+let victimConnection = null;
+
+let map = null;
 
 let victimMarker = null;
 
@@ -2157,90 +2792,180 @@ let lastVictimLat = null;
 
 let lastVictimLng = null;
 
-let peer = null;
-
-let victimConnection = null;
+let selectedStation = null;
 
 let sirenEnabled = false;
+
+let audioContext = null;
 
 let sirenTimer = null;
 
 
 /* =====================================================
-   MAP
-===================================================== */
+   BENGALURU DEFAULT
+   ===================================================== */
+
+const BENGALURU_LAT =
+    12.9716;
+
+const BENGALURU_LNG =
+    77.5946;
+
+
+/* =====================================================
+   POLICE STATIONS
+   ===================================================== */
+
+const stations = [
+
+    {
+        name:
+            "Whitefield Police Station",
+
+        lat:
+            12.9698,
+
+        lng:
+            77.7499,
+
+        available:
+            true
+    },
+
+    {
+        name:
+            "Kadugodi Police Station",
+
+        lat:
+            12.9980,
+
+        lng:
+            77.7568,
+
+        available:
+            true
+    },
+
+    {
+        name:
+            "Mahadevapura Police Station",
+
+        lat:
+            12.9935,
+
+        lng:
+            77.6974,
+
+        available:
+            true
+    },
+
+    {
+        name:
+            "Marathahalli Police Station",
+
+        lat:
+            12.9569,
+
+        lng:
+            77.7011,
+
+        available:
+            true
+    },
+
+    {
+        name:
+            "Varthur Police Station",
+
+        lat:
+            12.9386,
+
+        lng:
+            77.7462,
+
+        available:
+            true
+    },
+
+    {
+        name:
+            "HAL Police Station",
+
+        lat:
+            12.9582,
+
+        lng:
+            77.6595,
+
+        available:
+            true
+    }
+
+];
+
+
+/* =====================================================
+   INITIALIZE MAP
+   ===================================================== */
 
 function initializeMap() {
 
     map =
         L.map("map")
         .setView(
-            [13.006637,77.740073],
-            13
+            [
+                BENGALURU_LAT,
+                BENGALURU_LNG
+            ],
+            11
         );
 
 
     L.tileLayer(
         "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
         {
-            maxZoom: 19,
+            maxZoom:
+                19,
 
             attribution:
                 "&copy; OpenStreetMap contributors"
         }
     ).addTo(map);
 
+
+    stations.forEach(
+        function(station) {
+
+            L.marker(
+                [
+                    station.lat,
+                    station.lng
+                ]
+            )
+            .addTo(map)
+            .bindPopup(
+                "<b>🚔 " +
+                station.name +
+                "</b>"
+            );
+
+        }
+    );
+
 }
 
 
 /* =====================================================
-   POLICE STATIONS
-===================================================== */
+   STATION DISPLAY
+   ===================================================== */
 
 function displayStations() {
-
-    const stations =
-        [
-            {
-                name:
-                    "Whitefield Police Station",
-
-                distance:
-                    "1.8 km",
-
-                status:
-                    "AVAILABLE"
-            },
-
-            {
-                name:
-                    "Mahadevapura Police Station",
-
-                distance:
-                    "3.4 km",
-
-                status:
-                    "AVAILABLE"
-            },
-
-            {
-                name:
-                    "KR Puram Police Station",
-
-                distance:
-                    "5.1 km",
-
-                status:
-                    "BUSY"
-            }
-        ];
-
 
     const grid =
         document.getElementById(
             "stationGrid"
         );
-
 
     grid.innerHTML = "";
 
@@ -2253,12 +2978,10 @@ function displayStations() {
                     "div"
                 );
 
-
             card.className =
                 "station-card " +
                 (
-                    station.status ===
-                    "AVAILABLE"
+                    station.available
                     ? "available"
                     : "busy"
                 );
@@ -2267,24 +2990,27 @@ function displayStations() {
             card.innerHTML = `
 
                 <h3>
-                    ${station.name}
+                    🚔 ${station.name}
                 </h3>
 
                 <p>
-                    Distance:
-                    ${station.distance}
+                    Bengaluru Police Network
                 </p>
 
                 <div class="station-status">
-                    ${station.status}
+
+                    ${
+                        station.available
+                        ? "● Manpower Available"
+                        : "● Currently Busy"
+                    }
+
                 </div>
 
             `;
 
 
-            grid.appendChild(
-                card
-            );
+            grid.appendChild(card);
 
         }
     );
@@ -2293,136 +3019,276 @@ function displayStations() {
 
 
 /* =====================================================
-   PEERJS
-===================================================== */
+   PEER CONNECTION
+   ===================================================== */
 
 function initializePeer() {
 
-    const status =
+    document.getElementById(
+        "connectionStatus"
+    ).textContent =
+        "Connecting to secure police network...";
+
+
+    peer =
+        new Peer();
+
+
+    peer.on(
+        "open",
+        function(id) {
+
+            document.getElementById(
+                "peerId"
+            ).textContent =
+                id;
+
+
+            document.getElementById(
+                "connectionStatus"
+            ).textContent =
+                "✅ Police connection ready. Victim device can connect.";
+
+            generateQR(id);
+
+        }
+    );
+
+
+    peer.on(
+        "connection",
+        function(connection) {
+
+            victimConnection =
+                connection;
+
+            setupVictimConnection(
+                connection
+            );
+
+        }
+    );
+
+
+    peer.on(
+        "error",
+        function(error) {
+
+            console.error(error);
+
+            document.getElementById(
+                "connectionStatus"
+            ).textContent =
+                "⚠ Police connection error. Please refresh the page.";
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   QR CODE
+   ===================================================== */
+
+function generateQR(peerId) {
+
+    const qr =
         document.getElementById(
-            "connectionStatus"
+            "qrcode"
+        );
+
+    qr.innerHTML = "";
+
+
+    /*
+       The victim page should receive
+       the police PeerJS ID through the URL.
+    */
+
+    const victimPage =
+        window.location.origin +
+        window.location.pathname
+            .replace(
+                "police.html",
+                "index.html"
+            );
+
+
+    const connectionURL =
+        victimPage +
+        "?police=" +
+        encodeURIComponent(
+            peerId
         );
 
 
-    try {
+    new QRCode(
+        qr,
+        {
+            text:
+                connectionURL,
 
-        peer =
-            new Peer();
+            width:
+                190,
 
+            height:
+                190,
 
-        peer.on(
-            "open",
-            function(id) {
+            colorDark:
+                "#000000",
 
-                document.getElementById(
-                    "peerId"
-                ).textContent =
-                    id;
+            colorLight:
+                "#ffffff",
 
+            correctLevel:
+                QRCode.CorrectLevel.H
+        }
+    );
 
-                status.textContent =
-                    "🟢 Police network connected.";
-
-            }
-        );
-
-
-        peer.on(
-            "connection",
-            function(connection) {
-
-                victimConnection =
-                    connection;
+}
 
 
-                status.textContent =
-                    "🟢 Victim device connected.";
+/* =====================================================
+   VICTIM CONNECTION
+   ===================================================== */
+
+function setupVictimConnection(
+    connection
+) {
+
+    connection.on(
+        "open",
+        function() {
+
+            document.getElementById(
+                "connectionStatus"
+            ).textContent =
+                "🟢 Victim device connected successfully.";
+
+        }
+    );
 
 
-                connection.on(
-                    "data",
-                    function(data) {
+    connection.on(
+        "data",
+        function(data) {
 
-                        processVictimData(
-                            data
-                        );
+            processVictimData(
+                data
+            );
 
-                    }
-                );
-
-
-                connection.on(
-                    "close",
-                    function() {
-
-                        status.textContent =
-                            "⚠ Victim device disconnected.";
-
-                    }
-                );
-
-            }
-        );
+        }
+    );
 
 
-        peer.on(
-            "error",
-            function(error) {
+    connection.on(
+        "close",
+        function() {
 
-                console.error(
-                    "PeerJS:",
-                    error
-                );
+            document.getElementById(
+                "connectionStatus"
+            ).textContent =
+                "⚠ Victim device disconnected.";
 
-
-                status.textContent =
-                    "⚠ Network connection error.";
-
-            }
-        );
-
-    }
-
-    catch(error) {
-
-        console.error(error);
-
-        status.textContent =
-            "⚠ PeerJS unavailable.";
-
-    }
+        }
+    );
 
 }
 
 
 /* =====================================================
    VICTIM DATA
-===================================================== */
+   ===================================================== */
 
-function processVictimData(
-    data
-) {
+function processVictimData(data) {
+
+    console.log(
+        "Victim data:",
+        data
+    );
+
+
+    /*
+       Supports several common
+       GPS data formats.
+    */
+
+    let lat = null;
+
+    let lng = null;
+
 
     if (
-        !data ||
-        typeof data !== "object"
+        data &&
+        typeof data === "object"
     ) {
-        return;
+
+        if (
+            data.latitude !== undefined &&
+            data.longitude !== undefined
+        ) {
+
+            lat =
+                Number(
+                    data.latitude
+                );
+
+            lng =
+                Number(
+                    data.longitude
+                );
+
+        }
+
+        else if (
+            data.lat !== undefined &&
+            data.lng !== undefined
+        ) {
+
+            lat =
+                Number(
+                    data.lat
+                );
+
+            lng =
+                Number(
+                    data.lng
+                );
+
+        }
+
+        else if (
+            data.location &&
+            data.location.latitude !== undefined
+        ) {
+
+            lat =
+                Number(
+                    data.location.latitude
+                );
+
+            lng =
+                Number(
+                    data.location.longitude
+                );
+
+        }
+
+
+        if (
+            data.type === "SOS" ||
+            data.sos === true ||
+            data.alert === "SOS"
+        ) {
+
+            showEmergencyAlert(
+                data
+            );
+
+        }
+
     }
-
-
-    let lat =
-        Number(
-            data.latitude ??
-            data.lat
-        );
-
-
-    let lng =
-        Number(
-            data.longitude ??
-            data.lng
-        );
 
 
     if (
@@ -2437,27 +3303,17 @@ function processVictimData(
 
     }
 
-
-    if (
-        data.type === "SOS" ||
-        data.sos === true ||
-        data.alert === "SOS"
-    ) {
-
-        showSOS();
-
-    }
-
 }
 
 
 /* =====================================================
-   LOCATION
-===================================================== */
+   LOCATION UPDATE
+   ===================================================== */
 
 function updateVictimLocation(
     lat,
-    lng
+    lng,
+    accuracy
 ) {
 
     lastVictimLat =
@@ -2480,40 +3336,23 @@ function updateVictimLocation(
 
 
     document.getElementById(
-        "gpsStatus"
+        "locationStatus"
     ).textContent =
-        "CONNECTED";
+        "🟢 Live GPS tracking active";
 
 
     document.getElementById(
         "gpsTime"
     ).textContent =
-        new Date()
-        .toLocaleTimeString();
+        new Date().toLocaleTimeString();
 
 
-    document.getElementById(
-        "droneLat"
-    ).textContent =
-        lat.toFixed(6);
+    if (
+        !map
+    ) {
 
-
-    document.getElementById(
-        "droneLng"
-    ).textContent =
-        lng.toFixed(6);
-
-
-    document.getElementById(
-        "droneLocation"
-    ).textContent =
-        lat.toFixed(6) +
-        ", " +
-        lng.toFixed(6);
-
-
-    if (!map) {
         return;
+
     }
 
 
@@ -2524,7 +3363,9 @@ function updateVictimLocation(
         ];
 
 
-    if (!victimMarker) {
+    if (
+        !victimMarker
+    ) {
 
         victimMarker =
             L.marker(
@@ -2532,7 +3373,7 @@ function updateVictimLocation(
             )
             .addTo(map)
             .bindPopup(
-                "🚨 Victim SOS Location"
+                "<b>🚨 Victim Location</b><br>Live GPS"
             );
 
     }
@@ -2546,62 +3387,113 @@ function updateVictimLocation(
     }
 
 
-    if (!accuracyCircle) {
+    if (
+        accuracyCircle
+    ) {
+
+        accuracyCircle.setLatLng(
+            position
+        );
+
+        if (
+            Number.isFinite(
+                Number(accuracy)
+            )
+        ) {
+
+            accuracyCircle.setRadius(
+                Number(accuracy)
+            );
+
+        }
+
+    }
+
+    else {
 
         accuracyCircle =
             L.circle(
                 position,
                 {
-                    radius: 40,
+                    radius:
+                        Number.isFinite(
+                            Number(accuracy)
+                        )
+                        ? Number(accuracy)
+                        : 30,
 
                     color:
-                        "#39e58b",
+                        "#24d98a",
 
                     fillOpacity:
-                        .12
+                        0.12
                 }
             )
             .addTo(map);
 
     }
 
-    else {
-
-        accuracyCircle.setLatLng(
-            position
-        );
-
-    }
-
 
     map.setView(
         position,
-        16
+        16,
+        {
+            animate:
+                true
+        }
     );
 
 }
 
 
 /* =====================================================
-   SOS
-===================================================== */
+   EMERGENCY ALERT
+   ===================================================== */
 
-function showSOS() {
+function showEmergencyAlert(
+    data
+) {
 
-    document.getElementById(
-        "sosAlert"
-    ).classList.add(
+    const alertBox =
+        document.getElementById(
+            "alertBox"
+        );
+
+
+    alertBox.classList.add(
         "active"
     );
 
 
     document.getElementById(
-        "connectionStatus"
+        "alertDetails"
     ).textContent =
-        "🔴 SOS received — emergency active.";
+        "Emergency SOS received from the victim device. " +
+        "The nearest police station has been notified.";
 
 
-    if (sirenEnabled) {
+    document.getElementById(
+        "policeResponse"
+    ).textContent =
+        "🚔 SOS received. Nearest police station responding.";
+
+
+    document.getElementById(
+        "droneResponse"
+    ).textContent =
+        "🚁 Drone ready for immediate dispatch.";
+
+
+    /*
+       IMPORTANT:
+       Manpower response is intentionally
+       not modified.
+    */
+
+
+    if (
+        sirenEnabled
+    ) {
 
         startSiren();
 
@@ -2611,105 +3503,153 @@ function showSOS() {
 
 
 /* =====================================================
-   POLICE DISPATCH
-===================================================== */
-
-function dispatchPolice() {
-
-    document.getElementById(
-        "droneResponse"
-    ).textContent =
-        "🚔 Police unit dispatched to the emergency location.";
-
-
-    document.getElementById(
-        "flightMessage"
-    ).textContent =
-        "🚔 POLICE RESPONSE ACTIVE";
-
-}
-
-
-/* =====================================================
-   AUDIO
-===================================================== */
+   SIREN — WEB AUDIO
+   ===================================================== */
 
 function createAudioContext() {
 
-    const AudioContext =
-        window.AudioContext ||
-        window.webkitAudioContext;
+    if (
+        !audioContext
+    ) {
 
+        const AudioCtx =
+            window.AudioContext ||
+            window.webkitAudioContext;
 
-    if (!AudioContext) {
-        return null;
+        if (
+            !AudioCtx
+        ) {
+
+            return null;
+
+        }
+
+        audioContext =
+            new AudioCtx();
+
     }
 
 
-    return new AudioContext();
+    if (
+        audioContext.state ===
+        "suspended"
+    ) {
+
+        audioContext.resume();
+
+    }
+
+
+    return audioContext;
 
 }
 
 
 /* =====================================================
-   SIREN TOGGLE
-===================================================== */
+   ENABLE SIREN
+   ===================================================== */
 
-function toggleSiren() {
+document.getElementById(
+    "enableSiren"
+).addEventListener(
+    "click",
+    function() {
 
-    sirenEnabled =
-        !sirenEnabled;
-
-
-    const button =
-        document.getElementById(
-            "sirenButton"
-        );
+        const ctx =
+            createAudioContext();
 
 
-    if (sirenEnabled) {
+        if (
+            !ctx
+        ) {
 
-        button.classList.add(
+            document.getElementById(
+                "sirenStatus"
+            ).textContent =
+                "This browser does not support the emergency sound system.";
+
+            return;
+
+        }
+
+
+        sirenEnabled =
+            true;
+
+
+        this.classList.add(
             "enabled"
         );
 
-        button.textContent =
-            "🔊 SIREN ENABLED";
+
+        this.textContent =
+            "🔊 Emergency Siren Enabled";
 
 
         document.getElementById(
             "sirenStatus"
         ).textContent =
-            "Siren enabled — emergency alerts can trigger audio.";
+            "🟢 Emergency sound system enabled. It will activate when an SOS is received.";
 
-    }
 
-    else {
+        /*
+           Short confirmation beep.
+           This unlocks Web Audio on browsers
+           that require user interaction.
+        */
 
-        button.classList.remove(
-            "enabled"
+        const oscillator =
+            ctx.createOscillator();
+
+        const gain =
+            ctx.createGain();
+
+
+        oscillator.type =
+            "sine";
+
+        oscillator.frequency.value =
+            880;
+
+
+        gain.gain.setValueAtTime(
+            0.0001,
+            ctx.currentTime
         );
 
-        button.textContent =
-            "🔊 ENABLE SIREN";
+        gain.gain.exponentialRampToValueAtTime(
+            0.25,
+            ctx.currentTime + 0.03
+        );
+
+        gain.gain.exponentialRampToValueAtTime(
+            0.0001,
+            ctx.currentTime + 0.25
+        );
 
 
-        stopSiren();
+        oscillator.connect(
+            gain
+        );
+
+        gain.connect(
+            ctx.destination
+        );
 
 
-        document.getElementById(
-            "sirenStatus"
-        ).textContent =
-            "Siren disabled.";
+        oscillator.start();
+
+        oscillator.stop(
+            ctx.currentTime + 0.3
+        );
 
     }
-
-}
+);
 
 
 /* =====================================================
    START SIREN
-===================================================== */
+   ===================================================== */
 
 function startSiren() {
 
@@ -2717,8 +3657,13 @@ function startSiren() {
         createAudioContext();
 
 
-    if (!ctx) {
+    if (
+        !ctx ||
+        !sirenEnabled
+    ) {
+
         return;
+
     }
 
 
@@ -2734,7 +3679,6 @@ function startSiren() {
         const oscillator =
             ctx.createOscillator();
 
-
         const gain =
             ctx.createGain();
 
@@ -2745,7 +3689,7 @@ function startSiren() {
 
         oscillator.frequency.value =
             high
-            ? 900
+            ? 950
             : 550;
 
 
@@ -2754,27 +3698,24 @@ function startSiren() {
 
 
         gain.gain.setValueAtTime(
-            .0001,
+            0.0001,
             ctx.currentTime
         );
 
-
         gain.gain.exponentialRampToValueAtTime(
-            .25,
-            ctx.currentTime + .04
+            0.35,
+            ctx.currentTime + 0.04
         );
 
-
         gain.gain.exponentialRampToValueAtTime(
-            .0001,
-            ctx.currentTime + .4
+            0.0001,
+            ctx.currentTime + 0.42
         );
 
 
         oscillator.connect(
             gain
         );
-
 
         gain.connect(
             ctx.destination
@@ -2783,9 +3724,8 @@ function startSiren() {
 
         oscillator.start();
 
-
         oscillator.stop(
-            ctx.currentTime + .45
+            ctx.currentTime + 0.45
         );
 
     }
@@ -2811,11 +3751,13 @@ function startSiren() {
 
 /* =====================================================
    STOP SIREN
-===================================================== */
+   ===================================================== */
 
 function stopSiren() {
 
-    if (sirenTimer) {
+    if (
+        sirenTimer
+    ) {
 
         clearInterval(
             sirenTimer
@@ -2831,16 +3773,9 @@ function stopSiren() {
 
 /* =====================================================
    DISPATCH DRONE
-===================================================== */
+   ===================================================== */
 
 function dispatchDrone() {
-
-    /*
-       If GPS is not available yet,
-       use the demonstration location
-       so the exhibition simulation
-       can still be shown.
-    */
 
     if (
         !Number.isFinite(
@@ -2851,17 +3786,11 @@ function dispatchDrone() {
         )
     ) {
 
-        lastVictimLat =
-            13.006637;
-
-        lastVictimLng =
-            77.740073;
-
-
-        updateVictimLocation(
-            lastVictimLat,
-            lastVictimLng
+        alert(
+            "Waiting for the victim's live GPS location."
         );
+
+        return;
 
     }
 
@@ -2871,24 +3800,20 @@ function dispatchDrone() {
             "flyingDrone"
         );
 
-
     const world =
         document.getElementById(
             "cameraWorld"
         );
-
 
     const target =
         document.getElementById(
             "aiTarget"
         );
 
-
     const scan =
         document.getElementById(
             "scanLine"
         );
-
 
     const warning =
         document.getElementById(
@@ -2896,78 +3821,72 @@ function dispatchDrone() {
         );
 
 
-    const button =
-        document.getElementById(
-            "dispatchDroneButton"
-        );
-
-
-    /* RESET */
+    /*
+       RESET
+    */
 
     drone.classList.remove(
         "fly"
     );
 
-
-    drone.classList.remove(
-        "hovering"
-    );
-
-
-    drone.style.left =
-        "5%";
-
-
-    drone.style.top =
-        "8%";
-
-
-    drone.style.transform =
-        "scale(.75)";
-
-
     world.classList.remove(
         "zoomed"
     );
-
 
     target.classList.remove(
         "visible"
     );
 
-
     scan.classList.remove(
         "active"
     );
-
 
     warning.classList.remove(
         "active"
     );
 
 
+    /*
+       Force browser reflow
+       so the animation restarts.
+    */
+
     void drone.offsetWidth;
 
 
-    /* START */
+    /*
+       START DRONE
+    */
 
     drone.classList.add(
         "fly"
     );
 
 
-    button.disabled =
-        true;
+    document.getElementById(
+        "droneLat"
+    ).textContent =
+        lastVictimLat.toFixed(6);
 
 
-    button.textContent =
-        "🚁 DRONE DISPATCHED";
+    document.getElementById(
+        "droneLng"
+    ).textContent =
+        lastVictimLng.toFixed(6);
 
 
     document.getElementById(
         "droneMission"
     ).textContent =
         "🚁 Drone dispatched and approaching victim location.";
+
+
+    document.getElementById(
+        "droneLocation"
+    ).textContent =
+        lastVictimLat.toFixed(6) +
+        ", " +
+        lastVictimLng.toFixed(6);
 
 
     document.getElementById(
@@ -3006,7 +3925,9 @@ function dispatchDrone() {
         "🚁 Drone dispatched — approaching victim location.";
 
 
-    /* 2.5 SECONDS */
+    /*
+       2.5 SECONDS
+    */
 
     setTimeout(
         function() {
@@ -3027,7 +3948,9 @@ function dispatchDrone() {
     );
 
 
-    /* 5 SECONDS */
+    /*
+       5 SECONDS
+    */
 
     setTimeout(
         function() {
@@ -3060,7 +3983,10 @@ function dispatchDrone() {
     );
 
 
-    /* 6 SECONDS — CAMERA ZOOM */
+    /*
+       6 SECONDS
+       CAMERA ZOOMS
+    */
 
     setTimeout(
         function() {
@@ -3074,7 +4000,10 @@ function dispatchDrone() {
     );
 
 
-    /* 7 SECONDS — AI DETECTION */
+    /*
+       7 SECONDS
+       AI DETECTION
+    */
 
     setTimeout(
         function() {
@@ -3083,11 +4012,9 @@ function dispatchDrone() {
                 "visible"
             );
 
-
             scan.classList.add(
                 "active"
             );
-
 
             warning.classList.add(
                 "active"
@@ -3128,60 +4055,13 @@ function dispatchDrone() {
     );
 
 
-    /* =================================================
-       8 SECONDS
-       DRONE ARRIVES ABOVE PERSON
-    ================================================= */
+    /*
+       9 SECONDS
+       RECORDING
+    */
 
     setTimeout(
         function() {
-
-            /*
-               STOP FLIGHT
-            */
-
-            drone.classList.remove(
-                "fly"
-            );
-
-
-            /*
-               EXACT CENTER POSITION
-
-               Person:
-               left = 50%
-
-               Drone:
-               left = 50%
-
-               translateX(-50%)
-               centers the drone itself.
-            */
-
-            drone.style.left =
-                "50%";
-
-
-            drone.style.top =
-                "20%";
-
-
-            drone.style.transform =
-                "translateX(-50%) scale(1.08)";
-
-
-            /*
-               START HOVER
-            */
-
-            drone.classList.add(
-                "hovering"
-            );
-
-
-            /*
-               UPDATE STATUS
-            */
 
             document.getElementById(
                 "droneDistance"
@@ -3194,46 +4074,6 @@ function dispatchDrone() {
             ).textContent =
                 "25 m";
 
-
-            document.getElementById(
-                "droneStatus"
-            ).textContent =
-                "ON SITE";
-
-
-            document.getElementById(
-                "flightMessage"
-            ).textContent =
-                "🔴 DRONE ON SITE — AI MONITORING ACTIVE";
-
-
-            document.getElementById(
-                "aiObservation"
-            ).textContent =
-                "📹 Drone is hovering directly above the person while the AI camera monitors the simulated emergency scene.";
-
-
-            document.getElementById(
-                "droneMission"
-            ).textContent =
-                "🚁 Drone reached the victim location and is hovering directly above the person.";
-
-
-            document.getElementById(
-                "droneResponse"
-            ).textContent =
-                "🚁 Drone on site — hovering directly above victim.";
-
-
-        },
-        8000
-    );
-
-
-    /* 9 SECONDS — RECORDING */
-
-    setTimeout(
-        function() {
 
             document.getElementById(
                 "flightMessage"
@@ -3254,8 +4094,8 @@ function dispatchDrone() {
 
 
 /* =====================================================
-   CLOCK
-===================================================== */
+   LIVE FEED CLOCK
+   ===================================================== */
 
 setInterval(
     function() {
@@ -3266,11 +4106,12 @@ setInterval(
             );
 
 
-        if (element) {
+        if (
+            element
+        ) {
 
             element.textContent =
-                new Date()
-                .toLocaleTimeString();
+                new Date().toLocaleTimeString();
 
         }
 
@@ -3280,54 +4121,8 @@ setInterval(
 
 
 /* =====================================================
-   QR CODE
-===================================================== */
-
-function createQR() {
-
-    const element =
-        document.getElementById(
-            "qrcode"
-        );
-
-
-    if (!element) {
-        return;
-    }
-
-
-    try {
-
-        new QRCode(
-            element,
-            {
-                text:
-                    window.location.origin +
-                    "/index.html",
-
-                width: 180,
-
-                height: 180
-            }
-        );
-
-    }
-
-    catch(error) {
-
-        console.log(
-            "QR code unavailable:",
-            error
-        );
-
-    }
-
-}
-
-
-/* =====================================================
    INITIALIZATION
-===================================================== */
+   ===================================================== */
 
 window.addEventListener(
     "load",
@@ -3338,8 +4133,6 @@ window.addEventListener(
         displayStations();
 
         initializePeer();
-
-        createQR();
 
     }
 );
