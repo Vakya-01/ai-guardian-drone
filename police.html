@@ -11,8 +11,7 @@
 <title>AI Guardian Drone - Police Dashboard</title>
 
 
-<!-- Leaflet -->
-
+<!-- Leaflet Map -->
 <link
 rel="stylesheet"
 href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -20,12 +19,10 @@ href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
 
 
 <!-- PeerJS -->
-
 <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
 
 
 <!-- QR Code -->
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 
@@ -36,85 +33,45 @@ href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
 }
 
 body {
-
     margin: 0;
-
-    font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-
+    font-family: Arial, Helvetica, sans-serif;
     background: #071b2d;
-
     color: white;
-
 }
-
 
 header {
-
     background: #0c2942;
-
-    border-top:
-        5px solid #e53935;
-
+    border-top: 5px solid #e53935;
     padding: 25px;
-
     text-align: center;
-
 }
-
 
 header h1 {
-
     margin: 0;
-
     font-size: 32px;
-
 }
-
 
 header p {
-
     color: #c8d6e2;
-
 }
-
 
 .container {
-
     width: 94%;
-
     max-width: 1200px;
-
     margin: auto;
-
-    padding:
-        25px 0 50px;
-
+    padding: 25px 0 50px;
 }
-
 
 .section {
-
     background: #102f4a;
-
-    border:
-        1px solid #245375;
-
+    border: 1px solid #245375;
     border-radius: 18px;
-
     padding: 22px;
-
     margin-bottom: 25px;
-
 }
 
-
 .section h2 {
-
     margin-top: 0;
-
 }
 
 
@@ -123,85 +80,48 @@ header p {
    ===================================================== */
 
 #connectionStatus {
-
     display: inline-block;
-
     padding: 10px 18px;
-
     border-radius: 20px;
-
     background: #a51d1d;
-
     font-weight: bold;
-
 }
-
 
 #connectionStatus.connected {
-
     background: #18864b;
-
 }
-
 
 .qr-area {
-
     display: flex;
-
     flex-wrap: wrap;
-
     justify-content: center;
-
     align-items: center;
-
     gap: 30px;
-
 }
-
 
 .qr-card {
-
     background: white;
-
     padding: 20px;
-
     border-radius: 15px;
-
     text-align: center;
-
 }
-
 
 #qrcode {
-
     width: 220px;
-
     min-height: 220px;
-
 }
-
 
 .qr-card p {
-
     color: #222;
-
     font-weight: bold;
-
 }
 
-
 .peer-id {
-
     background: #183d5c;
-
     padding: 15px;
-
     border-radius: 10px;
-
     word-break: break-all;
-
     color: #aee2ff;
-
 }
 
 
@@ -210,70 +130,37 @@ header p {
    ===================================================== */
 
 .siren-enable {
-
     display: block;
-
     width: 100%;
-
     max-width: 500px;
-
     margin: 10px auto;
-
     padding: 16px;
-
     border: none;
-
     border-radius: 12px;
-
     background: #e53935;
-
     color: white;
-
     font-size: 18px;
-
     font-weight: bold;
-
     cursor: pointer;
-
 }
-
 
 .siren-enable.enabled {
-
     background: #18864b;
-
 }
-
 
 .siren-status {
-
     text-align: center;
-
     padding: 13px;
-
     max-width: 650px;
-
     margin: auto;
-
     border-radius: 10px;
-
     background: #173b58;
-
 }
-
 
 .siren-status.active {
-
     background: #b42318;
-
-    animation:
-        sirenFlash
-        0.6s
-        infinite
-        alternate;
-
+    animation: sirenFlash 0.6s infinite alternate;
 }
-
 
 @keyframes sirenFlash {
 
@@ -293,36 +180,21 @@ header p {
    ===================================================== */
 
 .alert-box {
-
     display: none;
-
     background: #641d1d;
-
-    border:
-        2px solid #ff4949;
-
+    border: 2px solid #ff4949;
     border-radius: 15px;
-
     padding: 20px;
-
 }
-
 
 .alert-box.active {
-
     display: block;
-
 }
 
-
 .alert-title {
-
     color: #ff7777;
-
     font-size: 25px;
-
     font-weight: bold;
-
 }
 
 
@@ -331,101 +203,58 @@ header p {
    ===================================================== */
 
 #map {
-
     width: 100%;
-
     height: 500px;
-
     border-radius: 15px;
-
 }
-
 
 .location-info {
-
     background: #173d5c;
-
     padding: 15px;
-
     border-radius: 12px;
-
     margin-top: 15px;
-
 }
-
 
 .location-info p {
-
     margin: 8px 0;
-
 }
 
-
 .green {
-
     color: #7fffa8;
-
     font-weight: bold;
-
 }
 
 
 /* =====================================================
-   STATIONS
+   POLICE STATIONS
    ===================================================== */
 
 .station-grid {
-
     display: grid;
-
     grid-template-columns:
-        repeat(
-            auto-fit,
-            minmax(230px, 1fr)
-        );
-
+        repeat(auto-fit, minmax(230px, 1fr));
     gap: 15px;
-
 }
-
 
 .station {
-
     background: #183b59;
-
     border-radius: 14px;
-
     padding: 18px;
-
-    border-left:
-        6px solid #37d17c;
-
+    border-left: 6px solid #37d17c;
 }
-
 
 .station.busy {
-
-    border-left-color:
-        #e53935;
-
+    border-left-color: #e53935;
 }
-
 
 .available {
-
     color: #7fffa8;
-
     font-weight: bold;
-
 }
 
-
 .busy-text {
-
     color: #ff7777;
-
     font-weight: bold;
-
 }
 
 
@@ -434,42 +263,24 @@ header p {
    ===================================================== */
 
 .response-grid {
-
     display: grid;
-
     grid-template-columns:
-        repeat(
-            auto-fit,
-            minmax(230px, 1fr)
-        );
-
+        repeat(auto-fit, minmax(230px, 1fr));
     gap: 15px;
-
 }
-
 
 .response-card {
-
     background: #183b59;
-
     padding: 20px;
-
     border-radius: 14px;
-
 }
-
 
 .response-card .icon {
-
     font-size: 35px;
-
 }
 
-
 .response-card p {
-
     color: #d0dce5;
-
 }
 
 
@@ -478,39 +289,23 @@ header p {
    ===================================================== */
 
 .drone-section {
-
     display: none;
-
 }
-
 
 .drone-section.active {
-
     display: block;
-
 }
-
 
 .drone-feed {
-
     display: grid;
-
-    grid-template-columns:
-        2fr 1fr;
-
+    grid-template-columns: 2fr 1fr;
     gap: 20px;
-
 }
 
-
 .camera-screen {
-
     min-height: 360px;
-
     position: relative;
-
     overflow: hidden;
-
     border-radius: 15px;
 
     background:
@@ -519,47 +314,32 @@ header p {
             rgba(5,15,25,.9)
         );
 
-    border:
-        2px solid #37d17c;
-
+    border: 2px solid #37d17c;
 }
 
-
 .camera-top {
-
     position: absolute;
-
     top: 0;
-
     left: 0;
-
     right: 0;
 
     display: flex;
-
     justify-content: space-between;
 
     padding: 14px;
 
-    background:
-        rgba(0,0,0,.6);
-
+    background: rgba(0,0,0,.6);
 }
 
-
 .rec {
-
     color: #ff4b4b;
-
     font-weight: bold;
 
     animation:
         blink
         1s
         infinite;
-
 }
-
 
 @keyframes blink {
 
@@ -573,48 +353,31 @@ header p {
 
 }
 
-
 .camera-center {
-
     position: absolute;
-
     inset: 0;
 
     display: flex;
-
     justify-content: center;
-
     align-items: center;
-
     flex-direction: column;
-
 }
 
-
 .crosshair {
-
     width: 100px;
-
     height: 100px;
 
-    border:
-        2px solid white;
-
+    border: 2px solid white;
     border-radius: 50%;
 
     display: flex;
-
     justify-content: center;
-
     align-items: center;
 
     font-size: 40px;
-
 }
 
-
 .victim-detected {
-
     margin-top: 20px;
 
     background:
@@ -625,51 +388,33 @@ header p {
     border-radius: 20px;
 
     font-weight: bold;
-
 }
 
-
 .camera-bottom {
-
     position: absolute;
-
     bottom: 0;
-
     left: 0;
-
     right: 0;
 
     display: flex;
-
     justify-content: space-between;
 
     padding: 12px;
 
-    background:
-        rgba(0,0,0,.65);
+    background: rgba(0,0,0,.65);
 
     font-size: 13px;
-
 }
-
 
 .drone-info {
-
     display: flex;
-
     flex-direction: column;
-
     gap: 12px;
-
 }
 
-
 .info-box {
-
     display: flex;
-
     gap: 15px;
-
     align-items: center;
 
     padding: 18px;
@@ -680,23 +425,15 @@ header p {
 
     border-left:
         5px solid #37d17c;
-
 }
-
 
 .info-box span {
-
     font-size: 28px;
-
 }
 
-
 .info-box p {
-
     margin: 5px 0;
-
     color: #d4e1eb;
-
 }
 
 
@@ -792,8 +529,7 @@ header p {
             </div>
 
             <p>
-                Keep this page open while the victim
-                connects.
+                Keep this page open while the victim connects.
             </p>
 
         </div>
@@ -826,8 +562,8 @@ header p {
         id="sirenStatus"
         class="siren-status">
 
-        Tap the button above once to allow
-        emergency siren sound.
+        Click the button once to activate the
+        emergency sound system.
 
     </div>
 
@@ -867,10 +603,8 @@ header p {
 
     <p>
         The map starts over Bengaluru and automatically
-        moves to the victim's actual GPS position when
-        the victim device sends its location.
+        moves to the victim's actual GPS position.
     </p>
-
 
     <div id="map"></div>
 
@@ -878,9 +612,7 @@ header p {
     <div class="location-info">
 
         <p>
-            <strong>
-                Latitude:
-            </strong>
+            <strong>Latitude:</strong>
 
             <span
                 id="victimLat"
@@ -893,9 +625,7 @@ header p {
 
 
         <p>
-            <strong>
-                Longitude:
-            </strong>
+            <strong>Longitude:</strong>
 
             <span
                 id="victimLng"
@@ -908,9 +638,7 @@ header p {
 
 
         <p>
-            <strong>
-                GPS Status:
-            </strong>
+            <strong>GPS Status:</strong>
 
             <span
                 id="locationStatus"
@@ -923,9 +651,7 @@ header p {
 
 
         <p>
-            <strong>
-                Last GPS Update:
-            </strong>
+            <strong>Last GPS Update:</strong>
 
             <span
                 id="gpsTime"
@@ -1246,7 +972,6 @@ const stations = [
         true
     },
 
-
     {
         name:
         "Mahadevapura Police Station",
@@ -1260,7 +985,6 @@ const stations = [
         available:
         true
     },
-
 
     {
         name:
@@ -1276,7 +1000,6 @@ const stations = [
         true
     },
 
-
     {
         name:
         "Marathahalli Police Station",
@@ -1290,7 +1013,6 @@ const stations = [
         available:
         true
     },
-
 
     {
         name:
@@ -1306,7 +1028,6 @@ const stations = [
         true
     },
 
-
     {
         name:
         "Hebbal Police Station",
@@ -1321,7 +1042,6 @@ const stations = [
         false
     },
 
-
     {
         name:
         "Yelahanka Police Station",
@@ -1335,7 +1055,6 @@ const stations = [
         available:
         true
     },
-
 
     {
         name:
@@ -1439,7 +1158,6 @@ function distanceKm(
         Math.PI /
         180;
 
-
     const dLng =
         (
             lng2 -
@@ -1447,7 +1165,6 @@ function distanceKm(
         ) *
         Math.PI /
         180;
-
 
     const a =
         Math.sin(
@@ -1470,14 +1187,12 @@ function distanceKm(
             dLng / 2
         ) ** 2;
 
-
     const c =
         2 *
         Math.atan2(
             Math.sqrt(a),
             Math.sqrt(1 - a)
         );
-
 
     return R * c;
 
@@ -1537,7 +1252,7 @@ function getNearestAvailableStation(
 
 
 /* =====================================================
-   UPDATE LOCATION
+   UPDATE VICTIM LOCATION
    ===================================================== */
 
 function updateVictimLocation(
@@ -1545,11 +1260,8 @@ function updateVictimLocation(
     lng
 ) {
 
-    lat =
-        Number(lat);
-
-    lng =
-        Number(lng);
+    lat = Number(lat);
+    lng = Number(lng);
 
 
     if (
@@ -1563,7 +1275,7 @@ function updateVictimLocation(
             lng
         );
 
-        return;
+        return null;
 
     }
 
@@ -1609,7 +1321,7 @@ function updateVictimLocation(
 
         victimMarker =
             L.marker(
-                [lat,lng]
+                [lat, lng]
             )
             .addTo(map)
             .bindPopup(
@@ -1621,14 +1333,14 @@ function updateVictimLocation(
     else {
 
         victimMarker.setLatLng(
-            [lat,lng]
+            [lat, lng]
         );
 
     }
 
 
     map.setView(
-        [lat,lng],
+        [lat, lng],
         15
     );
 
@@ -1642,17 +1354,25 @@ function updateVictimLocation(
 
 
 /* =====================================================
-   SIREN
+   RELIABLE EMERGENCY SIREN
    ===================================================== */
 
 let audioContext = null;
 
-let sirenTimer = null;
+let sirenOscillator = null;
+
+let sirenGain = null;
 
 let sirenEnabled = false;
 
 let sirenRunning = false;
 
+let sirenInterval = null;
+
+
+/* =====================================================
+   ENABLE SIREN
+   ===================================================== */
 
 document
 .getElementById(
@@ -1663,6 +1383,11 @@ document
     async function() {
 
         try {
+
+            /*
+             * Create the AudioContext as a direct
+             * result of the user's button click.
+             */
 
             if (!audioContext) {
 
@@ -1685,12 +1410,51 @@ document
             }
 
 
+            /*
+             * Create oscillator and gain.
+             */
+
+            sirenOscillator =
+                audioContext.createOscillator();
+
+
+            sirenGain =
+                audioContext.createGain();
+
+
+            sirenOscillator.type =
+                "sawtooth";
+
+
+            sirenOscillator.frequency.value =
+                700;
+
+
+            /*
+             * Start silent.
+             */
+
+            sirenGain.gain.value =
+                0;
+
+
+            sirenOscillator
+                .connect(sirenGain)
+                .connect(
+                    audioContext.destination
+                );
+
+
+            sirenOscillator.start();
+
+
             sirenEnabled =
                 true;
 
 
             this.textContent =
-                "🔊 Siren Enabled";
+                "🔊 Emergency Siren Enabled";
+
 
             this.classList.add(
                 "enabled"
@@ -1700,15 +1464,41 @@ document
             document.getElementById(
                 "sirenStatus"
             ).textContent =
-                "Siren enabled — waiting for SOS.";
+                "🟢 Siren ready — waiting for SOS";
+
+
+            /*
+             * SHORT TEST BEEP
+             *
+             * This proves that the browser has
+             * permitted audio.
+             */
+
+            sirenGain.gain.setValueAtTime(
+                0.20,
+                audioContext.currentTime
+            );
+
+
+            sirenGain.gain.setValueAtTime(
+                0,
+                audioContext.currentTime + 0.20
+            );
 
         }
 
         catch(error) {
 
             console.error(
+                "Siren initialization error:",
                 error
             );
+
+
+            document.getElementById(
+                "sirenStatus"
+            ).textContent =
+                "❌ Could not enable siren. Check browser audio permissions.";
 
         }
 
@@ -1722,12 +1512,17 @@ document
 
 function startSiren() {
 
-    if (!sirenEnabled) {
+    if (
+        !sirenEnabled ||
+        !audioContext ||
+        !sirenOscillator ||
+        !sirenGain
+    ) {
 
         document.getElementById(
             "sirenStatus"
         ).textContent =
-            "⚠️ SOS received. Tap Enable Emergency Siren first.";
+            "⚠️ SOS received — enable the siren first.";
 
         return;
 
@@ -1746,7 +1541,7 @@ function startSiren() {
     document.getElementById(
         "sirenStatus"
     ).textContent =
-        "🚨 EMERGENCY SIREN ACTIVE";
+        "🚨🚨 EMERGENCY SIREN ACTIVE 🚨🚨";
 
 
     document.getElementById(
@@ -1756,67 +1551,127 @@ function startSiren() {
     );
 
 
-    let high =
-        false;
+    /*
+     * Turn sound ON.
+     */
+
+    sirenGain.gain.cancelScheduledValues(
+        audioContext.currentTime
+    );
 
 
-    sirenTimer =
+    sirenGain.gain.setValueAtTime(
+        0.22,
+        audioContext.currentTime
+    );
+
+
+    /*
+     * Alternate frequencies.
+     */
+
+    let high = false;
+
+
+    sirenInterval =
         setInterval(
             function() {
 
-                const oscillator =
-                    audioContext
-                    .createOscillator();
+                if (!sirenOscillator) {
+                    return;
+                }
 
 
-                const gain =
-                    audioContext
-                    .createGain();
-
-
-                oscillator.type =
-                    "square";
-
-
-                oscillator.frequency.value =
+                const frequency =
                     high
-                    ? 1000
-                    : 600;
+                    ? 1100
+                    : 650;
 
 
-                gain.gain.value =
-                    0.18;
-
-
-                oscillator
-                    .connect(gain)
-                    .connect(
-                        audioContext
-                        .destination
+                sirenOscillator
+                    .frequency
+                    .setValueAtTime(
+                        frequency,
+                        audioContext.currentTime
                     );
-
-
-                oscillator.start();
-
-
-                oscillator.stop(
-                    audioContext.currentTime +
-                    0.45
-                );
 
 
                 high =
                     !high;
 
             },
-            500
+            450
         );
 
 }
 
 
 /* =====================================================
-   DRONE
+   STOP SIREN
+   ===================================================== */
+
+function stopSiren() {
+
+    if (!sirenRunning) {
+        return;
+    }
+
+
+    sirenRunning =
+        false;
+
+
+    if (sirenInterval) {
+
+        clearInterval(
+            sirenInterval
+        );
+
+        sirenInterval =
+            null;
+
+    }
+
+
+    if (
+        sirenGain &&
+        audioContext
+    ) {
+
+        sirenGain
+            .gain
+            .cancelScheduledValues(
+                audioContext.currentTime
+            );
+
+
+        sirenGain
+            .gain
+            .setValueAtTime(
+                0,
+                audioContext.currentTime
+            );
+
+    }
+
+
+    document.getElementById(
+        "sirenStatus"
+    ).textContent =
+        "🟢 Siren ready — waiting for SOS";
+
+
+    document.getElementById(
+        "sirenStatus"
+    ).classList.remove(
+        "active"
+    );
+
+}
+
+
+/* =====================================================
+   DRONE DISPATCH
    ===================================================== */
 
 function dispatchDrone(
@@ -1911,7 +1766,7 @@ function dispatchManpower(
 
 
 /* =====================================================
-   SOS PROCESSING
+   PROCESS SOS
    ===================================================== */
 
 function processSOS(
@@ -1962,6 +1817,10 @@ function processSOS(
         ", " +
         lng.toFixed(6);
 
+
+    /*
+     * START SIREN
+     */
 
     startSiren();
 
@@ -2042,9 +1901,7 @@ peer.on(
 
 
         /*
-         * IMPORTANT:
-         * QR points to the same GitHub Pages
-         * index.html and passes the police Peer ID.
+         * Create victim URL.
          */
 
         const victimURL =
@@ -2069,6 +1926,7 @@ peer.on(
                 "qrcode"
             ),
             {
+
                 text:
                     victimURL,
 
@@ -2080,6 +1938,7 @@ peer.on(
 
                 correctLevel:
                     QRCode.CorrectLevel.H
+
             }
         );
 
@@ -2088,7 +1947,7 @@ peer.on(
 
 
 /* =====================================================
-   INCOMING CONNECTION
+   INCOMING VICTIM CONNECTION
    ===================================================== */
 
 peer.on(
@@ -2122,9 +1981,9 @@ peer.on(
                 );
 
 
-                /* =====================================
-                   CONTINUOUS GPS
-                   ===================================== */
+                /*
+                 * LIVE GPS
+                 */
 
                 if (
                     data &&
@@ -2142,9 +2001,9 @@ peer.on(
                 }
 
 
-                /* =====================================
-                   SOS
-                   ===================================== */
+                /*
+                 * SOS
+                 */
 
                 if (
                     data &&
@@ -2244,4 +2103,5 @@ setInterval(
 </script>
 
 </body>
+
 </html>
