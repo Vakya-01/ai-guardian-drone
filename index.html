@@ -1,243 +1,104 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+document.getElementById("sos").onclick = function () {
 
-<title>AI Guardian Drone - SOS</title>
+    const button = this;
 
-<style>
-*{
-  box-sizing:border-box;
-}
+    button.disabled = true;
 
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#f4f7fb;
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
+    document.getElementById("status").textContent =
+        "🚨 SOS activated. Getting your current location...";
 
-.card{
-  width:92%;
-  max-width:430px;
-  background:white;
-  padding:30px;
-  border-radius:25px;
-  text-align:center;
-  box-shadow:0 10px 35px rgba(0,0,0,.12);
-}
+    if (!navigator.geolocation) {
 
-h1{
-  color:#17233c;
-  margin-bottom:5px;
-}
+        document.getElementById("status").textContent =
+            "❌ Location services are not supported on this device.";
 
-.sub{
-  color:#667085;
-  margin-bottom:30px;
-}
-
-#sos{
-  width:220px;
-  height:220px;
-  border-radius:50%;
-  border:none;
-  background:#e53935;
-  color:white;
-  font-size:48px;
-  font-weight:bold;
-  cursor:pointer;
-  box-shadow:0 0 0 15px #ffd8d8;
-}
-
-#sos:active{
-  transform:scale(.96);
-}
-
-#status{
-  margin-top:30px;
-  padding:18px;
-  border-radius:15px;
-  background:#fff3f3;
-  color:#b42318;
-  font-size:17px;
-}
-
-.location{
-  margin-top:20px;
-  padding:18px;
-  background:#eef9f0;
-  border:1px solid #b8dfc0;
-  border-radius:15px;
-  display:none;
-}
-
-.location b{
-  color:#18733b;
-}
-
-.mapbutton{
-  display:inline-block;
-  margin-top:15px;
-  padding:12px 18px;
-  background:#1976d2;
-  color:white;
-  text-decoration:none;
-  border-radius:10px;
-}
-</style>
-</head>
-
-<body>
-
-<div class="card">
-
-<h1>AI Guardian Drone</h1>
-
-<div class="sub">
-Women's Safety & Emergency Response
-</div>
-
-<button id="sos">SOS</button>
-
-<div id="status">
-Press SOS in an emergency
-</div>
-
-<div class="location" id="locationBox">
-
-<b>Victim's Location</b>
-
-<p>
-Latitude:
-<span id="lat">--</span>
-</p>
-
-<p>
-Longitude:
-<span id="lng">--</span>
-</p>
-
-<a id="mapLink"
-class="mapbutton"
-target="_blank">
-View Location on Map
-</a>
-
-</div>
-
-</div>
-
-<script>
-
-const sos = document.getElementById("sos");
-const statusBox = document.getElementById("status");
-const locationBox = document.getElementById("locationBox");
-const latBox = document.getElementById("lat");
-const lngBox = document.getElementById("lng");
-const mapLink = document.getElementById("mapLink");
-
-sos.onclick = function(){
-
-  statusBox.innerHTML =
-    "📍 Getting your location...";
-
-  if(!navigator.geolocation){
-
-    statusBox.innerHTML =
-      "Location services are not supported on this device.";
-
-    return;
-  }
-
-  navigator.geolocation.getCurrentPosition(
-
-    function(position){
-
-      const lat = position.coords.latitude;
-      const lng = position.coords.longitude;
-
-      latBox.textContent = lat.toFixed(6);
-      lngBox.textContent = lng.toFixed(6);
-
-      locationBox.style.display = "block";
-
-      mapLink.href =
-        "https://www.openstreetmap.org/?mlat="
-        + lat
-        + "&mlon="
-        + lng
-        + "#map=17/"
-        + lat
-        + "/"
-        + lng;
-
-      statusBox.innerHTML =
-        "✓ SOS sent with victim's location.";
-
-      sos.disabled = true;
-      sos.textContent = "SENT";
-
-      /*
-       * Send the emergency information to the
-       * police dashboard using the URL.
-       */
-
-      const policeURL =
-        "police.html?lat="
-        + encodeURIComponent(lat)
-        + "&lng="
-        + encodeURIComponent(lng)
-        + "&time="
-        + encodeURIComponent(new Date().toLocaleString());
-
-      /*
-       * For the exhibition:
-       * save the latest emergency locally.
-       */
-      localStorage.setItem(
-        "guardianEmergency",
-        JSON.stringify({
-          latitude:lat,
-          longitude:lng,
-          time:new Date().toLocaleString()
-        })
-      );
-
-      console.log("Emergency location:", lat, lng);
-
-      /*
-       * IMPORTANT:
-       * Do not automatically redirect the victim.
-       * The police dashboard should be opened separately.
-       */
-
-    },
-
-    function(error){
-
-      statusBox.innerHTML =
-        "Unable to get location. Please allow location permission and try again.";
-
-      console.log(error);
-
-    },
-
-    {
-      enableHighAccuracy:true,
-      timeout:10000,
-      maximumAge:0
+        button.disabled = false;
+        return;
     }
 
-  );
+    navigator.geolocation.getCurrentPosition(
+
+        function (position) {
+
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+
+            console.log("Victim latitude:", lat);
+            console.log("Victim longitude:", lng);
+
+            document.getElementById("latitude").textContent =
+                lat.toFixed(6);
+
+            document.getElementById("longitude").textContent =
+                lng.toFixed(6);
+
+
+            /*
+             Send the REAL GPS coordinates
+             to the police dashboard.
+            */
+
+            const policePeerId = "bangalore-police-demo";
+
+            const connection = peer.connect(
+                policePeerId,
+                {
+                    reliable: true
+                }
+            );
+
+
+            connection.on("open", function () {
+
+                connection.send({
+
+                    type: "SOS",
+
+                    lat: lat,
+
+                    lng: lng,
+
+                    time: new Date().toISOString()
+
+                });
+
+
+                document.getElementById("status").textContent =
+                    "🚨 SOS sent successfully with your current location.";
+
+            });
+
+
+            connection.on("error", function () {
+
+                document.getElementById("status").textContent =
+                    "⚠️ Unable to connect to the police dashboard.";
+
+                button.disabled = false;
+
+            });
+
+        },
+
+
+        function (error) {
+
+            console.log("Location error:", error);
+
+            document.getElementById("status").textContent =
+                "❌ Unable to get your location. Please allow location access.";
+
+            button.disabled = false;
+
+        },
+
+
+        {
+            enableHighAccuracy: true,
+            timeout: 15000,
+            maximumAge: 0
+        }
+
+    );
 
 };
-
-</script>
-
-</body>
-</html>
