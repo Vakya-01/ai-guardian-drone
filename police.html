@@ -29,7 +29,11 @@
      QR CODE
      ===================================================== -->
 
-<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer">
+</script>
 
 
 <!-- =====================================================
@@ -1599,7 +1603,7 @@ p {
             45%;
 
         top:
-            31%;
+            30%;
 
         transform:
             scale(.94)
@@ -1612,10 +1616,11 @@ p {
             50%;
 
         top:
-            41%;
+            20%;
 
         transform:
-            scale(1.08)
+            translateX(-50%)
+            scale(1.05)
             rotate(-2deg);
     }
 
@@ -1625,10 +1630,11 @@ p {
             50%;
 
         top:
-            46%;
+            20%;
 
         transform:
-            scale(1.18)
+            translateX(-50%)
+            scale(1.08)
             rotate(0deg);
     }
 }
@@ -3094,58 +3100,58 @@ function initializePeer() {
 function generateQR(peerId) {
 
     const qr =
-        document.getElementById(
-            "qrcode"
-        );
+        document.getElementById("qrcode");
+
+    if (!qr) {
+        console.error("QR container not found");
+        return;
+    }
 
     qr.innerHTML = "";
 
-
-    /*
-       The victim page should receive
-       the police PeerJS ID through the URL.
-    */
-
     const victimPage =
-        window.location.origin +
-        window.location.pathname
-            .replace(
-                "police.html",
-                "index.html"
-            );
-
+        "https://vakya-01.github.io/ai-guardian-drone/index.html";
 
     const connectionURL =
         victimPage +
         "?police=" +
-        encodeURIComponent(
-            peerId
+        encodeURIComponent(peerId);
+
+    console.log(
+        "QR connection URL:",
+        connectionURL
+    );
+
+    if (typeof QRCode === "undefined") {
+
+        qr.innerHTML = `
+            <p style="color:red;font-weight:bold;">
+                QR CODE LIBRARY FAILED TO LOAD.
+            </p>
+        `;
+
+        console.error(
+            "QRCode library is not loaded."
         );
 
+        return;
+    }
 
     new QRCode(
         qr,
         {
-            text:
-                connectionURL,
-
-            width:
-                190,
-
-            height:
-                190,
-
-            colorDark:
-                "#000000",
-
-            colorLight:
-                "#ffffff",
-
-            correctLevel:
-                QRCode.CorrectLevel.H
+            text: connectionURL,
+            width: 190,
+            height: 190,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
         }
     );
 
+    console.log(
+        "QR code generated successfully."
+    );
 }
 
 
