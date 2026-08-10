@@ -1,104 +1,576 @@
-document.getElementById("sos").onclick = function () {
+<!DOCTYPE html>
+<html lang="en">
 
-    const button = this;
+<head>
 
-    button.disabled = true;
+<meta charset="UTF-8">
 
-    document.getElementById("status").textContent =
-        "🚨 SOS activated. Getting your current location...";
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-    if (!navigator.geolocation) {
+<title>AI Guardian Drone - SOS</title>
 
-        document.getElementById("status").textContent =
-            "❌ Location services are not supported on this device.";
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
 
-        button.disabled = false;
-        return;
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f7fb;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card {
+    width: 92%;
+    max-width: 480px;
+    background: white;
+    padding: 30px;
+    border-radius: 25px;
+    text-align: center;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.12);
+}
+
+h1 {
+    color: #17233c;
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    color: #667085;
+    font-size: 17px;
+    margin-bottom: 25px;
+}
+
+#sos {
+    width: 230px;
+    height: 230px;
+    border-radius: 50%;
+    border: 15px solid #ffd5d5;
+    background: #e53935;
+    color: white;
+    font-size: 45px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 35px rgba(229,57,53,0.35);
+}
+
+#sos:active {
+    transform: scale(0.96);
+}
+
+#sos:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+#status {
+    margin-top: 25px;
+    padding: 15px;
+    border-radius: 12px;
+    background: #eef2f6;
+    color: #475467;
+    font-size: 16px;
+}
+
+.location {
+    display: none;
+    margin-top: 18px;
+    padding: 18px;
+    border-radius: 15px;
+    background: #eaf8ed;
+    border: 1px solid #b7dfc0;
+    text-align: left;
+}
+
+.location h3 {
+    margin-top: 0;
+    color: #217a3c;
+}
+
+.location p {
+    margin: 8px 0;
+}
+
+.success {
+    background: #e8f7eb !important;
+    color: #236b35 !important;
+}
+
+.error {
+    background: #fdecec !important;
+    color: #a12626 !important;
+}
+
+.small {
+    font-size: 13px;
+    color: #667085;
+    margin-top: 20px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="card">
+
+<h1>AI Guardian Drone</h1>
+
+<div class="subtitle">
+Women's Safety & Emergency Response
+</div>
+
+
+<button id="sos">
+SOS
+</button>
+
+
+<div id="status">
+Connecting to police station...
+</div>
+
+
+<div id="locationBox" class="location">
+
+<h3>📍 Victim's Live Location</h3>
+
+<p>
+<strong>Latitude:</strong>
+<span id="latitude">--</span>
+</p>
+
+<p>
+<strong>Longitude:</strong>
+<span id="longitude">--</span>
+</p>
+
+</div>
+
+
+<div class="small">
+School demonstration only — does not contact real emergency services.
+</div>
+
+</div>
+
+
+
+<script>
+
+
+/* =====================================================
+   POLICE PEER ID
+
+   This MUST match the ID used by police.html
+   ===================================================== */
+
+const DEFAULT_POLICE_ID =
+    "ai-guardian-bangalore-police-demo";
+
+
+/* =====================================================
+   GET POLICE ID FROM QR CODE
+   ===================================================== */
+
+const params =
+    new URLSearchParams(window.location.search);
+
+const policeId =
+    params.get("police") || DEFAULT_POLICE_ID;
+
+
+/* =====================================================
+   PAGE ELEMENTS
+   ===================================================== */
+
+const sosButton =
+    document.getElementById("sos");
+
+const statusBox =
+    document.getElementById("status");
+
+const locationBox =
+    document.getElementById("locationBox");
+
+const latitudeText =
+    document.getElementById("latitude");
+
+const longitudeText =
+    document.getElementById("longitude");
+
+
+/* =====================================================
+   PEER CONNECTION
+   ===================================================== */
+
+let peer = null;
+let connection = null;
+
+
+/* =====================================================
+   UPDATE STATUS
+   ===================================================== */
+
+function setStatus(message, type) {
+
+    statusBox.textContent = message;
+
+    statusBox.className = "";
+
+    if (type) {
+        statusBox.classList.add(type);
     }
 
-    navigator.geolocation.getCurrentPosition(
-
-        function (position) {
-
-            const lat = position.coords.latitude;
-            const lng = position.coords.longitude;
-
-            console.log("Victim latitude:", lat);
-            console.log("Victim longitude:", lng);
-
-            document.getElementById("latitude").textContent =
-                lat.toFixed(6);
-
-            document.getElementById("longitude").textContent =
-                lng.toFixed(6);
+}
 
 
-            /*
-             Send the REAL GPS coordinates
-             to the police dashboard.
-            */
+/* =====================================================
+   CREATE VICTIM PEER
+   ===================================================== */
 
-            const policePeerId = "bangalore-police-demo";
+peer = new Peer();
 
-            const connection = peer.connect(
-                policePeerId,
-                {
-                    reliable: true
-                }
+
+/* =====================================================
+   PEER READY
+   ===================================================== */
+
+peer.on("open", function(id) {
+
+    console.log("Victim Peer ID:", id);
+
+    setStatus(
+        "Connecting to the police station...",
+        ""
+    );
+
+    connectToPolice();
+
+});
+
+
+/* =====================================================
+   CONNECT TO POLICE DASHBOARD
+   ===================================================== */
+
+function connectToPolice() {
+
+    console.log(
+        "Connecting to police:",
+        policeId
+    );
+
+
+    connection =
+        peer.connect(
+            policeId,
+            {
+                reliable: true
+            }
+        );
+
+
+    connection.on("open", function() {
+
+        console.log(
+            "Connected to police dashboard"
+        );
+
+
+        setStatus(
+            "🟢 Connected to police station. SOS is ready.",
+            "success"
+        );
+
+    });
+
+
+    connection.on("error", function(error) {
+
+        console.error(error);
+
+        setStatus(
+            "⚠️ Could not connect to the police dashboard.",
+            "error"
+        );
+
+    });
+
+
+    connection.on("close", function() {
+
+        setStatus(
+            "Police connection closed. Please scan the QR code again.",
+            "error"
+        );
+
+    });
+
+}
+
+
+/* =====================================================
+   PEER ERROR
+   ===================================================== */
+
+peer.on("error", function(error) {
+
+    console.error(
+        "PeerJS error:",
+        error
+    );
+
+
+    setStatus(
+        "⚠️ Connection error: " + error.type,
+        "error"
+    );
+
+});
+
+
+/* =====================================================
+   GET LIVE GPS LOCATION
+   ===================================================== */
+
+function getVictimLocation() {
+
+    return new Promise(function(resolve, reject) {
+
+
+        if (!navigator.geolocation) {
+
+            reject(
+                new Error(
+                    "Geolocation is not supported by this device."
+                )
             );
 
+            return;
+        }
 
-            connection.on("open", function () {
 
-                connection.send({
+        navigator.geolocation.getCurrentPosition(
 
-                    type: "SOS",
+            function(position) {
 
-                    lat: lat,
+                const latitude =
+                    position.coords.latitude;
 
-                    lng: lng,
+                const longitude =
+                    position.coords.longitude;
 
-                    time: new Date().toISOString()
+
+                resolve({
+
+                    latitude: latitude,
+
+                    longitude: longitude,
+
+                    accuracy:
+                        position.coords.accuracy
 
                 });
 
-
-                document.getElementById("status").textContent =
-                    "🚨 SOS sent successfully with your current location.";
-
-            });
+            },
 
 
-            connection.on("error", function () {
+            function(error) {
 
-                document.getElementById("status").textContent =
-                    "⚠️ Unable to connect to the police dashboard.";
+                reject(error);
 
-                button.disabled = false;
-
-            });
-
-        },
+            },
 
 
-        function (error) {
+            {
 
-            console.log("Location error:", error);
+                enableHighAccuracy: true,
 
-            document.getElementById("status").textContent =
-                "❌ Unable to get your location. Please allow location access.";
+                timeout: 15000,
 
-            button.disabled = false;
+                maximumAge: 0
 
-        },
+            }
+
+        );
+
+    });
+
+}
 
 
-        {
-            enableHighAccuracy: true,
-            timeout: 15000,
-            maximumAge: 0
-        }
+/* =====================================================
+   SOS BUTTON
+   ===================================================== */
 
+sosButton.onclick = async function() {
+
+
+    if (
+        !connection ||
+        !connection.open
+    ) {
+
+        setStatus(
+            "⚠️ Police station is not connected. Please scan the QR code again.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    sosButton.disabled = true;
+
+
+    setStatus(
+        "📍 Getting your live GPS location...",
+        ""
     );
 
+
+    try {
+
+
+        /* GET ACTUAL PHONE GPS */
+
+        const location =
+            await getVictimLocation();
+
+
+        const latitude =
+            location.latitude;
+
+        const longitude =
+            location.longitude;
+
+        const accuracy =
+            location.accuracy;
+
+
+        /* SHOW LOCATION ON VICTIM DEVICE */
+
+        latitudeText.textContent =
+            latitude.toFixed(6);
+
+        longitudeText.textContent =
+            longitude.toFixed(6);
+
+        locationBox.style.display =
+            "block";
+
+
+        setStatus(
+            "📡 Sending your live location to the police station...",
+            ""
+        );
+
+
+        /* =================================================
+           SEND REAL GPS DATA TO POLICE
+           ================================================= */
+
+        connection.send({
+
+            type: "SOS",
+
+            lat: latitude,
+
+            lng: longitude,
+
+            accuracy: accuracy,
+
+            time:
+                new Date().toISOString()
+
+        });
+
+
+        /* SUCCESS */
+
+        setStatus(
+            "🚨 SOS SENT — Your live location has been sent to the police station.",
+            "success"
+        );
+
+
+        sosButton.textContent =
+            "SENT";
+
+
+        console.log(
+            "SOS sent:",
+            latitude,
+            longitude
+        );
+
+
+    }
+
+    catch(error) {
+
+
+        console.error(
+            "Location error:",
+            error
+        );
+
+
+        sosButton.disabled =
+            false;
+
+
+        let message =
+            "Unable to get your location.";
+
+
+        if (error.code === 1) {
+
+            message =
+                "📍 Location permission was denied. Please allow location access and try again.";
+
+        }
+
+        else if (error.code === 2) {
+
+            message =
+                "📍 Your location could not be determined. Please check GPS/location services.";
+
+        }
+
+        else if (error.code === 3) {
+
+            message =
+                "📍 Location request timed out. Please try again.";
+
+        }
+
+
+        setStatus(
+            message,
+            "error"
+        );
+
+    }
+
 };
+
+
+</script>
+
+</body>
+
+</html>
