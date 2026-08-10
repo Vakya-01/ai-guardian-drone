@@ -3,707 +3,420 @@
 
 <head>
 
-<meta charset="UTF-8">
+  <meta charset="UTF-8">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
-<title>AI Guardian Drone - Police Station</title>
+  <title>AI Guardian Drone - Police Station</title>
 
+  <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
 
-<!-- PeerJS -->
-<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+  <style>
 
+    * {
+      box-sizing: border-box;
+    }
 
-<!-- QR Code Generator -->
-<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    body {
 
+      margin: 0;
 
-<style>
+      font-family: Arial, sans-serif;
 
-* {
-    box-sizing: border-box;
-}
+      background: #101828;
 
+      color: white;
 
-body {
+      min-height: 100vh;
 
-    margin: 0;
+      display: flex;
 
-    font-family: Arial, sans-serif;
+      justify-content: center;
 
-    background: #0b1220;
-
-    color: white;
-
-}
-
-
-.container {
-
-    width: 92%;
-
-    max-width: 800px;
-
-    margin: auto;
-
-    padding: 25px;
-
-}
-
-
-.header {
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    gap: 15px;
-
-}
-
-
-h1 {
-
-    margin: 0;
-
-    font-size: 28px;
-
-}
-
-
-.status-badge {
-
-    background: #344054;
-
-    padding: 10px 15px;
-
-    border-radius: 20px;
-
-    font-size: 14px;
-
-}
-
-
-.card {
-
-    background: #172033;
-
-    border-radius: 20px;
-
-    padding: 25px;
-
-    margin-top: 20px;
-
-}
-
-
-button {
-
-    border: none;
-
-    border-radius: 10px;
-
-    padding: 14px 20px;
-
-    font-weight: bold;
-
-    cursor: pointer;
-
-}
-
-
-#enableSiren {
-
-    background: #12b76a;
-
-    color: white;
-
-}
-
-
-#status {
-
-    margin-top: 15px;
-
-    color: #98a2b3;
-
-}
-
-
-.qr-container {
-
-    background: white;
-
-    width: 240px;
-
-    height: 240px;
-
-    margin: 20px auto;
-
-    padding: 15px;
-
-    border-radius: 15px;
-
-    display: flex;
-
-    justify-content: center;
-
-    align-items: center;
-
-}
-
-
-#qrcode {
-
-    display: flex;
-
-    justify-content: center;
-
-    align-items: center;
-
-}
-
-
-#qrcode img {
-
-    max-width: 210px;
-
-}
-
-
-.link {
-
-    background: #0b1220;
-
-    padding: 12px;
-
-    border-radius: 10px;
-
-    word-break: break-all;
-
-    font-size: 12px;
-
-    color: #98a2b3;
-
-}
-
-
-/* SOS ALERT */
-
-#alert {
-
-    display: none;
-
-    background: #b42318;
-
-    border-radius: 20px;
-
-    padding: 25px;
-
-    margin-top: 20px;
-
-    text-align: center;
-
-    animation: alertPulse 1s infinite alternate;
-
-}
-
-
-@keyframes alertPulse {
-
-    from {
-
-        box-shadow: 0 0 0px #b42318;
+      align-items: center;
 
     }
 
-    to {
+    .wrap {
 
-        box-shadow: 0 0 30px #f04438;
+      width: 92%;
+
+      max-width: 850px;
 
     }
 
-}
+    h1 {
 
+      text-align: center;
 
-.alert-icon {
+      margin-bottom: 5px;
 
-    font-size: 65px;
+    }
 
-}
+    .subtitle {
 
+      text-align: center;
 
-#alert h2 {
+      color: #b8c0cc;
 
-    font-size: 35px;
+      margin-bottom: 25px;
 
-    margin: 10px;
+    }
 
-}
+    .card {
 
+      background: #1d2939;
 
-/* LOCATION */
+      border: 1px solid #344054;
 
-.location-card {
+      border-radius: 20px;
 
-    background: white;
+      padding: 25px;
 
-    color: #172033;
+      margin-bottom: 20px;
 
-    padding: 20px;
+    }
 
-    border-radius: 15px;
+    .status {
 
-    margin-top: 20px;
+      padding: 15px;
 
-    text-align: left;
+      border-radius: 12px;
 
-}
+      background: #344054;
 
+      margin-bottom: 20px;
 
-.location-card h3 {
+    }
 
-    margin-top: 0;
+    .alert {
 
-}
+      display: none;
 
+      background: #3b1515;
 
-.coordinates {
+      border: 2px solid #ff4438;
 
-    line-height: 1.8;
+      border-radius: 20px;
 
-}
+      padding: 25px;
 
+    }
 
-.map-button {
+    .alert h2 {
 
-    display: inline-block;
+      color: #ff6b63;
 
-    margin-top: 15px;
+      margin-top: 0;
 
-    padding: 12px 18px;
+    }
 
-    background: #1976d2;
+    .location {
 
-    color: white;
+      background: #102a1b;
 
-    text-decoration: none;
+      border: 1px solid #3ca66b;
 
-    border-radius: 9px;
+      border-radius: 15px;
 
-    font-weight: bold;
+      padding: 20px;
 
-}
+      margin-top: 15px;
 
+    }
 
-.waiting {
+    .coordinate {
 
-    color: #98a2b3;
+      font-size: 20px;
 
-}
+      margin: 10px 0;
 
+    }
 
-</style>
+    .map {
+
+      display: inline-block;
+
+      margin-top: 15px;
+
+      padding: 14px 20px;
+
+      background: #1976d2;
+
+      color: white;
+
+      text-decoration: none;
+
+      border-radius: 10px;
+
+    }
+
+    .qr {
+
+      text-align: center;
+
+      margin-top: 20px;
+
+    }
+
+    #qrCanvas {
+
+      background: white;
+
+      padding: 10px;
+
+      border-radius: 10px;
+
+      max-width: 100%;
+
+    }
+
+    .small {
+
+      font-size: 12px;
+
+      color: #98a2b3;
+
+      word-break: break-all;
+
+    }
+
+  </style>
 
 </head>
 
 
 <body>
 
+<div class="wrap">
 
-<div class="container">
+  <h1>🚔 AI Guardian Drone</h1>
+
+  <div class="subtitle">
+    Police Station Emergency Monitoring System
+  </div>
 
 
-    <!-- HEADER -->
+  <div class="card">
 
-    <div class="header">
+    <div id="connectionStatus"
+         class="status">
 
-        <h1>
-            🚓 AI Guardian Drone
-        </h1>
-
-        <div
-        class="status-badge"
-        id="onlineStatus">
-
-            STARTING...
-
-        </div>
+      Starting police station system...
 
     </div>
 
 
+    <div class="qr">
 
-    <!-- POLICE DASHBOARD -->
+      <h3>📱 Scan this QR code from the victim's phone</h3>
 
-    <div class="card">
+      <canvas id="qrCanvas"></canvas>
 
-        <h2>
-            Police Station Dashboard
-        </h2>
-
-
-        <p>
-            This phone acts as the demonstration
-            police station.
-        </p>
-
-
-        <button id="enableSiren">
-
-            🔊 Enable Siren
-
-        </button>
-
-
-        <div id="status">
-
-            Creating secure demonstration session...
-
-        </div>
-
-
-        <!-- QR CODE -->
-
-        <h3>
-            Parent / Victim SOS QR Code
-        </h3>
-
-
-        <div class="qr-container">
-
-            <div id="qrcode"></div>
-
-        </div>
-
-
-        <div class="link" id="sosLink">
-
-            Preparing SOS link...
-
-        </div>
-
+      <p class="small" id="sosLink"></p>
 
     </div>
 
+  </div>
 
 
-    <!-- SOS ALERT -->
+  <div id="alertBox"
+       class="alert">
 
-    <div id="alert">
+    <h2>🚨 SOS ALERT RECEIVED</h2>
 
-        <div class="alert-icon">
-
-            🚨
-
-        </div>
-
-
-        <h2>
-            SOS ALERT RECEIVED
-        </h2>
+    <p>
+      Emergency request received from the AI Guardian Drone system.
+    </p>
 
 
-        <p id="alertTime">
+    <div class="location">
 
-        </p>
+      <h3>📍 Victim's Live Location</h3>
 
+      <div class="coordinate">
 
-        <!-- LOCATION -->
+        <b>Latitude:</b>
 
-        <div
-        class="location-card">
+        <span id="latitude">-</span>
 
-            <h3>
-                📍 Victim Location
-            </h3>
+      </div>
 
 
-            <div
-            class="coordinates"
-            id="locationInfo">
+      <div class="coordinate">
 
-                Waiting for location...
+        <b>Longitude:</b>
 
-            </div>
+        <span id="longitude">-</span>
+
+      </div>
 
 
-            <a
-            id="mapButton"
-            class="map-button"
-            href="#"
-            target="_blank">
+      <div>
 
-                🗺️ OPEN LOCATION IN MAPS
+        <b>Time:</b>
 
-            </a>
+        <span id="time">-</span>
 
-        </div>
+      </div>
+
+
+      <a id="mapLink"
+         class="map"
+         target="_blank">
+
+        🗺️ Open Location on Map
+
+      </a>
 
     </div>
 
+  </div>
 
 </div>
 
 
-
 <script>
 
+/* --------------------------------
+   CREATE POLICE PEER
+-------------------------------- */
 
-/* =====================================================
-   VARIABLES
-===================================================== */
+const peer = new Peer();
 
-let peer;
 
-let policeSessionID;
+peer.on("open", function(id) {
 
-let audioContext = null;
+  document.getElementById("connectionStatus").textContent =
+    "✓ Police station is online and ready to receive SOS alerts.";
 
-let sirenTimer = null;
+  const sosURL =
+    window.location.origin +
+    window.location.pathname.replace(
+      "police.html",
+      "index.html"
+    ) +
+    "?police=" +
+    id;
 
 
-/* =====================================================
-   CREATE UNIQUE POLICE SESSION
-===================================================== */
+  document.getElementById("sosLink").textContent =
+    sosURL;
 
-function createPoliceSession() {
 
+  /* Create QR code */
 
-    policeSessionID =
-        "guardian-police-" +
-        Math.random()
-        .toString(36)
-        .substring(2, 10) +
-        "-" +
-        Date.now();
+  const qrScript =
+    document.createElement("script");
 
+  qrScript.src =
+    "https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js";
 
-    peer = new Peer(policeSessionID);
+  qrScript.onload = function() {
 
+    QRCode.toCanvas(
 
-    peer.on("open", function(id) {
+      document.getElementById("qrCanvas"),
 
+      sosURL,
 
-        document.getElementById(
-            "onlineStatus"
-        ).textContent =
-            "● SYSTEM ONLINE";
+      {
+        width: 250,
+        margin: 2
+      },
 
+      function(error) {
 
-        document.getElementById(
-            "onlineStatus"
-        ).style.background =
-            "#067647";
+        if (error) {
+          console.log(error);
+        }
 
+      }
 
-        document.getElementById(
-            "status"
-        ).textContent =
-            "Police station online. Waiting for SOS...";
+    );
 
+  };
 
-        /* ---------------------------------------------
-           CREATE SOS LINK
-        --------------------------------------------- */
+  document.head.appendChild(qrScript);
 
-        const sosURL =
-            new URL(
-                "index.html",
-                window.location.href
-            );
+});
 
 
-        sosURL.searchParams.set(
-            "police",
-            id
-        );
+/* --------------------------------
+   RECEIVE VICTIM CONNECTION
+-------------------------------- */
 
+peer.on("connection", function(conn) {
 
-        document.getElementById(
-            "sosLink"
-        ).textContent =
-            sosURL.href;
+  document.getElementById("connectionStatus").textContent =
+    "✓ Victim device connected.";
 
+  conn.on("data", function(data) {
 
-        /* ---------------------------------------------
-           CREATE QR CODE
-        --------------------------------------------- */
+    if (data.type === "SOS") {
 
-        document.getElementById(
-            "qrcode"
-        ).innerHTML = "";
+      showSOS(data);
 
+    }
 
-        new QRCode(
+  });
 
-            document.getElementById(
-                "qrcode"
-            ),
+});
 
-            {
 
-                text: sosURL.href,
+/* --------------------------------
+   DISPLAY SOS
+-------------------------------- */
 
-                width: 210,
+function showSOS(data) {
 
-                height: 210
+  const alertBox =
+    document.getElementById("alertBox");
 
-            }
+  alertBox.style.display = "block";
 
-        );
 
-    });
+  document.getElementById("latitude").textContent =
+    Number(data.latitude).toFixed(6);
 
 
-    /* =================================================
-       WHEN VICTIM CONNECTS
-    ================================================= */
+  document.getElementById("longitude").textContent =
+    Number(data.longitude).toFixed(6);
 
-    peer.on("connection", function(connection) {
 
+  document.getElementById("time").textContent =
+    data.time;
 
-        console.log(
-            "Victim connected"
-        );
 
+  document.getElementById("mapLink").href =
+    "https://www.google.com/maps?q=" +
+    data.latitude + "," +
+    data.longitude;
 
-        document.getElementById(
-            "status"
-        ).textContent =
-            "Victim phone connected. Waiting for SOS...";
 
+  document.getElementById("connectionStatus").textContent =
+    "🚨 SOS received — victim's location available.";
 
-        connection.on("data", function(data) {
+}
 
 
-            console.log(
-                "Data received:",
-                data
-            );
+/* --------------------------------
+   ERROR HANDLING
+-------------------------------- */
 
+peer.on("error", function(error) {
 
-            /* =========================================
-               SOS RECEIVED
-            ========================================= */
+  document.getElementById("connectionStatus").textContent =
+    "⚠️ Connection error: " + error.type;
 
-            if (
-                data &&
-                data.type === "SOS"
-            ) {
+});
 
+</script>
 
-                /* -------------------------------------
-                   SHOW ALERT
-                ------------------------------------- */
+</body>
 
-                document.getElementById(
-                    "alert"
-                ).style.display =
-                    "block";
-
-
-                document.getElementById(
-                    "alertTime"
-                ).textContent =
-                    "Alert received at " +
-                    data.time;
-
-
-                document.getElementById(
-                    "status"
-                ).textContent =
-                    "🚨 SOS received!";
-
-
-                /* -------------------------------------
-                   PLAY SIREN
-                ------------------------------------- */
-
-                startSiren();
-
-
-                /* -------------------------------------
-                   LOCATION
-                ------------------------------------- */
-
-                const locationInfo =
-                    document.getElementById(
-                        "locationInfo"
-                    );
-
-
-                const mapButton =
-                    document.getElementById(
-                        "mapButton"
-                    );
-
-
-                if (
-                    data.latitude !== undefined &&
-                    data.longitude !== undefined
-                ) {
-
-
-                    const latitude =
-                        Number(
-                            data.latitude
-                        );
-
-
-                    const longitude =
-                        Number(
-                            data.longitude
-                        );
-
-
-                    const accuracy =
-                        data.accuracy
-                        ? Math.round(
-                            data.accuracy
-                          )
-                        : "Unknown";
-
-
-                    locationInfo.innerHTML =
-
-                        "<b>Latitude:</b> " +
-                        latitude.toFixed(6) +
-
-                        "<br>" +
-
-                        "<b>Longitude:</b> " +
-                        longitude.toFixed(6) +
-
-                        "<br>" +
-
-                        "<b>Location accuracy:</b> approximately " +
-                        accuracy +
-                        " metres";
-
-
-                    /* ---------------------------------
-                       GOOGLE MAPS LINK
-                    --------------------------------- */
-
-                    const mapURL =
-
-                        "https://www.google.com/maps?q=" +
-
-                        latitude +
-                        "," +
-                        longitude;
-
-
-                    mapButton.href =
-                        mapURL;
-
-
-                    mapButton.style.display =
-                        "inline-block";
+</html>                       "inline-block";
 
 
                 }
