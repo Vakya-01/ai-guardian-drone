@@ -1,662 +1,903 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
 
-  <meta charset="UTF-8">
-
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0">
-
-  <title>AI Guardian Drone - Police Station</title>
-
-  <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
-
-  <style>
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-
-      margin: 0;
-
-      font-family: Arial, sans-serif;
-
-      background: #101828;
-
-      color: white;
-
-      min-height: 100vh;
-
-      display: flex;
-
-      justify-content: center;
-
-      align-items: center;
-
-    }
-
-    .wrap {
-
-      width: 92%;
-
-      max-width: 850px;
-
-    }
-
-    h1 {
-
-      text-align: center;
-
-      margin-bottom: 5px;
-
-    }
-
-    .subtitle {
-
-      text-align: center;
-
-      color: #b8c0cc;
-
-      margin-bottom: 25px;
-
-    }
-
-    .card {
-
-      background: #1d2939;
-
-      border: 1px solid #344054;
-
-      border-radius: 20px;
-
-      padding: 25px;
-
-      margin-bottom: 20px;
-
-    }
-
-    .status {
-
-      padding: 15px;
-
-      border-radius: 12px;
-
-      background: #344054;
-
-      margin-bottom: 20px;
-
-    }
-
-    .alert {
-
-      display: none;
-
-      background: #3b1515;
-
-      border: 2px solid #ff4438;
-
-      border-radius: 20px;
-
-      padding: 25px;
-
-    }
-
-    .alert h2 {
-
-      color: #ff6b63;
-
-      margin-top: 0;
-
-    }
-
-    .location {
-
-      background: #102a1b;
-
-      border: 1px solid #3ca66b;
-
-      border-radius: 15px;
-
-      padding: 20px;
-
-      margin-top: 15px;
-
-    }
-
-    .coordinate {
-
-      font-size: 20px;
-
-      margin: 10px 0;
-
-    }
-
-    .map {
-
-      display: inline-block;
-
-      margin-top: 15px;
-
-      padding: 14px 20px;
-
-      background: #1976d2;
-
-      color: white;
-
-      text-decoration: none;
-
-      border-radius: 10px;
-
-    }
-
-    .qr {
-
-      text-align: center;
-
-      margin-top: 20px;
-
-    }
-
-    #qrCanvas {
-
-      background: white;
-
-      padding: 10px;
-
-      border-radius: 10px;
-
-      max-width: 100%;
-
-    }
-
-    .small {
-
-      font-size: 12px;
-
-      color: #98a2b3;
-
-      word-break: break-all;
-
-    }
-
-  </style>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>AI Guardian Drone - Police Control</title>
+
+<link
+rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
+<style>
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#071426;
+  color:white;
+}
+
+.header{
+  padding:20px;
+  background:#0d223d;
+  text-align:center;
+  border-bottom:2px solid #1d4f7a;
+}
+
+.header h1{
+  margin:0;
+  font-size:28px;
+}
+
+.header p{
+  margin:7px 0 0;
+  color:#a9c4df;
+}
+
+.dashboard{
+  display:grid;
+  grid-template-columns:350px 1fr;
+  min-height:calc(100vh - 100px);
+}
+
+.panel{
+  padding:20px;
+  background:#0b1b30;
+  overflow:auto;
+}
+
+.card{
+  background:#102943;
+  border-radius:15px;
+  padding:18px;
+  margin-bottom:15px;
+  border:1px solid #1d466d;
+}
+
+.card h2{
+  margin-top:0;
+  font-size:19px;
+}
+
+.alert{
+  display:none;
+  background:#441b20;
+  border:2px solid #e5484d;
+  animation:pulse 1.2s infinite alternate;
+}
+
+@keyframes pulse{
+  from{
+    box-shadow:0 0 5px #e5484d;
+  }
+  to{
+    box-shadow:0 0 22px #e5484d;
+  }
+}
+
+.success{
+  background:#123b2b;
+  border-color:#31a46c;
+}
+
+.warning{
+  background:#463713;
+  border-color:#e0aa24;
+}
+
+.info{
+  color:#b7cce2;
+  line-height:1.6;
+}
+
+.big{
+  font-size:22px;
+  font-weight:bold;
+}
+
+.station{
+  padding:12px;
+  margin-top:10px;
+  border-radius:10px;
+  background:#183753;
+}
+
+.station.available{
+  border-left:5px solid #37c878;
+}
+
+.station.busy{
+  border-left:5px solid #e5484d;
+}
+
+button{
+  width:100%;
+  padding:13px;
+  border:none;
+  border-radius:9px;
+  cursor:pointer;
+  font-size:16px;
+  font-weight:bold;
+  margin-top:10px;
+}
+
+.drone{
+  background:#1976d2;
+  color:white;
+}
+
+.manpower{
+  background:#16845a;
+  color:white;
+}
+
+#map{
+  height:calc(100vh - 100px);
+  min-height:600px;
+}
+
+.coords{
+  font-family:monospace;
+  background:#06101e;
+  padding:10px;
+  border-radius:8px;
+  color:#8bd3ff;
+}
+
+.status{
+  padding:12px;
+  border-radius:10px;
+  background:#172f49;
+  margin-top:10px;
+}
+
+@media(max-width:800px){
+
+  .dashboard{
+    grid-template-columns:1fr;
+  }
+
+  .panel{
+    order:2;
+  }
+
+  #map{
+    height:500px;
+    min-height:500px;
+    order:1;
+  }
+
+}
+
+</style>
 
 </head>
 
-
 <body>
 
-<div class="wrap">
+<div class="header">
 
-  <h1>🚔 AI Guardian Drone</h1>
+<h1>🚨 AI Guardian Drone — Police Control Centre</h1>
 
-  <div class="subtitle">
-    Police Station Emergency Monitoring System
-  </div>
-
-
-  <div class="card">
-
-    <div id="connectionStatus"
-         class="status">
-
-      Starting police station system...
-
-    </div>
-
-
-    <div class="qr">
-
-      <h3>📱 Scan this QR code from the victim's phone</h3>
-
-      <canvas id="qrCanvas"></canvas>
-
-      <p class="small" id="sosLink"></p>
-
-    </div>
-
-  </div>
-
-
-  <div id="alertBox"
-       class="alert">
-
-    <h2>🚨 SOS ALERT RECEIVED</h2>
-
-    <p>
-      Emergency request received from the AI Guardian Drone system.
-    </p>
-
-
-    <div class="location">
-
-      <h3>📍 Victim's Live Location</h3>
-
-      <div class="coordinate">
-
-        <b>Latitude:</b>
-
-        <span id="latitude">-</span>
-
-      </div>
-
-
-      <div class="coordinate">
-
-        <b>Longitude:</b>
-
-        <span id="longitude">-</span>
-
-      </div>
-
-
-      <div>
-
-        <b>Time:</b>
-
-        <span id="time">-</span>
-
-      </div>
-
-
-      <a id="mapLink"
-         class="map"
-         target="_blank">
-
-        🗺️ Open Location on Map
-
-      </a>
-
-    </div>
-
-  </div>
+<p>
+Bengaluru Women's Safety Emergency Response Dashboard
+</p>
 
 </div>
 
 
+<div class="dashboard">
+
+
+<div class="panel">
+
+
+<div class="card alert" id="alertCard">
+
+<h2>🚨 EMERGENCY ALERT</h2>
+
+<div class="big">
+Victim SOS Received
+</div>
+
+<p id="alertTime">
+Waiting...
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h2>📍 Victim Location</h2>
+
+<div class="coords">
+
+Latitude:
+<span id="victimLat">--</span>
+
+<br>
+
+Longitude:
+<span id="victimLng">--</span>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>🚔 Nearest Police Station</h2>
+
+<div id="nearestStation"
+class="big">
+
+Waiting for location...
+
+</div>
+
+<div id="stationDistance"
+class="info">
+--
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>👮 Response Status</h2>
+
+<div id="responseStatus"
+class="status">
+
+Waiting for emergency...
+
+</div>
+
+<button
+class="drone"
+id="droneButton"
+onclick="dispatchDrone()">
+
+🚁 DISPATCH DRONE
+
+</button>
+
+<button
+class="manpower"
+id="manpowerButton"
+onclick="dispatchManpower()">
+
+👮 DISPATCH MANPOWER
+
+</button>
+
+</div>
+
+
+<div class="card">
+
+<h2>🔄 Backup Response</h2>
+
+<div id="backupStatus"
+class="info">
+
+Backup station will be selected automatically if the nearest station has no immediate manpower.
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>🏢 Bengaluru Police Stations</h2>
+
+<div id="stationList"></div>
+
+</div>
+
+
+</div>
+
+
+<div id="map"></div>
+
+
+</div>
+
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+
 <script>
 
-/* --------------------------------
-   CREATE POLICE PEER
--------------------------------- */
 
-const peer = new Peer();
-
-
-peer.on("open", function(id) {
-
-  document.getElementById("connectionStatus").textContent =
-    "✓ Police station is online and ready to receive SOS alerts.";
-
-  const sosURL =
-    window.location.origin +
-    window.location.pathname.replace(
-      "police.html",
-      "index.html"
-    ) +
-    "?police=" +
-    id;
-
-
-  document.getElementById("sosLink").textContent =
-    sosURL;
-
-
-  /* Create QR code */
-
-  const qrScript =
-    document.createElement("script");
-
-  qrScript.src =
-    "https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js";
-
-  qrScript.onload = function() {
-
-    QRCode.toCanvas(
-
-      document.getElementById("qrCanvas"),
-
-      sosURL,
-
-      {
-        width: 250,
-        margin: 2
-      },
-
-      function(error) {
-
-        if (error) {
-          console.log(error);
-        }
-
-      }
-
-    );
-
-  };
-
-  document.head.appendChild(qrScript);
-
-});
-
-
-/* --------------------------------
-   RECEIVE VICTIM CONNECTION
--------------------------------- */
-
-peer.on("connection", function(conn) {
-
-  document.getElementById("connectionStatus").textContent =
-    "✓ Victim device connected.";
-
-  conn.on("data", function(data) {
-
-    if (data.type === "SOS") {
-
-      showSOS(data);
-
-    }
-
-  });
-
-});
-
-
-/* --------------------------------
-   DISPLAY SOS
--------------------------------- */
-
-function showSOS(data) {
-
-  const alertBox =
-    document.getElementById("alertBox");
-
-  alertBox.style.display = "block";
-
-
-  document.getElementById("latitude").textContent =
-    Number(data.latitude).toFixed(6);
-
-
-  document.getElementById("longitude").textContent =
-    Number(data.longitude).toFixed(6);
-
-
-  document.getElementById("time").textContent =
-    data.time;
-
-
-  document.getElementById("mapLink").href =
-    "https://www.google.com/maps?q=" +
-    data.latitude + "," +
-    data.longitude;
-
-
-  document.getElementById("connectionStatus").textContent =
-    "🚨 SOS received — victim's location available.";
-
-}
-
-
-/* --------------------------------
-   ERROR HANDLING
--------------------------------- */
-
-peer.on("error", function(error) {
-
-  document.getElementById("connectionStatus").textContent =
-    "⚠️ Connection error: " + error.type;
-
-});
-
-</script>
-
-</body>
-
-</html>                       "inline-block";
-
-
-                }
-
-                else {
-
-
-                    locationInfo.innerHTML =
-
-                        "⚠️ Victim location was not available.";
-
-
-                    mapButton.style.display =
-                        "none";
-
-                }
-
-            }
-
-        });
-
-    });
-
-
-    /* =================================================
-       PEER ERROR
-    ================================================= */
-
-    peer.on("error", function(error) {
-
-
-        console.log(
-            "Peer error:",
-            error
-        );
-
-
-        document.getElementById(
-            "onlineStatus"
-        ).textContent =
-            "CONNECTION ERROR";
-
-
-        document.getElementById(
-            "onlineStatus"
-        ).style.background =
-            "#b42318";
-
-
-        document.getElementById(
-            "status"
-        ).textContent =
-            "Connection error. Refresh the page and try again.";
-
-    });
-
-}
-
-
-/* =====================================================
-   ENABLE SIREN
-===================================================== */
-
-document.getElementById(
-    "enableSiren"
-).addEventListener(
-    "click",
-    function() {
-
-
-        audioContext =
-            new (
-                window.AudioContext ||
-                window.webkitAudioContext
-            )();
-
-
-        audioContext.resume();
-
-
-        this.textContent =
-            "🔊 Siren Enabled";
-
-
-        this.style.background =
-            "#067647";
-
-
-        document.getElementById(
-            "status"
-        ).textContent =
-            "Siren enabled. Waiting for SOS...";
-
-    }
+/*
+=========================================================
+BENGALURU MAP
+=========================================================
+*/
+
+const map = L.map("map").setView(
+  [12.9716,77.5946],
+  11
 );
 
 
-/* =====================================================
-   SIREN
-===================================================== */
-
-function startSiren() {
-
-
-    if (!audioContext) {
-
-
-        alert(
-            "Please tap 'Enable Siren' before the demonstration."
-        );
+L.tileLayer(
+  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+  {
+    maxZoom:19,
+    attribution:
+      "&copy; OpenStreetMap contributors"
+  }
+).addTo(map);
 
 
-        return;
+/*
+=========================================================
+POLICE STATIONS
+=========================================================
 
-    }
+These are demonstration locations.
+manpower = true  -> immediately available
+manpower = false -> station is busy
 
+You can change these for your exhibition.
+=========================================================
+*/
 
-    if (sirenTimer) {
+const stations = [
 
-        clearInterval(
-            sirenTimer
-        );
+  {
+    name:"Whitefield Police Station",
+    lat:12.9698,
+    lng:77.7500,
+    manpower:true
+  },
 
-    }
+  {
+    name:"Mahadevapura Police Station",
+    lat:12.9913,
+    lng:77.6899,
+    manpower:false
+  },
 
+  {
+    name:"Marathahalli Police Station",
+    lat:12.9591,
+    lng:77.6974,
+    manpower:true
+  },
 
-    let highTone = false;
+  {
+    name:"Indiranagar Police Station",
+    lat:12.9784,
+    lng:77.6408,
+    manpower:true
+  },
 
+  {
+    name:"Koramangala Police Station",
+    lat:12.9345,
+    lng:77.6266,
+    manpower:false
+  },
 
-    sirenTimer =
-        setInterval(
-            function() {
+  {
+    name:"Jayanagar Police Station",
+    lat:12.9250,
+    lng:77.5938,
+    manpower:true
+  },
 
+  {
+    name:"Yelahanka Police Station",
+    lat:13.1007,
+    lng:77.5963,
+    manpower:true
+  },
 
-                const oscillator =
-                    audioContext.createOscillator();
+  {
+    name:"Hebbal Police Station",
+    lat:13.0358,
+    lng:77.5970,
+    manpower:false
+  },
 
+  {
+    name:"Electronic City Police Station",
+    lat:12.8452,
+    lng:77.6602,
+    manpower:true
+  }
 
-                const gain =
-                    audioContext.createGain();
-
-
-                oscillator.type =
-                    "square";
-
-
-                oscillator.frequency.value =
-                    highTone
-                    ? 1050
-                    : 650;
-
-
-                gain.gain.value =
-                    0.12;
-
-
-                oscillator
-                    .connect(gain)
-                    .connect(
-                        audioContext.destination
-                    );
-
-
-                oscillator.start();
-
-
-                oscillator.stop(
-                    audioContext.currentTime +
-                    0.18
-                );
-
-
-                highTone =
-                    !highTone;
-
-
-            },
-            220
-        );
-
-
-    /* Siren runs for 10 seconds */
-
-    setTimeout(
-        function() {
-
-
-            clearInterval(
-                sirenTimer
-            );
-
-
-            sirenTimer =
-                null;
+];
 
 
-        },
-        10000
+/*
+=========================================================
+DISPLAY POLICE STATIONS
+=========================================================
+*/
+
+const stationList =
+document.getElementById("stationList");
+
+
+stations.forEach(function(station,index){
+
+  const marker =
+    L.marker([station.lat,station.lng])
+    .addTo(map);
+
+  marker.bindPopup(
+    "<b>🚔 "
+    + station.name
+    + "</b><br>"
+    + (
+      station.manpower
+      ? "🟢 Manpower Available"
+      : "🔴 No Immediate Manpower"
+    )
+  );
+
+
+  const div =
+    document.createElement("div");
+
+  div.className =
+    "station "
+    + (
+      station.manpower
+      ? "available"
+      : "busy"
     );
+
+  div.innerHTML =
+
+    "<b>"
+    + station.name
+    + "</b><br>"
+    + (
+      station.manpower
+      ? "🟢 Available"
+      : "🔴 Currently Busy"
+    );
+
+  stationList.appendChild(div);
+
+});
+
+
+/*
+=========================================================
+DISTANCE CALCULATION
+=========================================================
+
+Haversine formula calculates approximate straight-line
+distance between victim and police station.
+=========================================================
+*/
+
+function distanceKm(
+  lat1,
+  lon1,
+  lat2,
+  lon2
+){
+
+  const R = 6371;
+
+  const dLat =
+    (lat2-lat1)
+    * Math.PI/180;
+
+  const dLon =
+    (lon2-lon1)
+    * Math.PI/180;
+
+  const a =
+    Math.sin(dLat/2)
+    * Math.sin(dLat/2)
+    +
+    Math.cos(lat1*Math.PI/180)
+    *
+    Math.cos(lat2*Math.PI/180)
+    *
+    Math.sin(dLon/2)
+    *
+    Math.sin(dLon/2);
+
+  const c =
+    2 *
+    Math.atan2(
+      Math.sqrt(a),
+      Math.sqrt(1-a)
+    );
+
+  return R*c;
 
 }
 
 
-/* =====================================================
-   START
-===================================================== */
+/*
+=========================================================
+GET VICTIM LOCATION
+=========================================================
+*/
 
-createPoliceSession();
+const params =
+new URLSearchParams(
+  window.location.search
+);
+
+
+let victimLat =
+parseFloat(params.get("lat"));
+
+let victimLng =
+parseFloat(params.get("lng"));
+
+
+/*
+If URL doesn't contain coordinates,
+check the latest demonstration emergency.
+*/
+
+if(
+  !Number.isFinite(victimLat)
+  ||
+  !Number.isFinite(victimLng)
+){
+
+  const saved =
+    localStorage.getItem(
+      "guardianEmergency"
+    );
+
+  if(saved){
+
+    try{
+
+      const data =
+        JSON.parse(saved);
+
+      victimLat =
+        parseFloat(data.latitude);
+
+      victimLng =
+        parseFloat(data.longitude);
+
+    }catch(e){
+
+      console.log(e);
+
+    }
+
+  }
+
+}
+
+
+/*
+=========================================================
+VICTIM MARKER
+=========================================================
+*/
+
+let victimMarker = null;
+
+let selectedStation = null;
+
+let stationOrder = [];
+
+
+if(
+  Number.isFinite(victimLat)
+  &&
+  Number.isFinite(victimLng)
+){
+
+  document.getElementById(
+    "victimLat"
+  ).textContent =
+    victimLat.toFixed(6);
+
+  document.getElementById(
+    "victimLng"
+  ).textContent =
+    victimLng.toFixed(6);
+
+
+  document.getElementById(
+    "alertCard"
+  ).style.display =
+    "block";
+
+
+  document.getElementById(
+    "alertTime"
+  ).textContent =
+    "SOS received at "
+    + new Date().toLocaleTimeString();
+
+
+  /*
+  Add victim marker
+  */
+
+  victimMarker =
+    L.marker(
+      [victimLat,victimLng],
+      {
+        title:"Victim Emergency Location"
+      }
+    )
+    .addTo(map);
+
+
+  victimMarker.bindPopup(
+    "<b>🚨 VICTIM LOCATION</b><br>"
+    + victimLat.toFixed(6)
+    + ", "
+    + victimLng.toFixed(6)
+  ).openPopup();
+
+
+  /*
+  Zoom map to victim
+  */
+
+  map.setView(
+    [victimLat,victimLng],
+    13
+  );
+
+
+  /*
+  Calculate distance to every station
+  */
+
+  stationOrder =
+    stations.map(function(station){
+
+      return {
+
+        station:station,
+
+        distance:
+          distanceKm(
+            victimLat,
+            victimLng,
+            station.lat,
+            station.lng
+          )
+
+      };
+
+    });
+
+
+  /*
+  Sort nearest → farthest
+  */
+
+  stationOrder.sort(
+    function(a,b){
+      return a.distance-b.distance;
+    }
+  );
+
+
+  /*
+  Find first station with manpower.
+  */
+
+  assignNearestAvailableStation();
+
+}else{
+
+  document.getElementById(
+    "responseStatus"
+  ).innerHTML =
+    "⚠️ No victim location received.";
+
+}
+
+
+/*
+=========================================================
+SELECT NEAREST AVAILABLE STATION
+=========================================================
+*/
+
+function assignNearestAvailableStation(){
+
+  selectedStation = null;
+
+  for(
+    let i=0;
+    i<stationOrder.length;
+    i++
+  ){
+
+    if(
+      stationOrder[i]
+      .station
+      .manpower
+    ){
+
+      selectedStation =
+        stationOrder[i];
+
+      break;
+
+    }
+
+  }
+
+
+  if(!selectedStation){
+
+    document.getElementById(
+      "nearestStation"
+    ).textContent =
+      "No station currently available";
+
+    document.getElementById(
+      "stationDistance"
+    ).textContent =
+      "All listed stations are busy.";
+
+    return;
+
+  }
+
+
+  document.getElementById(
+    "nearestStation"
+  ).textContent =
+    selectedStation.station.name;
+
+
+  document.getElementById(
+    "stationDistance"
+  ).textContent =
+    "Approx. "
+    + selectedStation.distance.toFixed(2)
+    + " km from victim";
+
+
+  /*
+  Show fallback information
+  */
+
+  const nearest =
+    stationOrder[0];
+
+  if(
+    nearest.station !==
+    selectedStation.station
+  ){
+
+    document.getElementById(
+      "backupStatus"
+    ).innerHTML =
+      "⚠️ "
+      + nearest.station.name
+      + " is the closest station but has no immediate manpower.<br><br>"
+      + "➡️ Alert automatically routed to "
+      + selectedStation.station.name
+      + ".";
+
+  }else{
+
+    document.getElementById(
+      "backupStatus"
+    ).innerHTML =
+      "🟢 Nearest station has manpower available. "
+      + "No backup station required.";
+
+  }
+
+}
+
+
+/*
+=========================================================
+DISPATCH DRONE
+=========================================================
+*/
+
+function dispatchDrone(){
+
+  if(!selectedStation){
+
+    alert(
+      "No available police station."
+    );
+
+    return;
+
+  }
+
+
+  document.getElementById(
+    "responseStatus"
+  ).innerHTML =
+    "🚁 DRONE DISPATCHED<br><br>"
+    + "Drone launched from "
+    + selectedStation.station.name
+    + ".<br>"
+    + "Flying toward victim location.";
+
+}
+
+
+/*
+=========================================================
+DISPATCH MANPOWER
+=========================================================
+*/
+
+function dispatchManpower(){
+
+  if(!selectedStation){
+
+    alert(
+      "No available police station."
+    );
+
+    return;
+
+  }
+
+
+  document.getElementById(
+    "responseStatus"
+  ).innerHTML =
+    "👮 MANPOWER DISPATCHED<br><br>"
+    + selectedStation.station.name
+    + " personnel are proceeding to the victim's location.";
+
+}
+
+
+/*
+=========================================================
+DEMONSTRATION BUTTON
+
+This lets you test the system without pressing SOS.
+=========================================================
+*/
+
+function demoLocation(){
+
+  victimLat = 12.9716;
+  victimLng = 77.5946;
+
+}
 
 
 </script>
 
 </body>
-
-</html><div class="big">🚨</div><h2>SOS ALERT RECEIVED</h2>
-<p id="details"></p>
-</div>
-</div>
-<script>
-const statusEl=document.getElementById("status"), online=document.getElementById("online");
-let peer, audioCtx, sirenTimer, sessionId;
-
-function makeSession(){
-  sessionId="guardian-"+Math.random().toString(36).slice(2,10)+"-"+Date.now().toString(36);
-  peer=new Peer(sessionId);
-  peer.on("open",id=>{
-    online.textContent="● SYSTEM ONLINE";
-    online.style.background="#067647";
-    statusEl.textContent="Ready. Parent can scan the QR code.";
-    const url=new URL("index.html",location.href);
-    url.searchParams.set("police",id);
-    document.getElementById("link").textContent=url.href;
-    new QRCode(document.getElementById("qrcode"),{text:url.href,width:210,height:210});
-  });
-  peer.on("connection",conn=>{
-    conn.on("open",()=>statusEl.textContent="Parent phone connected — waiting for SOS…");
-    conn.on("data",data=>{
-      if(data && data.type==="SOS"){
-        document.getElementById("alert").style.display="block";
-        document.getElementById("details").textContent="Alert received at "+data.time;
+</html>nt.getElementById("details").textContent="Alert received at "+data.time;
         startSiren();
         statusEl.textContent="SOS received. Demonstration alert active.";
       }
