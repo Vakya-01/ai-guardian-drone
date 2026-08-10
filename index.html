@@ -1,431 +1,322 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+  <title>AI Guardian Drone - SOS</title>
 
-<title>AI Guardian Drone - SOS</title>
+  <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
-
-<style>
+  <style>
     * {
-        box-sizing: border-box;
+      box-sizing: border-box;
     }
 
     body {
-        margin: 0;
-        font-family: Arial, sans-serif;
-        background: #f4f7fb;
-        min-height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f7fb;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     .card {
-        width: 92%;
-        max-width: 480px;
-        background: white;
-        padding: 30px;
-        border-radius: 25px;
-        text-align: center;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      background: white;
+      width: 92%;
+      max-width: 430px;
+      padding: 30px;
+      border-radius: 25px;
+      text-align: center;
+      box-shadow: 0 10px 35px rgba(0,0,0,0.12);
     }
 
     h1 {
-        margin: 0 0 8px;
-        color: #17233c;
+      color: #17233c;
+      margin: 0 0 8px;
+      font-size: 30px;
     }
 
     .sub {
-        color: #667085;
-        margin-bottom: 25px;
+      color: #667085;
+      font-size: 17px;
+      margin-bottom: 25px;
     }
 
     #sos {
-        width: 215px;
-        height: 215px;
-        border-radius: 50%;
-        border: 10px solid #ffd5d5;
-        background: #e53935;
-        color: white;
-        font-size: 42px;
-        font-weight: bold;
-        cursor: pointer;
-        box-shadow: 0 5px 20px rgba(229,57,53,0.35);
+      width: 215px;
+      height: 215px;
+      border-radius: 50%;
+      border: 12px solid #ffd5d5;
+      background: #e53935;
+      color: white;
+      font-size: 40px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 30px rgba(229,57,53,0.35);
     }
 
     #sos:active {
-        transform: scale(0.96);
+      transform: scale(0.96);
     }
 
     #sos:disabled {
-        opacity: 0.65;
-        cursor: not-allowed;
+      background: #888;
+      cursor: not-allowed;
     }
 
     #status {
-        margin-top: 25px;
-        padding: 14px;
-        border-radius: 12px;
-        background: #eef2f7;
-        color: #344054;
-        font-size: 15px;
+      margin-top: 25px;
+      padding: 15px;
+      border-radius: 15px;
+      background: #fff4f4;
+      color: #a00000;
+      font-size: 16px;
     }
 
-    .location-box {
-        display: none;
-        margin-top: 18px;
-        padding: 15px;
-        background: #eefaf0;
-        border: 1px solid #b7dfbd;
-        border-radius: 12px;
-        text-align: left;
+    .location {
+      display: none;
+      margin-top: 18px;
+      padding: 18px;
+      border-radius: 15px;
+      background: #eef9ee;
+      border: 1px solid #b8dfb8;
+      color: #176b2c;
+      text-align: left;
     }
 
-    .location-box strong {
-        color: #167c2f;
+    .location h3 {
+      margin-top: 0;
+      text-align: center;
     }
 
-    .map-link {
-        display: inline-block;
-        margin-top: 10px;
-        padding: 10px 15px;
-        background: #1976d2;
-        color: white;
-        text-decoration: none;
-        border-radius: 8px;
+    .map-button {
+      display: block;
+      margin-top: 15px;
+      padding: 13px;
+      background: #1976d2;
+      color: white;
+      text-decoration: none;
+      border-radius: 10px;
+      text-align: center;
     }
 
     .note {
-        margin-top: 20px;
-        color: #667085;
-        font-size: 12px;
+      margin-top: 20px;
+      font-size: 12px;
+      color: #667085;
     }
-</style>
+  </style>
 </head>
 
 <body>
 
-<div class="card">
+  <div class="card">
 
     <h1>AI Guardian Drone</h1>
 
     <div class="sub">
-        Women's Safety & Emergency Response
+      Women's Safety & Emergency Response
     </div>
 
     <button id="sos">SOS</button>
 
     <div id="status">
-        Connecting to the demonstration police station...
+      Ready. Press SOS in an emergency.
     </div>
 
-    <div id="locationBox" class="location-box">
-        <strong>Victim's Location</strong>
+    <div id="locationBox" class="location">
+      <h3>📍 Victim's Location</h3>
 
-        <p id="coordinates">
-            Location not available yet.
-        </p>
+      <div>
+        <b>Latitude:</b>
+        <span id="latitude">-</span>
+      </div>
 
-        <a id="mapLink"
-           class="map-link"
-           href="#"
-           target="_blank">
-           View Location on Map
-        </a>
+      <div>
+        <b>Longitude:</b>
+        <span id="longitude">-</span>
+      </div>
+
+      <a id="mapLink"
+         class="map-button"
+         target="_blank">
+        View Location on Map
+      </a>
     </div>
 
     <div class="note">
-        School demonstration only — does not contact real emergency services.
+      School demonstration only — does not contact real emergency services.
     </div>
 
-</div>
-
+  </div>
 
 <script>
-
-/* -------------------------------------------------------
-   GET POLICE PEER ID FROM THE QR CODE / URL
-   Example:
-   index.html?police=POLICE_PEER_ID
-------------------------------------------------------- */
 
 const params = new URLSearchParams(window.location.search);
 
 const policeId = params.get("police");
 
-
-/* -------------------------------------------------------
-   PAGE ELEMENTS
-------------------------------------------------------- */
-
-const sosButton = document.getElementById("sos");
+const sos = document.getElementById("sos");
 const statusBox = document.getElementById("status");
+
 const locationBox = document.getElementById("locationBox");
-const coordinatesBox = document.getElementById("coordinates");
+const latitudeText = document.getElementById("latitude");
+const longitudeText = document.getElementById("longitude");
 const mapLink = document.getElementById("mapLink");
-
-
-/* -------------------------------------------------------
-   CREATE PEER CONNECTION
-------------------------------------------------------- */
 
 let peer = null;
 let connection = null;
 
 
-/* -------------------------------------------------------
-   CHECK WHETHER POLICE ID EXISTS
-------------------------------------------------------- */
+/* --------------------------------
+   CONNECT TO POLICE STATION
+-------------------------------- */
 
 if (!policeId) {
 
-    statusBox.textContent =
-        "No police-station connection found. Please scan the QR code again.";
+  statusBox.textContent =
+    "⚠️ Police station connection is missing. Please open the SOS page using the QR code.";
 
 } else {
 
+  statusBox.textContent =
+    "Connecting to demonstration police station...";
+
+  peer = new Peer();
+
+  peer.on("open", function() {
+
+    connection = peer.connect(policeId, {
+      reliable: true
+    });
+
+    connection.on("open", function() {
+
+      statusBox.textContent =
+        "✓ Connected to demonstration police station.";
+
+    });
+
+    connection.on("error", function() {
+
+      statusBox.textContent =
+        "⚠️ Could not connect to the police station.";
+
+    });
+
+  });
+
+  peer.on("error", function() {
+
     statusBox.textContent =
-        "Connecting to demonstration police station...";
+      "⚠️ Internet connection unavailable. Please try again.";
 
-    peer = new Peer();
+  });
 
-    peer.on("open", function(id) {
-
-        console.log("Victim Peer ID:", id);
-
-        connection = peer.connect(policeId, {
-            reliable: true
-        });
-
-        connection.on("open", function() {
-
-            statusBox.textContent =
-                "✓ Connected to demonstration police station. Ready for SOS.";
-
-            statusBox.style.background = "#e8f5e9";
-            statusBox.style.color = "#1b5e20";
-
-        });
-
-        connection.on("error", function(error) {
-
-            console.log(error);
-
-            statusBox.textContent =
-                "Could not connect to the police station. Please scan the QR code again.";
-
-            statusBox.style.background = "#ffebee";
-            statusBox.style.color = "#b71c1c";
-        });
-
-    });
-
-    peer.on("error", function(error) {
-
-        console.log(error);
-
-        statusBox.textContent =
-            "Connection error. Please scan the QR code again.";
-
-        statusBox.style.background = "#ffebee";
-        statusBox.style.color = "#b71c1c";
-    });
 }
 
 
-/* -------------------------------------------------------
-   GET VICTIM LOCATION
-------------------------------------------------------- */
+/* --------------------------------
+   GET LOCATION
+-------------------------------- */
 
-function getVictimLocation() {
+function getLocation() {
 
-    if (!navigator.geolocation) {
+  if (!navigator.geolocation) {
+
+    statusBox.textContent =
+      "Location services are not supported on this device.";
+
+    return;
+
+  }
+
+  statusBox.textContent =
+    "📍 Getting your current location...";
+
+  navigator.geolocation.getCurrentPosition(
+
+    function(position) {
+
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+
+      latitudeText.textContent =
+        latitude.toFixed(6);
+
+      longitudeText.textContent =
+        longitude.toFixed(6);
+
+      locationBox.style.display = "block";
+
+      mapLink.href =
+        "https://www.google.com/maps?q=" +
+        latitude + "," + longitude;
+
+
+      /* Send location to police station */
+
+      if (connection && connection.open) {
+
+        connection.send({
+
+          type: "SOS",
+
+          latitude: latitude,
+
+          longitude: longitude,
+
+          time: new Date().toLocaleString()
+
+        });
 
         statusBox.textContent =
-            "This browser does not support location services.";
+          "✓ SOS sent with victim's location.";
 
-        sosButton.disabled = false;
+      } else {
 
-        return;
+        statusBox.textContent =
+          "📍 Location found, but police station is not connected.";
+
+      }
+
+      sos.disabled = true;
+      sos.textContent = "SENT";
+
+    },
+
+    function(error) {
+
+      statusBox.textContent =
+        "⚠️ Unable to get location. Please allow location permission.";
+
+    },
+
+    {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 0
     }
 
+  );
 
-    statusBox.textContent =
-        "Requesting victim's location...";
-
-    navigator.geolocation.getCurrentPosition(
-
-        function(position) {
-
-            const latitude =
-                position.coords.latitude;
-
-            const longitude =
-                position.coords.longitude;
-
-
-            /* Display location on victim page */
-
-            locationBox.style.display = "block";
-
-            coordinatesBox.innerHTML =
-                "Latitude: <b>" + latitude.toFixed(6) +
-                "</b><br>" +
-                "Longitude: <b>" + longitude.toFixed(6) +
-                "</b>";
-
-
-            /* Create map link */
-
-            const mapURL =
-                "https://www.google.com/maps?q=" +
-                latitude + "," + longitude;
-
-            mapLink.href = mapURL;
-
-
-            /* Current time */
-
-            const time =
-                new Date().toLocaleString();
-
-
-            /* ------------------------------------------------
-               LOCATION DATA SENT TO POLICE STATION
-            ------------------------------------------------ */
-
-            const alertData = {
-
-                type: "SOS",
-
-                latitude: latitude,
-
-                longitude: longitude,
-
-                accuracy: position.coords.accuracy,
-
-                time: time,
-
-                mapURL: mapURL
-
-            };
-
-
-            /* ------------------------------------------------
-               SEND DATA THROUGH PEERJS
-            ------------------------------------------------ */
-
-            if (connection && connection.open) {
-
-                connection.send(alertData);
-
-                statusBox.textContent =
-                    "✓ SOS sent with victim's location.";
-
-                statusBox.style.background = "#e8f5e9";
-
-                statusBox.style.color = "#1b5e20";
-
-            } else {
-
-                statusBox.textContent =
-                    "Location found, but police-station connection is unavailable.";
-
-                statusBox.style.background = "#fff3cd";
-
-                statusBox.style.color = "#664d03";
-            }
-
-
-            sosButton.disabled = false;
-
-        },
-
-
-        function(error) {
-
-            console.log(error);
-
-
-            let message =
-                "Unable to get location.";
-
-
-            if (error.code === 1) {
-
-                message =
-                    "Location permission was denied. Please allow location access.";
-
-            } else if (error.code === 2) {
-
-                message =
-                    "Location is currently unavailable.";
-
-            } else if (error.code === 3) {
-
-                message =
-                    "Location request timed out.";
-            }
-
-
-            statusBox.textContent = message;
-
-            statusBox.style.background = "#ffebee";
-
-            statusBox.style.color = "#b71c1c";
-
-            sosButton.disabled = false;
-
-        },
-
-        {
-            enableHighAccuracy: true,
-
-            timeout: 15000,
-
-            maximumAge: 0
-
-        }
-
-    );
 }
 
 
-/* -------------------------------------------------------
+/* --------------------------------
    SOS BUTTON
-------------------------------------------------------- */
+-------------------------------- */
 
-sosButton.addEventListener("click", function() {
+sos.onclick = function() {
 
-    sosButton.disabled = true;
+  getLocation();
 
-    statusBox.textContent =
-        "SOS activated. Getting victim's location...";
-
-    getVictimLocation();
-
-});
-
+};
 
 </script>
 
 </body>
-</html>    conn.on("error",()=>status.textContent="Could not connect. Please scan the QR code again.");
-  });
-  peer.on("error",()=>status.textContent="Internet connection unavailable.");
-}
-sos.onclick=()=>{
-  if(!conn||!conn.open)return;
-  conn.send({type:"SOS",time:new Date().toLocaleString()});
-  sos.disabled=true;
-  sos.textContent="SENT";
-  status.textContent="🚨 SOS SENT — help alert delivered to the police station.";
-  status.className="";
-};
-</script>
-</body></html>
+</html>
