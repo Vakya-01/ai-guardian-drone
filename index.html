@@ -732,4 +732,211 @@ peer.on(
 </script>
 
 </body>
+</html>mAge: 5000,
+                timeout: 15000
+            }
+
+        );
+
+}
+
+
+/* =====================================================
+   SEND LIVE LOCATION
+   ===================================================== */
+
+function sendLocationToPolice() {
+
+    if (
+        !policeConnection ||
+        !policeConnection.open
+    ) {
+        return;
+    }
+
+
+    if (
+        latestLatitude === null ||
+        latestLongitude === null
+    ) {
+        return;
+    }
+
+
+    const locationData = {
+
+        type: "LOCATION",
+
+        lat: latestLatitude,
+
+        lng: latestLongitude,
+
+        timestamp:
+            new Date().toISOString()
+
+    };
+
+
+    policeConnection.send(
+        locationData
+    );
+
+
+    console.log(
+        "Location sent:",
+        locationData
+    );
+
+}
+
+
+/* =====================================================
+   SOS BUTTON
+   ===================================================== */
+
+document
+.getElementById("sosButton")
+.addEventListener(
+    "click",
+    function() {
+
+        sendSOS();
+
+    }
+);
+
+
+/* =====================================================
+   SEND SOS
+   ===================================================== */
+
+function sendSOS() {
+
+    const button =
+        document.getElementById(
+            "sosButton"
+        );
+
+    const status =
+        document.getElementById(
+            "sosStatus"
+        );
+
+
+    if (
+        !policeConnection ||
+        !policeConnection.open
+    ) {
+
+        status.style.display =
+            "block";
+
+        status.textContent =
+            "⚠️ Police station is not connected.";
+
+        return;
+
+    }
+
+
+    if (
+        latestLatitude === null ||
+        latestLongitude === null
+    ) {
+
+        status.style.display =
+            "block";
+
+        status.textContent =
+            "⚠️ Waiting for GPS location. Please allow location access.";
+
+        return;
+
+    }
+
+
+    const sosData = {
+
+        type: "SOS",
+
+        lat: latestLatitude,
+
+        lng: latestLongitude,
+
+        timestamp:
+            new Date().toISOString()
+
+    };
+
+
+    policeConnection.send(
+        sosData
+    );
+
+
+    console.log(
+        "SOS SENT:",
+        sosData
+    );
+
+
+    button.classList.add(
+        "sent"
+    );
+
+    button.textContent =
+        "SENT";
+
+
+    status.style.display =
+        "block";
+
+    status.textContent =
+        "🚨 SOS SENT — Police station alerted!";
+
+
+    /*
+     * Send the GPS one additional time
+     * immediately with the SOS.
+     */
+
+    policeConnection.send({
+
+        type: "LOCATION",
+
+        lat: latestLatitude,
+
+        lng: latestLongitude,
+
+        timestamp:
+            new Date().toISOString()
+
+    });
+
+}
+
+
+/* =====================================================
+   PEER ERROR
+   ===================================================== */
+
+peer.on(
+    "error",
+    function(error) {
+
+        console.error(
+            "PeerJS error:",
+            error
+        );
+
+        connectionStatus.textContent =
+            "⚠️ Connection error: " +
+            error.type;
+
+    }
+);
+
+</script>
+
+</body>
 </html>
