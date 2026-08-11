@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>AI Guardian Drone - SOS</title>
@@ -125,58 +128,109 @@ h1 {
 }
 
 </style>
+
 </head>
+
 
 <body>
 
+
 <div class="container">
+
+
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
 
     <div class="card">
 
-        <h1>🛡️ AI Guardian Drone</h1>
+        <h1>
+            🛡️ AI Guardian Drone
+        </h1>
 
         <p class="subtitle">
             Smart Women's Safety & Emergency Response System
         </p>
 
-        <div id="connectionStatus" class="status">
+        <div
+            id="connectionStatus"
+            class="status"
+        >
             Connecting to police station...
         </div>
 
     </div>
 
 
+    <!-- =====================================================
+         LIVE GPS
+         ===================================================== -->
+
     <div class="card">
 
-        <h2>📍 Live Location</h2>
+        <h2>
+            📍 Live Location
+        </h2>
 
         <p class="info">
             Your location is continuously shared with the
             connected emergency response dashboard.
         </p>
 
+
         <div class="gps-box">
 
             <p>
-                <span class="label">Latitude:</span>
-                <span id="latitude" class="value">Waiting...</span>
+                <span class="label">
+                    Latitude:
+                </span>
+
+                <span
+                    id="latitude"
+                    class="value"
+                >
+                    Waiting...
+                </span>
             </p>
 
-            <p>
-                <span class="label">Longitude:</span>
-                <span id="longitude" class="value">Waiting...</span>
-            </p>
 
             <p>
-                <span class="label">GPS Status:</span>
-                <span id="gpsStatus" class="value">
+                <span class="label">
+                    Longitude:
+                </span>
+
+                <span
+                    id="longitude"
+                    class="value"
+                >
+                    Waiting...
+                </span>
+            </p>
+
+
+            <p>
+                <span class="label">
+                    GPS Status:
+                </span>
+
+                <span
+                    id="gpsStatus"
+                    class="value"
+                >
                     Waiting for permission...
                 </span>
             </p>
 
+
             <p>
-                <span class="label">Last Update:</span>
-                <span id="lastUpdate" class="value">
+                <span class="label">
+                    Last Update:
+                </span>
+
+                <span
+                    id="lastUpdate"
+                    class="value"
+                >
                     --
                 </span>
             </p>
@@ -186,33 +240,45 @@ h1 {
     </div>
 
 
+    <!-- =====================================================
+         SOS
+         ===================================================== -->
+
     <div class="card">
 
         <h2 style="text-align:center;">
             Emergency SOS
         </h2>
 
+
         <button
             id="sosButton"
-            class="sos-button">
-
+            class="sos-button"
+            type="button"
+        >
             SOS
-
         </button>
+
 
         <div
             id="sosStatus"
             class="status"
-            style="display:none;">
-
+            style="display:none;"
+        >
         </div>
 
     </div>
 
 
+    <!-- =====================================================
+         WHAT HAPPENS AFTER SOS
+         ===================================================== -->
+
     <div class="card">
 
-        <h2>🚁 What happens after SOS?</h2>
+        <h2>
+            🚁 What happens after SOS?
+        </h2>
 
         <p class="info">
             1. Your GPS location is immediately sent to the
@@ -242,29 +308,43 @@ h1 {
     </div>
 
 
+    <!-- =====================================================
+         WARNING
+         ===================================================== -->
+
     <div class="card">
 
         <div class="warning">
+
             ⚠️ This is a school exhibition prototype.
             The drone camera and emergency response shown
             on the police dashboard are simulated.
+
         </div>
 
     </div>
 
+
 </div>
 
 
+<!-- =========================================================
+     JAVASCRIPT
+     ========================================================= -->
+
 <script>
+
 
 /* =====================================================
    VARIABLES
    ===================================================== */
 
 let peer = null;
+
 let policeConnection = null;
 
 let latestLatitude = null;
+
 let latestLongitude = null;
 
 let gpsWatchId = null;
@@ -275,7 +355,9 @@ let gpsWatchId = null;
    ===================================================== */
 
 const params =
-    new URLSearchParams(window.location.search);
+    new URLSearchParams(
+        window.location.search
+    );
 
 const policeId =
     params.get("police");
@@ -314,6 +396,10 @@ if (!policeId) {
 peer = new Peer();
 
 
+/* =====================================================
+   PEER OPEN
+   ===================================================== */
+
 peer.on(
     "open",
     function(victimPeerId) {
@@ -338,6 +424,7 @@ function connectToPolice() {
     if (!policeId) {
         return;
     }
+
 
     connectionStatus.textContent =
         "Connecting to police station...";
@@ -364,6 +451,7 @@ function connectToPolice() {
             connectionStatus.textContent =
                 "🟢 Connected to Police Emergency Dashboard";
 
+
             connectionStatus.classList.add(
                 "connected"
             );
@@ -371,7 +459,7 @@ function connectToPolice() {
 
             /*
              * Start continuous GPS tracking
-             * ONLY after connection is established.
+             * only after connection is established.
              */
 
             startGPSTracking();
@@ -427,7 +515,6 @@ function startGPSTracking() {
             "GPS not supported by this browser.";
 
         return;
-
     }
 
 
@@ -488,6 +575,7 @@ function startGPSTracking() {
 
             },
 
+
             function(error) {
 
                 console.error(
@@ -501,18 +589,24 @@ function startGPSTracking() {
 
 
                 if (error.code === 1) {
+
                     message =
                         "GPS permission denied";
+
                 }
 
                 else if (error.code === 2) {
+
                     message =
                         "GPS position unavailable";
+
                 }
 
                 else if (error.code === 3) {
+
                     message =
                         "GPS request timed out";
+
                 }
 
 
@@ -523,9 +617,12 @@ function startGPSTracking() {
 
             },
 
+
             {
                 enableHighAccuracy: true,
+
                 maximumAge: 5000,
+
                 timeout: 15000
             }
 
@@ -544,6 +641,7 @@ function sendLocationToPolice() {
         !policeConnection ||
         !policeConnection.open
     ) {
+
         return;
     }
 
@@ -552,17 +650,21 @@ function sendLocationToPolice() {
         latestLatitude === null ||
         latestLongitude === null
     ) {
+
         return;
     }
 
 
     const locationData = {
 
-        type: "LOCATION",
+        type:
+            "LOCATION",
 
-        lat: latestLatitude,
+        lat:
+            latestLatitude,
 
-        lng: latestLongitude,
+        lng:
+            latestLongitude,
 
         timestamp:
             new Date().toISOString()
@@ -588,15 +690,15 @@ function sendLocationToPolice() {
    ===================================================== */
 
 document
-.getElementById("sosButton")
-.addEventListener(
-    "click",
-    function() {
+    .getElementById("sosButton")
+    .addEventListener(
+        "click",
+        function() {
 
-        sendSOS();
+            sendSOS();
 
-    }
-);
+        }
+    );
 
 
 /* =====================================================
@@ -610,11 +712,14 @@ function sendSOS() {
             "sosButton"
         );
 
+
     const status =
         document.getElementById(
             "sosStatus"
         );
 
+
+    /* Check police connection */
 
     if (
         !policeConnection ||
@@ -628,9 +733,10 @@ function sendSOS() {
             "⚠️ Police station is not connected.";
 
         return;
-
     }
 
+
+    /* Check GPS */
 
     if (
         latestLatitude === null ||
@@ -644,23 +750,29 @@ function sendSOS() {
             "⚠️ Waiting for GPS location. Please allow location access.";
 
         return;
-
     }
 
 
+    /* Create SOS */
+
     const sosData = {
 
-        type: "SOS",
+        type:
+            "SOS",
 
-        lat: latestLatitude,
+        lat:
+            latestLatitude,
 
-        lng: latestLongitude,
+        lng:
+            latestLongitude,
 
         timestamp:
             new Date().toISOString()
 
     };
 
+
+    /* Send SOS */
 
     policeConnection.send(
         sosData
@@ -673,33 +785,42 @@ function sendSOS() {
     );
 
 
+    /* Change button */
+
     button.classList.add(
         "sent"
     );
+
 
     button.textContent =
         "SENT";
 
 
+    /* Show status */
+
     status.style.display =
         "block";
+
 
     status.textContent =
         "🚨 SOS SENT — Police station alerted!";
 
 
     /*
-     * Send the GPS one additional time
-     * immediately with the SOS.
+     * Send GPS one additional time
+     * immediately with SOS.
      */
 
     policeConnection.send({
 
-        type: "LOCATION",
+        type:
+            "LOCATION",
 
-        lat: latestLatitude,
+        lat:
+            latestLatitude,
 
-        lng: latestLongitude,
+        lng:
+            latestLongitude,
 
         timestamp:
             new Date().toISOString()
@@ -722,212 +843,6 @@ peer.on(
             error
         );
 
-        connectionStatus.textContent =
-            "⚠️ Connection error: " +
-            error.type;
-
-    }
-);
-
-</script>
-
-</body>
-</html>mAge: 5000,
-                timeout: 15000
-            }
-
-        );
-
-}
-
-
-/* =====================================================
-   SEND LIVE LOCATION
-   ===================================================== */
-
-function sendLocationToPolice() {
-
-    if (
-        !policeConnection ||
-        !policeConnection.open
-    ) {
-        return;
-    }
-
-
-    if (
-        latestLatitude === null ||
-        latestLongitude === null
-    ) {
-        return;
-    }
-
-
-    const locationData = {
-
-        type: "LOCATION",
-
-        lat: latestLatitude,
-
-        lng: latestLongitude,
-
-        timestamp:
-            new Date().toISOString()
-
-    };
-
-
-    policeConnection.send(
-        locationData
-    );
-
-
-    console.log(
-        "Location sent:",
-        locationData
-    );
-
-}
-
-
-/* =====================================================
-   SOS BUTTON
-   ===================================================== */
-
-document
-.getElementById("sosButton")
-.addEventListener(
-    "click",
-    function() {
-
-        sendSOS();
-
-    }
-);
-
-
-/* =====================================================
-   SEND SOS
-   ===================================================== */
-
-function sendSOS() {
-
-    const button =
-        document.getElementById(
-            "sosButton"
-        );
-
-    const status =
-        document.getElementById(
-            "sosStatus"
-        );
-
-
-    if (
-        !policeConnection ||
-        !policeConnection.open
-    ) {
-
-        status.style.display =
-            "block";
-
-        status.textContent =
-            "⚠️ Police station is not connected.";
-
-        return;
-
-    }
-
-
-    if (
-        latestLatitude === null ||
-        latestLongitude === null
-    ) {
-
-        status.style.display =
-            "block";
-
-        status.textContent =
-            "⚠️ Waiting for GPS location. Please allow location access.";
-
-        return;
-
-    }
-
-
-    const sosData = {
-
-        type: "SOS",
-
-        lat: latestLatitude,
-
-        lng: latestLongitude,
-
-        timestamp:
-            new Date().toISOString()
-
-    };
-
-
-    policeConnection.send(
-        sosData
-    );
-
-
-    console.log(
-        "SOS SENT:",
-        sosData
-    );
-
-
-    button.classList.add(
-        "sent"
-    );
-
-    button.textContent =
-        "SENT";
-
-
-    status.style.display =
-        "block";
-
-    status.textContent =
-        "🚨 SOS SENT — Police station alerted!";
-
-
-    /*
-     * Send the GPS one additional time
-     * immediately with the SOS.
-     */
-
-    policeConnection.send({
-
-        type: "LOCATION",
-
-        lat: latestLatitude,
-
-        lng: latestLongitude,
-
-        timestamp:
-            new Date().toISOString()
-
-    });
-
-}
-
-
-/* =====================================================
-   PEER ERROR
-   ===================================================== */
-
-peer.on(
-    "error",
-    function(error) {
-
-        console.error(
-            "PeerJS error:",
-            error
-        );
 
         connectionStatus.textContent =
             "⚠️ Connection error: " +
@@ -936,7 +851,10 @@ peer.on(
     }
 );
 
+
 </script>
 
+
 </body>
+
 </html>
