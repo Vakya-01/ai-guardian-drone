@@ -2130,6 +2130,230 @@ p {
     }
 }
 
+
+
+/* =====================================================
+   HEART RATE / HOSPITAL RESPONSE
+   ===================================================== */
+
+.heart-section {
+    margin-top: 20px;
+}
+
+.heart-card {
+    background: #0b2030;
+    border: 1px solid #28536b;
+    border-radius: 14px;
+    padding: 20px;
+}
+
+.heart-display {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+}
+
+.heart-icon {
+    font-size: 42px;
+    animation: heartBeat 1s infinite;
+}
+
+@keyframes heartBeat {
+    0%, 100% { transform: scale(1); }
+    15% { transform: scale(1.18); }
+    30% { transform: scale(1); }
+    45% { transform: scale(1.12); }
+    60% { transform: scale(1); }
+}
+
+.heart-bpm {
+    font-size: 34px;
+    font-weight: 800;
+    color: #7fffa8;
+}
+
+.heart-status {
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 10px;
+    background: #123b2b;
+    color: #8fffc0;
+    font-weight: 700;
+}
+
+.heart-status.alert {
+    background: #571b1b;
+    color: #ff9b9b;
+    animation: alertPulse 1s infinite;
+}
+
+@keyframes alertPulse {
+    0%, 100% { box-shadow: 0 0 0 rgba(255,70,70,0); }
+    50% { box-shadow: 0 0 22px rgba(255,70,70,0.45); }
+}
+
+.heart-controls {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.heart-button {
+    border: none;
+    border-radius: 8px;
+    padding: 10px 14px;
+    background: #188dce;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.heart-button:hover {
+    background: #21a9ed;
+}
+
+.hospital-alert {
+    display: none;
+    margin-top: 15px;
+    padding: 16px;
+    border-radius: 12px;
+    background: #4d1717;
+    border: 2px solid #ff4d4d;
+    color: #fff;
+    font-weight: 700;
+}
+
+.hospital-alert.active {
+    display: block;
+}
+
+.hospital-alert small {
+    display: block;
+    margin-top: 6px;
+    color: #ffc4c4;
+    font-weight: 400;
+}
+
+
+
+.hospital-list {
+    display: grid;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.hospital-card {
+    background: rgba(7, 27, 45, 0.75);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 14px;
+    padding: 15px;
+    transition: 0.25s ease;
+}
+
+.hospital-card.nearest {
+    border: 2px solid #7fffa8;
+    box-shadow: 0 0 18px rgba(127,255,168,0.18);
+}
+
+.hospital-name {
+    font-weight: bold;
+    font-size: 17px;
+}
+
+.hospital-distance {
+    color: #7fffa8;
+    font-weight: bold;
+    margin-top: 6px;
+}
+
+.hospital-meta {
+    color: #c9d9e5;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+.nearest-badge {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 5px 9px;
+    border-radius: 999px;
+    background: #176b42;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+
+
+/* =====================================================
+   FALL DETECTION
+   ===================================================== */
+
+.safety-monitor {
+    margin-top: 20px;
+}
+
+.safety-card {
+    background: #102f4a;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 16px;
+    padding: 20px;
+    margin-top: 15px;
+}
+
+.safety-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 15px;
+}
+
+.safety-status {
+    padding: 12px;
+    border-radius: 10px;
+    background: #173e59;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.safety-status.active {
+    background: #713026;
+    color: #fff;
+}
+
+.safety-button {
+    border: 0;
+    border-radius: 10px;
+    padding: 11px 16px;
+    margin: 6px 4px 0 0;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.safety-button:hover {
+    transform: translateY(-1px);
+}
+
+.safety-small {
+    color: #b8ccda;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.safety-alert {
+    display: none;
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 12px;
+    background: #6e1f1f;
+    border: 1px solid #ff6b6b;
+    font-weight: bold;
+}
+
+.safety-alert.active {
+    display: block;
+}
 </style>
 
 </head>
@@ -2332,24 +2556,6 @@ p {
 
 
 <!-- =====================================================
-     POLICE STATION NETWORK
-     ===================================================== -->
-
-<section>
-
-<h2>
-    🚔 Bengaluru Police Station Network
-</h2>
-
-<div
-    id="stationGrid"
-    class="station-grid">
-</div>
-
-</section>
-
-
-<!-- =====================================================
      RESPONSE
      ===================================================== -->
 
@@ -2428,6 +2634,74 @@ p {
     </div>
 
 </div>
+
+</section>
+
+<!-- =====================================================
+     POLICE STATION NETWORK
+     ===================================================== -->
+
+<section>
+
+<h2>
+    🚔 Bengaluru Police Station Network
+</h2>
+
+<div
+    id="stationGrid"
+    class="station-grid">
+</div>
+
+</section>
+
+
+
+<!-- =====================================================
+     FALL DETECTION
+     ===================================================== -->
+
+<section class="safety-monitor">
+
+<h2>
+    🛡️ AI Safety Monitor
+</h2>
+
+<div class="safety-grid">
+
+    <div class="safety-card">
+        <h3>🧍 Fall + No Movement</h3>
+
+        <p class="safety-small">
+            If a simulated fall is detected, the system watches for
+            15 seconds of no movement. If heart rate is also above
+            100 BPM, an automatic SOS is triggered.
+        </p>
+
+        <div id="fallStatus" class="safety-status">
+            ● Fall monitor: READY
+        </div>
+
+        <button class="safety-button" onclick="simulateFallDetection()">
+            ⚠ SIMULATE FALL
+        </button>
+
+        <button class="safety-button" onclick="simulateMovement()">
+            🏃 SIMULATE MOVEMENT
+        </button>
+    </div>
+
+</div>
+
+<div id="automaticSafetyAlert" class="safety-alert">
+    🚨 AUTOMATIC SOS TRIGGERED
+    <div id="automaticSafetyAlertDetails" class="safety-small"></div>
+</div>
+
+<p class="safety-small">
+    ⚠ SIMULATED SENSOR FEATURE — a normal browser cannot reliably detect
+    physical power-button presses. Real fall/heart-rate detection requires
+    compatible phone or wearable sensors.
+</p>
 
 </section>
 
@@ -2771,6 +3045,82 @@ p {
 <!-- =====================================================
      LEAFLET
      ===================================================== -->
+
+<!-- =====================================================
+     HEART RATE MONITOR
+     ===================================================== -->
+
+<section class="heart-section">
+
+    <h2>
+        ❤️ Victim Vital Monitor
+    </h2>
+
+    <div class="heart-card">
+
+        <div class="heart-display">
+
+            <div class="heart-icon">❤️</div>
+
+            <div>
+                <div class="heart-bpm">
+                    <span id="heartRate">78</span> BPM
+                </div>
+                <div>SIMULATED HEART RATE</div>
+            </div>
+
+        </div>
+
+        <div id="heartStatus" class="heart-status">
+            ● VITAL STATUS: STABLE
+        </div>
+
+        <div class="heart-controls">
+            <button
+                class="heart-button"
+                onclick="simulateHighHeartRate()">
+                ❤️ SIMULATE &gt;100 BPM
+            </button>
+
+            <button
+                class="heart-button"
+                onclick="resetHeartRate()">
+                ↺ RESET TO NORMAL
+            </button>
+        </div>
+
+        <div id="hospitalAlert" class="hospital-alert">
+            🚑 HOSPITAL ALERT SENT
+            <small id="hospitalAlertDetails">
+                Waiting for abnormal heart-rate detection.
+            </small>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =====================================================
+     NEARBY HOSPITALS
+     ===================================================== -->
+
+<section>
+
+<h2>
+    🏥 Nearby Hospitals — Whitefield
+</h2>
+
+<p>
+    Distances are calculated from the victim's latest GPS
+    coordinates using straight-line geographic distance.
+</p>
+
+<div
+    id="hospitalList"
+    class="hospital-list">
+</div>
+
+</section>
 
 <script
 src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
@@ -3359,6 +3709,14 @@ function updateVictimLocation(
     lastVictimLng =
         lng;
 
+    /* Recalculate hospital distances from the newest GPS position. */
+    displayHospitals();
+
+    /* If a high heart rate was already detected, select the nearest hospital now. */
+    if (currentHeartRate > 100 && !hospitalAlertSent) {
+        sendHospitalAlert();
+    }
+
 
     document.getElementById(
         "victimLat"
@@ -3808,6 +4166,500 @@ function stopSiren() {
 
     }
 
+}
+
+
+
+
+/* =====================================================
+   HEART RATE + NEAREST HOSPITAL
+   ===================================================== */
+
+let currentHeartRate = 78;
+let hospitalAlertSent = false;
+
+/*
+   Whitefield-area hospitals. Coordinates are stored so the
+   nearest hospital can be calculated from the victim's GPS.
+   Distances shown in the dashboard are straight-line distances,
+   not live road/ambulance travel times.
+*/
+const hospitals = [
+
+    {
+        name: "Manipal Hospitals Whitefield",
+        area: "Whitefield Main Road / Hagadur",
+        lat: 12.9581,
+        lng: 77.74461,
+        emergency: "Emergency services available"
+    },
+
+    {
+        name: "Aster Whitefield Hospital",
+        area: "Sadaramangala / ITPL",
+        lat: 12.98806,
+        lng: 77.73389,
+        emergency: "Emergency services available"
+    },
+
+    {
+        name: "Vydehi Institute of Medical Sciences",
+        area: "Nallurahalli / Whitefield",
+        lat: 12.97972,
+        lng: 77.73083,
+        emergency: "Hospital / emergency care"
+    },
+
+    {
+        name: "Sri Sathya Sai Super Speciality Hospital",
+        area: "EPIP Zone / Whitefield",
+        lat: 12.9812,
+        lng: 77.7293,
+        emergency: "Super-speciality hospital"
+    }
+];
+
+function calculateDistanceKm(lat1, lng1, lat2, lng2) {
+
+    const R = 6371;
+
+    const dLat =
+        (lat2 - lat1) * Math.PI / 180;
+
+    const dLng =
+        (lng2 - lng1) * Math.PI / 180;
+
+    const a =
+        Math.sin(dLat / 2) ** 2 +
+        Math.cos(lat1 * Math.PI / 180) *
+        Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLng / 2) ** 2;
+
+    return R * 2 * Math.atan2(
+        Math.sqrt(a),
+        Math.sqrt(1 - a)
+    );
+}
+
+function getHospitalDistances() {
+
+    if (
+        !Number.isFinite(lastVictimLat) ||
+        !Number.isFinite(lastVictimLng)
+    ) {
+        return hospitals.map(function(hospital) {
+            return {
+                hospital: hospital,
+                distance: null
+            };
+        });
+    }
+
+    return hospitals
+        .map(function(hospital) {
+
+            return {
+                hospital: hospital,
+                distance: calculateDistanceKm(
+                    lastVictimLat,
+                    lastVictimLng,
+                    hospital.lat,
+                    hospital.lng
+                )
+            };
+
+        })
+        .sort(function(a, b) {
+            return a.distance - b.distance;
+        });
+}
+
+function getNearestHospital() {
+
+    const results =
+        getHospitalDistances();
+
+    return results[0].hospital;
+}
+
+function displayHospitals() {
+
+    const list =
+        document.getElementById("hospitalList");
+
+    if (!list) {
+        return;
+    }
+
+    const results =
+        getHospitalDistances();
+
+    list.innerHTML = "";
+
+    results.forEach(function(item, index) {
+
+        const hospital = item.hospital;
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "hospital-card" +
+            (index === 0 && item.distance !== null
+                ? " nearest"
+                : "");
+
+        const distanceText =
+            item.distance === null
+                ? "Waiting for victim GPS..."
+                : item.distance.toFixed(2) + " km from victim";
+
+        card.innerHTML = `
+            <div class="hospital-name">
+                🏥 ${hospital.name}
+            </div>
+
+            <div class="hospital-distance">
+                📍 ${distanceText}
+            </div>
+
+            <div class="hospital-meta">
+                ${hospital.area}<br>
+                🚑 ${hospital.emergency}
+            </div>
+
+            ${
+                index === 0 && item.distance !== null
+                    ? '<div class="nearest-badge">NEAREST HOSPITAL</div>'
+                    : ''
+            }
+        `;
+
+        list.appendChild(card);
+    });
+}
+
+function updateHeartRate(value) {
+
+    currentHeartRate = Number(value);
+
+    const heartRate =
+        document.getElementById("heartRate");
+
+    const heartStatus =
+        document.getElementById("heartStatus");
+
+    heartRate.textContent =
+        currentHeartRate;
+
+    if (currentHeartRate > 100) {
+
+        heartStatus.classList.add("alert");
+
+        heartStatus.textContent =
+            "⚠️ HIGH HEART RATE — MEDICAL ALERT TRIGGERED";
+
+        sendHospitalAlert();
+
+    } else {
+
+        heartStatus.classList.remove("alert");
+
+        heartStatus.textContent =
+            "● VITAL STATUS: STABLE";
+
+    }
+}
+
+function sendHospitalAlert() {
+
+    if (hospitalAlertSent) {
+        return;
+    }
+
+    if (
+        !Number.isFinite(lastVictimLat) ||
+        !Number.isFinite(lastVictimLng)
+    ) {
+
+        const details =
+            document.getElementById("hospitalAlertDetails");
+
+        details.textContent =
+            "High heart rate detected, but victim GPS is not available yet. Hospital selection will update when GPS arrives.";
+
+        document.getElementById(
+            "hospitalAlert"
+        ).classList.add("active");
+
+        return;
+    }
+
+    hospitalAlertSent = true;
+
+    const hospital =
+        getNearestHospital();
+
+    const alertBox =
+        document.getElementById("hospitalAlert");
+
+    const details =
+        document.getElementById("hospitalAlertDetails");
+
+    const distance =
+        calculateDistanceKm(
+            lastVictimLat,
+            lastVictimLng,
+            hospital.lat,
+            hospital.lng
+        );
+
+    alertBox.classList.add("active");
+
+    details.textContent =
+        "Nearest hospital: " +
+        hospital.name +
+        " — " +
+        distance.toFixed(2) +
+        " km away. Simulated medical alert sent because heart rate reached " +
+        currentHeartRate +
+        " BPM.";
+
+    console.log(
+        "SIMULATED HOSPITAL ALERT:",
+        hospital.name,
+        distance.toFixed(2) + " km",
+        currentHeartRate + " BPM"
+    );
+
+    displayHospitals();
+}
+
+function simulateHighHeartRate() {
+    updateHeartRate(108);
+}
+
+function resetHeartRate() {
+
+    currentHeartRate = 78;
+    hospitalAlertSent = false;
+
+    document.getElementById(
+        "hospitalAlert"
+    ).classList.remove("active");
+
+    updateHeartRate(78);
+
+    displayHospitals();
+}
+
+/* Automatically vary the simulated heart rate. */
+setInterval(function() {
+
+    if (hospitalAlertSent) {
+        return;
+    }
+
+    const variation =
+        Math.floor(Math.random() * 9) - 4;
+
+    updateHeartRate(
+        Math.max(65, Math.min(98, 78 + variation))
+    );
+
+}, 3000);
+
+/* Refresh hospital distances whenever the victim GPS changes. */
+setInterval(function() {
+    displayHospitals();
+}, 2000);
+
+/* Initial hospital list. */
+displayHospitals();
+
+
+
+
+/* =====================================================
+   FALL / NO-MOVEMENT DETECTION
+   ===================================================== */
+
+let lastAcceleration = null;
+let fallDetected = false;
+let fallTime = 0;
+let fallCheckTimer = null;
+let automaticSafetySOSSent = false;
+
+function setSafetyStatus(id, text, active) {
+
+    const element = document.getElementById(id);
+
+    if (!element) return;
+
+    element.textContent = text;
+    element.classList.toggle("active", !!active);
+}
+
+function startFallMonitoring() {
+
+    if (fallDetected) return;
+
+    fallDetected = true;
+    fallTime = Date.now();
+    lastAcceleration = Date.now();
+
+    setSafetyStatus(
+        "fallStatus",
+        "⚠ FALL DETECTED — monitoring for 15 seconds of no movement",
+        true
+    );
+
+    clearTimeout(fallCheckTimer);
+
+    fallCheckTimer = setTimeout(function() {
+
+        const elapsed =
+            Date.now() - fallTime;
+
+        const movementElapsed =
+            Date.now() - (lastAcceleration || fallTime);
+
+        if (
+            fallDetected &&
+            elapsed >= 15000 &&
+            movementElapsed >= 15000 &&
+            currentHeartRate > 100
+        ) {
+
+            triggerAutomaticSOS(
+                "Fall detected + no movement for 15 seconds + heart rate above 100 BPM."
+            );
+
+        } else if (fallDetected) {
+
+            setSafetyStatus(
+                "fallStatus",
+                "● Fall detected, but automatic SOS conditions were not met",
+                false
+            );
+
+            fallDetected = false;
+        }
+
+    }, 15000);
+}
+
+function simulateFallDetection() {
+
+    startFallMonitoring();
+
+    /* For the exhibition, make the high-heart-rate condition explicit. */
+    if (typeof updateHeartRate === "function") {
+        updateHeartRate(108);
+    }
+
+    setSafetyStatus(
+        "fallStatus",
+        "⚠ SIMULATED FALL — waiting 15 seconds for no movement",
+        true
+    );
+}
+
+function simulateMovement() {
+
+    if (!fallDetected) {
+        setSafetyStatus(
+            "fallStatus",
+            "● No fall currently detected",
+            false
+        );
+        return;
+    }
+
+    lastAcceleration = Date.now();
+
+    setSafetyStatus(
+        "fallStatus",
+        "🟢 Movement detected — automatic fall SOS cancelled",
+        false
+    );
+
+    fallDetected = false;
+    clearTimeout(fallCheckTimer);
+}
+
+function triggerAutomaticSOS(reason) {
+
+    if (automaticSafetySOSSent) return;
+
+    automaticSafetySOSSent = true;
+
+    const alertBox =
+        document.getElementById("automaticSafetyAlert");
+
+    const details =
+        document.getElementById("automaticSafetyAlertDetails");
+
+    if (alertBox) {
+        alertBox.classList.add("active");
+    }
+
+    if (details) {
+        details.textContent =
+            reason +
+            " Police, drone and emergency response simulation activated.";
+    }
+
+    /* Reuse the existing SOS response system. */
+    showEmergencyAlert({
+        type: "SOS",
+        automatic: true,
+        reason: reason
+    });
+
+    document.getElementById("policeResponse").textContent =
+        "🚨 AUTOMATIC SOS — Police response activated.";
+
+    document.getElementById("droneResponse").textContent =
+        "🚁 AUTOMATIC SOS — Drone dispatch activated.";
+
+    document.getElementById("manpowerResponse").textContent =
+        "👮 AUTOMATIC SOS — Emergency manpower dispatched.";
+
+    /* If a victim GPS position is already available, start the existing drone simulation. */
+    if (
+        Number.isFinite(lastVictimLat) &&
+        Number.isFinite(lastVictimLng)
+    ) {
+        setTimeout(function() {
+            dispatchDrone();
+        }, 500);
+    }
+
+    /* High heart rate also activates the existing hospital logic. */
+    if (currentHeartRate > 100 && typeof sendHospitalAlert === "function") {
+        sendHospitalAlert();
+    }
+}
+
+function resetAutomaticSafetySOS() {
+
+    automaticSafetySOSSent = false;
+    fallDetected = false;
+    clearTimeout(fallCheckTimer);
+
+    setSafetyStatus(
+        "fallStatus",
+        "● Fall monitor: READY",
+        false
+    );
+
+    const alertBox =
+        document.getElementById("automaticSafetyAlert");
+
+    if (alertBox) {
+        alertBox.classList.remove("active");
+    }
 }
 
 
