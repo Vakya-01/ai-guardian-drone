@@ -1603,7 +1603,7 @@ p {
             45%;
 
         top:
-            30%;
+            31%;
 
         transform:
             scale(.94)
@@ -1616,25 +1616,24 @@ p {
             50%;
 
         top:
-            20%;
+            34%;
 
         transform:
-            translateX(-50%)
-            scale(1.05)
+            scale(1.08)
             rotate(-2deg);
     }
 
     100% {
 
         left:
-            50%;
+            49.5%;
 
         top:
-            20%;
+            25%;
 
         transform:
-            translateX(-50%)
-            scale(1.08)
+            translate(-50%, -50%)
+            scale(1.18)
             rotate(0deg);
     }
 }
@@ -3100,7 +3099,9 @@ function initializePeer() {
 function generateQR(peerId) {
 
     const qr =
-        document.getElementById("qrcode");
+        document.getElementById(
+            "qrcode"
+        );
 
     if (!qr) {
         console.error("QR container not found");
@@ -3109,25 +3110,41 @@ function generateQR(peerId) {
 
     qr.innerHTML = "";
 
+
+    /*
+       This is the actual victim page.
+       The police PeerJS ID is added as
+       ?police=... so index.html can connect.
+    */
+
     const victimPage =
         "https://vakya-01.github.io/ai-guardian-drone/index.html";
+
 
     const connectionURL =
         victimPage +
         "?police=" +
-        encodeURIComponent(peerId);
+        encodeURIComponent(
+            peerId
+        );
+
 
     console.log(
         "QR connection URL:",
         connectionURL
     );
 
+
     if (typeof QRCode === "undefined") {
 
         qr.innerHTML = `
-            <p style="color:red;font-weight:bold;">
-                QR CODE LIBRARY FAILED TO LOAD.
-            </p>
+            <div style="
+                color:red;
+                font-weight:bold;
+                padding:20px;
+            ">
+                QR CODE LIBRARY FAILED TO LOAD
+            </div>
         `;
 
         console.error(
@@ -3137,21 +3154,35 @@ function generateQR(peerId) {
         return;
     }
 
+
     new QRCode(
         qr,
         {
-            text: connectionURL,
-            width: 190,
-            height: 190,
-            colorDark: "#000000",
-            colorLight: "#ffffff",
-            correctLevel: QRCode.CorrectLevel.H
+            text:
+                connectionURL,
+
+            width:
+                190,
+
+            height:
+                190,
+
+            colorDark:
+                "#000000",
+
+            colorLight:
+                "#ffffff",
+
+            correctLevel:
+                QRCode.CorrectLevel.H
         }
     );
+
 
     console.log(
         "QR code generated successfully."
     );
+
 }
 
 
@@ -3491,10 +3522,13 @@ function showEmergencyAlert(
 
 
     /*
-       IMPORTANT:
-       Manpower response is intentionally
-       not modified.
+       Update manpower response when SOS is received.
     */
+
+    document.getElementById(
+        "manpowerResponse"
+    ).textContent =
+        "👮 Emergency manpower dispatched. Officers are moving toward the victim's location.";
 
 
     if (
