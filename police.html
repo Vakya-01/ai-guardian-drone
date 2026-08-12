@@ -2132,6 +2132,38 @@ p {
 
 
 
+.movement-alert {
+    display: none;
+    margin-top: 18px;
+    padding: 18px;
+    border-radius: 14px;
+    background: #4d1717;
+    border: 2px solid #ff4d4d;
+    color: #fff;
+}
+
+.movement-alert.active {
+    display: block;
+    animation: movementPulse 1.2s ease-in-out infinite alternate;
+}
+
+.movement-alert-title {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.movement-alert p {
+    margin: 0;
+    line-height: 1.6;
+    color: #ffd1d1;
+}
+
+@keyframes movementPulse {
+    from { box-shadow: 0 0 0 rgba(255, 77, 77, 0.1); }
+    to { box-shadow: 0 0 24px rgba(255, 77, 77, 0.35); }
+}
+
 /* =====================================================
    HEART RATE / HOSPITAL RESPONSE
    ===================================================== */
@@ -2484,6 +2516,17 @@ p {
 
 
 <!-- =====================================================
+     VICTIM MOVEMENT / GEOFENCE ALERT
+     ===================================================== -->
+
+<section id="victimMovedAlert" class="movement-alert">
+    <div class="movement-alert-title">🚨 VICTIM MOVED ALERT</div>
+    <p id="victimMovedDetails">
+        Geofence is inactive. It will activate after an SOS is received.
+    </p>
+</section>
+
+<!-- =====================================================
      LOCATION
      ===================================================== -->
 
@@ -2674,7 +2717,7 @@ p {
         <p class="safety-small">
             If a simulated fall is detected, the system watches for
             15 seconds of no movement. If heart rate is also above
-            100 BPM, an automatic SOS is triggered.
+            120 BPM, an automatic SOS is triggered.
         </p>
 
         <div id="fallStatus" class="safety-status">
@@ -3079,7 +3122,7 @@ p {
             <button
                 class="heart-button"
                 onclick="simulateHighHeartRate()">
-                ❤️ SIMULATE &gt;100 BPM
+                ❤️ SIMULATE &gt;120 BPM
             </button>
 
             <button
@@ -3146,6 +3189,15 @@ let accuracyCircle = null;
 let lastVictimLat = null;
 
 let lastVictimLng = null;
+
+/* =====================================================
+   SOS GEOFENCE / VICTIM MOVED ALERT
+   ===================================================== */
+let sosOriginLat = null;
+let sosOriginLng = null;
+let sosGeofenceActive = false;
+let victimMovedAlertSent = false;
+const SOS_GEOFENCE_RADIUS_METERS = 100;
 
 let selectedStation = null;
 
@@ -3709,11 +3761,17 @@ function updateVictimLocation(
     lastVictimLng =
         lng;
 
+    /* Check whether the victim has moved beyond the SOS geofence. */
+    checkVictimMovement(
+        lat,
+        lng
+    );
+
     /* Recalculate hospital distances from the newest GPS position. */
     displayHospitals();
 
     /* If a high heart rate was already detected, select the nearest hospital now. */
-    if (currentHeartRate > 100 && !hospitalAlertSent) {
+    if (currentHeartRate > 120 && !hospitalAlertSent) {
         sendHospitalAlert();
     }
 
@@ -3842,6 +3900,84 @@ function updateVictimLocation(
 
 
 /* =====================================================
+   SOS GEOFENCE / VICTIM MOVED DETECTION
+   ===================================================== */
+
+function calculateDistanceMeters(lat1, lng1, lat2, lng2) {
+    return calculateDistanceKm(lat1, lng1, lat2, lng2) * 1000;
+}
+
+function activateSOSGeofence(lat, lng) {
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+
+    sosOriginLat = lat;
+    sosOriginLng = lng;
+    sosGeofenceActive = true;
+    victimMovedAlertSent = false;
+
+    const alertBox = document.getElementById("victimMovedAlert");
+    const details = document.getElementById("victimMovedDetails");
+
+    if (alertBox) alertBox.classList.remove("active");
+    if (details) {
+        details.textContent =
+            "Geofence active: movement beyond " +
+            SOS_GEOFENCE_RADIUS_METERS +
+            " m from the SOS location will trigger an alert.";
+    }
+}
+
+function checkVictimMovement(lat, lng) {
+    if (
+        !sosGeofenceActive ||
+        victimMovedAlertSent ||
+        !Number.isFinite(sosOriginLat) ||
+        !Number.isFinite(sosOriginLng) ||
+        !Number.isFinite(lat) ||
+        !Number.isFinite(lng)
+    ) return;
+
+    const distanceMoved = calculateDistanceMeters(
+        sosOriginLat,
+        sosOriginLng,
+        lat,
+        lng
+    );
+
+    if (distanceMoved >= SOS_GEOFENCE_RADIUS_METERS) {
+        victimMovedAlertSent = true;
+
+        const alertBox = document.getElementById("victimMovedAlert");
+        const details = document.getElementById("victimMovedDetails");
+
+        if (alertBox) alertBox.classList.add("active");
+
+        if (details) {
+            details.innerHTML =
+                "⚠️ Victim moved <strong>" + distanceMoved.toFixed(0) +
+                " m</strong> from the SOS location.<br>" +
+                "Original: " + sosOriginLat.toFixed(6) + ", " + sosOriginLng.toFixed(6) +
+                "<br>Current: " + lat.toFixed(6) + ", " + lng.toFixed(6) +
+                "<br>🚁 Drone tracking updated to the latest GPS position.";
+        }
+
+        const alertDetails = document.getElementById("alertDetails");
+        if (alertDetails) {
+            alertDetails.textContent =
+                "🚨 SOS active. Victim moved " +
+                distanceMoved.toFixed(0) +
+                " m from the original SOS location.";
+        }
+
+        const droneResponse = document.getElementById("droneResponse");
+        if (droneResponse) {
+            droneResponse.textContent =
+                "🚁 Victim moved — drone tracking updated to the latest GPS location.";
+        }
+    }
+}
+
+/* =====================================================
    EMERGENCY ALERT
    ===================================================== */
 
@@ -3857,6 +3993,12 @@ function showEmergencyAlert(
 
     alertBox.classList.add(
         "active"
+    );
+
+    /* Save the victim GPS position at the moment of SOS. */
+    activateSOSGeofence(
+        lastVictimLat,
+        lastVictimLng
     );
 
 
@@ -4352,7 +4494,7 @@ function updateHeartRate(value) {
     heartRate.textContent =
         currentHeartRate;
 
-    if (currentHeartRate > 100) {
+    if (currentHeartRate > 120) {
 
         heartStatus.classList.add("alert");
 
@@ -4436,7 +4578,7 @@ function sendHospitalAlert() {
 }
 
 function simulateHighHeartRate() {
-    updateHeartRate(108);
+    updateHeartRate(125);
 }
 
 function resetHeartRate() {
@@ -4528,11 +4670,11 @@ function startFallMonitoring() {
             fallDetected &&
             elapsed >= 15000 &&
             movementElapsed >= 15000 &&
-            currentHeartRate > 100
+            currentHeartRate > 120
         ) {
 
             triggerAutomaticSOS(
-                "Fall detected + no movement for 15 seconds + heart rate above 100 BPM."
+                "Fall detected + no movement for 15 seconds + heart rate above 120 BPM."
             );
 
         } else if (fallDetected) {
@@ -4555,7 +4697,7 @@ function simulateFallDetection() {
 
     /* For the exhibition, make the high-heart-rate condition explicit. */
     if (typeof updateHeartRate === "function") {
-        updateHeartRate(108);
+        updateHeartRate(125);
     }
 
     setSafetyStatus(
@@ -4637,7 +4779,7 @@ function triggerAutomaticSOS(reason) {
     }
 
     /* High heart rate also activates the existing hospital logic. */
-    if (currentHeartRate > 100 && typeof sendHospitalAlert === "function") {
+    if (currentHeartRate > 120 && typeof sendHospitalAlert === "function") {
         sendHospitalAlert();
     }
 }
