@@ -442,6 +442,41 @@ p {
 
 
 /* =====================================================
+   NEAREST POLICE STATION ROUTE
+   ===================================================== */
+
+.nearest-police-card {
+    margin-top: 14px;
+    background: #0a1d2b;
+    border: 1px solid #2f6b87;
+    border-radius: 12px;
+    padding: 15px 18px;
+}
+
+.nearest-police-card.nearest-active {
+    border: 2px solid #ffcc55;
+    box-shadow: 0 0 18px rgba(255,204,85,0.15);
+}
+
+.nearest-police-title {
+    color: #ffdf78;
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+
+.nearest-police-distance {
+    color: #62e99a;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.nearest-police-meta {
+    color: #c9d9e5;
+    margin-top: 5px;
+}
+
+/* =====================================================
    POLICE STATIONS
    ===================================================== */
 
@@ -2595,6 +2630,30 @@ p {
 
 </div>
 
+<div id="nearestPoliceCard" class="nearest-police-card">
+
+    <div class="nearest-police-title">
+        🚔 Nearest Police Station
+    </div>
+
+    <div id="nearestPoliceName" class="nearest-police-meta">
+        Waiting for victim GPS...
+    </div>
+
+    <div id="nearestPoliceDistance" class="nearest-police-distance">
+        --
+    </div>
+
+    <div id="nearestPoliceStatus" class="nearest-police-meta">
+        Nearest police station will be calculated when GPS arrives.
+    </div>
+
+    <div class="nearest-police-meta">
+        🟡 Dashed route on the map shows the approximate straight-line connection from the victim to the nearest police station.
+    </div>
+
+</div>
+
 </section>
 
 
@@ -3186,6 +3245,10 @@ let victimMarker = null;
 
 let accuracyCircle = null;
 
+let policeRouteLine = null;
+
+let nearestPoliceStation = null;
+
 let lastVictimLat = null;
 
 let lastVictimLng = null;
@@ -3364,6 +3427,123 @@ function initializeMap() {
 
 
 /* =====================================================
+   NEAREST POLICE STATION + VISUAL ROUTE
+   ===================================================== */
+
+function getNearestPoliceStation() {
+
+    if (
+        !Number.isFinite(lastVictimLat) ||
+        !Number.isFinite(lastVictimLng)
+    ) {
+        return null;
+    }
+
+    let nearest = null;
+    let nearestDistance = Infinity;
+
+    stations.forEach(function(station) {
+
+        const distance = calculateDistanceKm(
+            lastVictimLat,
+            lastVictimLng,
+            station.lat,
+            station.lng
+        );
+
+        if (distance < nearestDistance) {
+            nearestDistance = distance;
+            nearest = station;
+        }
+    });
+
+    if (!nearest) return null;
+
+    return {
+        station: nearest,
+        distance: nearestDistance
+    };
+}
+
+function updateNearestPoliceStationRoute() {
+
+    const card = document.getElementById("nearestPoliceCard");
+    const name = document.getElementById("nearestPoliceName");
+    const distance = document.getElementById("nearestPoliceDistance");
+    const status = document.getElementById("nearestPoliceStatus");
+
+    if (!Number.isFinite(lastVictimLat) || !Number.isFinite(lastVictimLng)) {
+
+        nearestPoliceStation = null;
+
+        if (card) card.classList.remove("nearest-active");
+        if (name) name.textContent = "Waiting for victim GPS...";
+        if (distance) distance.textContent = "--";
+        if (status) status.textContent = "Nearest police station will be calculated when GPS arrives.";
+
+        if (policeRouteLine && map) {
+            map.removeLayer(policeRouteLine);
+            policeRouteLine = null;
+        }
+
+        return;
+    }
+
+    const result = getNearestPoliceStation();
+
+    if (!result) return;
+
+    nearestPoliceStation = result.station;
+
+    if (name) name.textContent = result.station.name;
+
+    if (distance) {
+        distance.textContent = result.distance.toFixed(2) + " km from victim";
+    }
+
+    if (status) {
+        status.textContent = result.station.available
+            ? "🟢 Manpower Available — nearest station"
+            : "🟠 Currently Busy — nearest station";
+    }
+
+    if (card) card.classList.add("nearest-active");
+
+    if (map) {
+
+        const routePoints = [
+            [lastVictimLat, lastVictimLng],
+            [result.station.lat, result.station.lng]
+        ];
+
+        if (!policeRouteLine) {
+
+            policeRouteLine = L.polyline(
+                routePoints,
+                {
+                    color: "#ffcc55",
+                    weight: 5,
+                    opacity: 0.9,
+                    dashArray: "12, 10",
+                    lineCap: "round"
+                }
+            ).addTo(map);
+
+        } else {
+            policeRouteLine.setLatLngs(routePoints);
+        }
+
+        policeRouteLine.bindPopup(
+            "<b>🚨 Victim → 🚔 " +
+            result.station.name +
+            "</b><br>Approx. distance: " +
+            result.distance.toFixed(2) +
+            " km"
+        );
+    }
+}
+
+/* =====================================================
    STATION DISPLAY
    ===================================================== */
 
@@ -3414,13 +3594,34 @@ function displayStations() {
 
                 </div>
 
+                <div class="station-distance" id="stationDistance-${station.name.replace(/[^a-zA-Z0-9]/g, "")}">
+                    📍 Distance from victim: waiting for GPS...
+                </div>
+
             `;
 
 
             grid.appendChild(card);
 
+            if (Number.isFinite(lastVictimLat) && Number.isFinite(lastVictimLng)) {
+                const d = calculateDistanceKm(
+                    lastVictimLat,
+                    lastVictimLng,
+                    station.lat,
+                    station.lng
+                );
+
+                const distanceElement = card.querySelector(".station-distance");
+                if (distanceElement) {
+                    distanceElement.textContent =
+                        "📍 Distance from victim: " + d.toFixed(2) + " km";
+                }
+            }
+
         }
     );
+
+    updateNearestPoliceStationRoute();
 
 }
 
@@ -3895,6 +4096,10 @@ function updateVictimLocation(
                 true
         }
     );
+
+    /* Update the nearest police station and its visual route. */
+    updateNearestPoliceStationRoute();
+    displayStations();
 
 }
 
